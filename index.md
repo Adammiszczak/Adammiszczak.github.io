@@ -6,7 +6,7 @@
   * Initial post - about me!
   * ...
 
---
+---
 
 ## Initial post - about me!
 Hello :).
