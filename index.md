@@ -12,3 +12,5 @@
 Hello :).
 
 My name is...
+
+site.posts
