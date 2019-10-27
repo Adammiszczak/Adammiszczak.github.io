@@ -49,8 +49,8 @@ First version was made with bootstrap styles, but there are some problems, becau
 of clients domain (Wordpress - Visual Composer). I have to do custom styles and strip bootstrap classes.
 
 
-Check the production version of [Photovoltaic Calculator at Domain](https://consorenergia.pl/fotowoltaika-kalkulator-oplacalnosci-instalacja-fotowoltaiczna-oplacalnosc/)
-[Photovoltaic Calculator Github - Bootstrap](https://adammiszczak.github.io/photovoltaic-calculator/)
-[Photovoltaic Calculator Github - Custom Css](https://adammiszczak.github.io/photovoltaic-calculator/index-edited.html)
+* Check the production version of [Photovoltaic Calculator at Domain](https://consorenergia.pl/fotowoltaika-kalkulator-oplacalnosci-instalacja-fotowoltaiczna-oplacalnosc/)
+* [Photovoltaic Calculator Github - Bootstrap](https://adammiszczak.github.io/photovoltaic-calculator/)
+* [Photovoltaic Calculator Github - Custom Css](https://adammiszczak.github.io/photovoltaic-calculator/index-edited.html)
 
 
