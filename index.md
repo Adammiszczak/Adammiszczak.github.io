@@ -58,4 +58,12 @@ of clients domain (Wordpress - Visual Composer). I have to do custom styles and 
 
 ## <span id="#bartender-for-a-wedding-website-span">Bartender for a wedding Website</span>
 
+This project is commercial one for real services, namely **The Bartender for a wedding Website**. So far the goals are:
 
+
+* New design based on Bootstrap
+* Some custom scripts and improvements
+* Prepare domain to a new structure for SEO purposes
+* Improve analytics based on Google Analytics + Google Tag Manager
+
+IN PROGRESS...
