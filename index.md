@@ -1,3 +1,7 @@
+---
+title: My Page Title
+---
+
 # Welcome at my blog - Adam Miszczak SEO Specialist and novice Front-end Developer :)
 
 ---
