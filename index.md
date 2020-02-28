@@ -3,9 +3,9 @@
 ---
 
 * Navigation
-  * Initial post - about me!
-  * SEO Content Orderer
-  * Photovoltaic Calculator
+  * [Initial post - about me!](#initial-post---about-me)
+  * [SEO Content Orderer](#seo-content-orderer)
+  * [Photovoltaic Calculator](#photovoltaic-calculator)
 
 ---
 
