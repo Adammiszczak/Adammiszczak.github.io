@@ -1,5 +1,5 @@
 ---
-title: My Page Title
+title: Adam Miszczak SEO Specialist and novice Front-end Developer
 ---
 
 # Welcome at my blog - Adam Miszczak SEO Specialist and novice Front-end Developer :)
