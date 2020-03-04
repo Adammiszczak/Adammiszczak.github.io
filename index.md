@@ -22,7 +22,7 @@ My name is Adam Miszczak and I'm SEO Specialist for some time, but my main goal 
 
 I'm fascinated about various programming languages and web technologies. My hobbies also are militaries, anime, manga, cyber security, air soft gun, computer games, comics, martial arts.
 
-As SEO Specialist I've also done technical taska, so I had to and decided to learn thing like regex, mysql, php, some servers stuff and other. In the meantime I've learned pure javascript with a bit of React and tried to use it as often as I can at SEO Specialist job.
+As SEO Specialist I've also done technical tasks, so I had to and decided to learn thing like regex, mysql, php, some servers stuff and other. In the meantime I've learned pure javascript with a bit of React and tried to use it as often as I can at SEO.
 
 At this blog there will be links to my project with some description :)
 
@@ -77,6 +77,8 @@ This project is one of recruitment task for my application as Junior Front-end D
 
 Despite of it's functional I'm going to develop this "app" e.g. using async / await, scopes, performance etc. 
 
+* Check the production version of [Github Users Resume](https://adammiszczak.github.io/recruitment-github-api-task/adam-miszczak-rekrutacja.html)
+* [Repository for Github Users Resume](https://github.com/Adammiszczak/recruitment-github-api-task)
 ---
 
 ## Bartender for a wedding Website
