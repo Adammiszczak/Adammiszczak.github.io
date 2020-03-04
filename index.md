@@ -10,7 +10,8 @@ title: Adam Miszczak SEO Specialist and novice Front-end Developer
   * [Initial post - about me!](#initial-post---about-me)
   * [SEO Content Orderer](#seo-content-orderer)
   * [Photovoltaic Calculator](#photovoltaic-calculator)
-  * [Bartender for a wedding Website](#bartender-for-a-wedding-website-span)
+  * [Github Users Resume](#github-users-resume)
+  * [Bartender for a wedding Website](#bartender-for-a-wedding-website)
 
 ---
 
@@ -58,9 +59,27 @@ of clients domain (Wordpress - Visual Composer). I have to do custom styles and 
 * [Photovoltaic Calculator Github - Bootstrap](https://adammiszczak.github.io/photovoltaic-calculator/)
 * [Photovoltaic Calculator Github - Custom Css](https://adammiszczak.github.io/photovoltaic-calculator/index-edited.html)
 
+
 ---
 
-## <span id="#bartender-for-a-wedding-website-span">Bartender for a wedding Website</span>
+## Github Users Resume
+
+This project is one of recruitment task for my application as Junior Front-end Developer. The target is to get data about GitHub users, knowing only name and using Github Api. The skills used at this task are:
+
+
+* Using fetch to communicate with api (also nested fetches)
+* Display fetched data from Github Api
+* Responsive design
+* A bit of error handling and clearing previous state
+* Events handling
+* Operations at arrays, objects using dedicated methods
+* Making some custom functions
+
+Despite of it's functional I'm going to develop this "app" e.g. using async / await, scopes, performance etc. 
+
+---
+
+## Bartender for a wedding Website
 
 This project is commercial one for real services, namely **The Bartender for a wedding Website**. So far the goals are:
 
