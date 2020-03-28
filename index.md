@@ -81,15 +81,3 @@ Despite of it's functional I'm going to develop this "app" e.g. using async / aw
 * Check the [Repository for Github Users Resume](https://github.com/Adammiszczak/recruitment-github-api-task)
 
 ---
-
-## Bartender for a wedding Website
-
-This project is commercial one for real services, namely **The Bartender for a wedding Website**. So far the goals are:
-
-
-* New design based on Bootstrap
-* Some custom scripts and improvements
-* Prepare domain to a new structure for SEO purposes
-* Improve analytics based on Google Analytics + Google Tag Manager
-
-IN PROGRESS...
