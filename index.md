@@ -11,7 +11,7 @@ title: Adam Miszczak SEO Specialist and novice Front-end Developer
   * [SEO Content Orderer](#seo-content-orderer)
   * [Photovoltaic Calculator](#photovoltaic-calculator)
   * [Github Users Resume](#github-users-resume)
-  * [Bartender for a wedding Website](#bartender-for-a-wedding-website)
+  * [React.js Pokedex](#react.js-pokedex)
 
 ---
 
@@ -79,5 +79,33 @@ Despite of it's functional I'm going to develop this "app" e.g. using async / aw
 
 * Check the production version of [Github Users Resume](https://adammiszczak.github.io/recruitment-github-api-task/adam-miszczak-rekrutacja.html)
 * Check the [Repository for Github Users Resume](https://github.com/Adammiszczak/recruitment-github-api-task)
+
+---
+
+## React.js Pokedex
+
+This project is another one of recruitment task for my application as Junior Front-end Developer. This time it was from one big company. The task is to create custom Pokedex (pokemon lists). The goals are:
+
+* The app should have list with pagination
+* The app should have at least one sort options
+* The app should use the PokeApi v2
+* The app should be launched by "npm start"
+* The app should be compatible with node.js v12
+* The app should be fully responsive
+
+I met a few obstacles:
+* The PokeApi doesn't enable endpoints to sort data at backend
+* There is need for some asynchronic functions for fetches
+* Making pagination and sorting at the some time was challenging
+
+Further plans for this app:
+* Javascript unit tests, which I have to learn!
+* Basic backend
+* Ux improvements
+* Users login platform
+
+
+* Check the production version of [React.js Pokedex GH Page Version](https://adammiszczak.github.io/React-pokedex/)
+* Check the [React.js Pokedex Repository](https://github.com/Adammiszczak/React-pokedex)
 
 ---
