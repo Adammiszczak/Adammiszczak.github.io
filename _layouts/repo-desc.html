@@ -3,15 +3,12 @@ layout: default
 ---
 
 <h1>{{ page.title }}</h1>
-<p> Repository Description </p>
-<p>{{ page.date | date_to_string }} - {{ page.author }}</p>
-
-<p id="2"> {{ page.technologies }}
-
+<p> Repository Description | {{ page.date | date_to_string }} - {{ page.author }}</p>
+<p>Technologies:</p>
 <ul>  
 {% for item in page.technologies %}
   <li> {{ item }} </li>
 {% endfor %}
 </ul>  
-
+<hr>
 {{ content }}
