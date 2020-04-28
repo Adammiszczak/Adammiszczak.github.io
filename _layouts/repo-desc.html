@@ -5,13 +5,13 @@ layout: default
 <h1>{{ page.title }}</h1>
 <p> Repository Description </p>
 <p>{{ page.date | date_to_string }} - {{ page.author }}</p>
-<p id="1"> {{ post.technologies }}
-<p id="2"> {{ page.technologies }}
-<p id="3"> {{ technologies }}
-  
-{% for item in technologies %}
-{{ item }} 
-{% endfor %}
 
+<p id="2"> {{ page.technologies }}
+
+<ul>  
+{% for item in page.technologies %}
+  <li> {{ item }} </li>
+{% endfor %}
+</ul>  
 
 {{ content }}
