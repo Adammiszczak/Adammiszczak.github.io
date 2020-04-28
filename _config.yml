@@ -5,3 +5,4 @@ description: Blog about SEO, Front-end and many others
 url: https://adammiszczak.github.io/
 twitter_username: AdamMiszczak
 github_username: AdamMiszczak
+permalink: /:categories/:title
