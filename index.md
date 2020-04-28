@@ -11,7 +11,7 @@ title: Adam Miszczak SEO Specialist and novice Front-end Developer
   * [SEO Content Orderer](#seo-content-orderer)
   * [Photovoltaic Calculator](#photovoltaic-calculator)
   * [Github Users Resume](#github-users-resume)
-  * [React.js Pokedex](#react.js-pokedex)
+  * [React.js Pokedex](#reactjs-pokedex)
 
 ---
 
