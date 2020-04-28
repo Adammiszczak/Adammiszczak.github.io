@@ -5,8 +5,9 @@ layout: default
 <h1>{{ page.title }}</h1>
 <p> Repository Description </p>
 <p>{{ page.date | date_to_string }} - {{ page.author }}</p>
+<p> {{ post.technologies }}
 
-{% for item in technologies %}
+{% for item in post.technologies %}
 {{ item }} 
 {% endfor %}
 
