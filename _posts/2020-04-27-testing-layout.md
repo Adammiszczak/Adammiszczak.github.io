@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: repo-desc
 title:  "Testing Layouts"
 author: "Adam Miszczak"
 categories: [layout-test]
