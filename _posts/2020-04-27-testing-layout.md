@@ -3,6 +3,7 @@ layout: default
 title:  "Testing Layouts"
 author: "Adam Miszczak"
 categories: [layout-test]
+technologies: [react, javascript, axios, nodejs]
 ---
 
 # Welcome
