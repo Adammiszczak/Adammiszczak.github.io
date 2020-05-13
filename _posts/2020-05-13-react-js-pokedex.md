@@ -2,7 +2,7 @@
 layout: repo-desc
 title:  "React.js Pokedex"
 author: "Adam Miszczak"
-categories: [react]
+categories: [repo-description]
 technologies: [react, javascript, axios, nodejs]
 ---
 
