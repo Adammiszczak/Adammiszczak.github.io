@@ -6,3 +6,5 @@ url: https://adammiszczak.github.io/
 twitter_username: AdamMiszczak
 github_username: AdamMiszczak
 permalink: /:categories/:title
+paginate: 3
+paginate_path: "/page:num/"
