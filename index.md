@@ -1,6 +1,8 @@
 ---
 title: Adam Miszczak SEO Specialist and novice Front-end Developer
-layout: main-page
+permalink: /
+redirect:  /posts/
+layout:    redirect
 ---
 
 
