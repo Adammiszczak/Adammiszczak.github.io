@@ -17,20 +17,18 @@ title: Jekyll Pagination
 
 {% if paginator.total_pages > 1 %}
 <div class="pagination">
-    <ul>
         {% if paginator.previous_page %}
-        <li><a
+        <span><a
                 href="/posts/{% if paginator.previous_page != 1 %}page{{ paginator.previous_page }}{% endif %}">Previous page</a>
-        </li>
+        </span>
         {% endif %}
-        <li><a {% if paginator.page == 1 %}class="active" {% endif %}href="/posts/">1</a></li>
+        <span><a {% if paginator.page == 1 %}class="active" {% endif %}href="/posts/">1</a></span>
         {% for count in (2..paginator.total_pages) %}
-        <li><a {% if paginator.page == count %}class="active" {% endif %}href="/posts/page{{ count }}">{{ count }}</a>
-        </li>
+        <span><a {% if paginator.page == count %}class="active" {% endif %}href="/posts/page{{ count }}">{{ count }}</a>
+        </span>
         {% endfor %}
         {% if paginator.next_page %}
-        <li><a href="/posts/page{{ paginator.next_page }}">Next page</a></li>
+        <span><a href="/posts/page{{ paginator.next_page }}">Next page</a></span>
         {% endif %}
-    </ul>
 </div>
 {% endif %}
