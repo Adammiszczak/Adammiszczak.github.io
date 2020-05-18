@@ -17,6 +17,5 @@ My goals are:
 * Make some navigation
 * Make this as seo friendly as it can
 
-
-* Check the [blog repository](https://github.com/Adammiszczak/Adammiszczak.github.io)
+Link for repo is at the top bar left.
 
