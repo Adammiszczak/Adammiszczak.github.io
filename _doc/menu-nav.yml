@@ -1,0 +1,9 @@
+---
+navigation:
+  - url: /posts/
+    title: Blog
+    identifier: posts-list
+  - url: /about-me/
+    title: About me
+    identifier: about-me
+---
