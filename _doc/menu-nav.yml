@@ -1,10 +1,9 @@
-menu_title: "Here is the test menu"
-navigation:
+menu_title: Here is the test menu
 
+navigation:
   - identifier: posts-list
     title: Blog
     url: /posts/
-    
   - identifier: about-me
-    title: "About me"
+    title: About me
     url: /about-me/
