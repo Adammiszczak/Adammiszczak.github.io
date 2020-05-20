@@ -4,18 +4,10 @@ title: Testsite Subpage
 ---
 
 <h2>{{ site.data.menu-nav.menu_title }}</h2>
-<ul>
-   {% for item in site.data.menu-nav.navigation %}
+<nav>
+   <ul>
+      {% for item in site.data.menu-nav.navigation %}
       <li><a href="{{ item.url }}">{{ item.title }}</a></li>
-   {% endfor %}
-</ul>
-
-<ul>
-   {% for member in site.data.testyaml %}
-     <li>
-       <a href="https://github.com/{{ member.github }}">
-         {{ member.name }}
-       </a>
-     </li>
-   {% endfor %}
+      {% endfor %}
    </ul>
+</nav>

@@ -1,6 +1,9 @@
 menu_title: Here is the test menu
 
 navigation:
+  - identifier: home
+    title: Home
+    url: /
   - identifier: posts-list
     title: Blog
     url: /posts/
