@@ -1,9 +1,10 @@
----
+menu_title: "Here is the test menu"
 navigation:
-  - url: /posts/
+
+  - identifier: posts-list
     title: Blog
-    identifier: posts-list
-  - url: /about-me/
-    title: About me
-    identifier: about-me
----
+    url: /posts/
+    
+  - identifier: about-me
+    title: "About me"
+    url: /about-me/

@@ -3,7 +3,7 @@ layout: default
 title: Testsite Subpage
 ---
 
-<h2>Nav test</h2>
+<h2>{{ site.data.menu-nav.menu_title }}</h2>
 <ul>
    {% for item in site.data.menu-nav.navigation %}
       <li><a href="{{ item.url }}">{{ item.title }}</a></li>
