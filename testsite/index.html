@@ -3,12 +3,10 @@ layout: default
 title: Testsite Subpage
 ---
 
-<h2>{{ site.data.menu-nav.menu_title }}</h2>
 <nav class="navbar">
-   
-<div class="navbar-toggle">
+   <div class="navbar-toggle">
       <i class="fas fa-bars"></i>
-</div>
+   </div>
    <ul class="navbar-list">
       {% for item in site.data.menu-nav.navigation %}
       <li><a href="{{ item.url }}">{{ item.title }}</a></li>
