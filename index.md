@@ -1,9 +1,8 @@
 ---
 title: Adam Miszczak SEO Specialist and novice Front-end Developer
-layout: main-page
+layout: default
 
 ---
 
 
-## Initial post - about me!
-Hello :).
+<h1>Welcome at my blog - Adam Miszczak SEO Specialist and novice Front-end Developer :)</h1>
