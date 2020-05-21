@@ -1,34 +1,47 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: "en-US" }}">
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://kit.fontawesome.com/c8db903e7e.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
 
-    {% seo %}
-    <link rel="stylesheet" href="/assets/css/main.css">
-  </head>
-  <body>
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://kit.fontawesome.com/c8db903e7e.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
 
-    <header>
-      <div class="container">
-        <a style="text-decoration: none;" href="{{ '/' | relative_url }}">
-          <h1>{{ site.title | default: site.github.repository_name }}</h1>
-        </a>
-        <h2>{{ site.description | default: site.github.project_tagline }}</h2>
-        <section id="downloads">
-          <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-        </section>
-      </div>
-    </header>
+  {% seo %}
+  <link rel="stylesheet" href="/assets/css/main.css">
+</head>
 
+<body>
+
+  <header>
     <div class="container">
-      <section id="main_content">
-        {{ content }}
+      <a style="text-decoration: none;" href="{{ '/' | relative_url }}">
+        <h1>{{ site.title | default: site.github.repository_name }}</h1>
+      </a>
+      <h2>{{ site.description | default: site.github.project_tagline }}</h2>
+      <section id="downloads">
+        <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
       </section>
+      <nav class="navbar">
+        <div class="navbar-toggle">
+          <i class="fas fa-bars" aria-hidden="true"></i>
+        </div>
+        <ul class="navbar-list">
+          <li><a href="/">Home</a></li>
+          <li><a href="/posts/">Blog</a></li>
+          <li><a href="#">About me</a></li>
+        </ul>
+      </nav>
     </div>
-    <script src="/assets/js/customScripts.js"></script>
-  </body>
+  </header>
+
+  <div class="container">
+    <section id="main_content">
+      {{ content }}
+    </section>
+  </div>
+  <script src="/assets/js/customScripts.js"></script>
+</body>
+
 </html>
