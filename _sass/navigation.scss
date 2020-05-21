@@ -1,10 +1,9 @@
-@mixin navUlStyle($display,$direction) {
+@mixin navUlStyle($display, $direction) {
     display: $display;
     flex-direction: $direction;
     font-size: 18px;
     margin: 0;
     padding: 0;
-    border: 1px solid white;
 }
 
 @mixin navLiStyle {
@@ -19,7 +18,7 @@ nav.navbar {
     }
 
     ul.navbar-list {
-        @include navUlStyle(flex,row);
+        @include navUlStyle(flex, row);
 
         li {
             @include navLiStyle;
@@ -32,18 +31,20 @@ nav.navbar {
 }
 
 @media screen and (max-width: 768px) {
-
     nav.navbar {
         div.navbar-toggle {
             font-size: 18px;
             padding: 10px;
-            border-top: 1px solid white;
-            border-left: 1px solid white;
-            border-right: 1px solid white;
+            border: 1px solid white;
+            display:block
         }
 
         ul.navbar-list {
-            @include navUlStyle(flex,column);
+            @include navUlStyle(none, column);
+
+            &.visible {
+                @include navUlStyle(flex, column);
+            }
 
             li {
                 @include navLiStyle;
@@ -54,8 +55,4 @@ nav.navbar {
             }
         }
     }
-}
-
-.visible {
-    @include navUlStyle(flex,column);
 }
