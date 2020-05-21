@@ -1,4 +1,4 @@
-let navToggler = document.querySelector("span.navbar-toggle");
+let navToggler = document.querySelector("div.navbar-toggle");
 let navMenu = document.querySelector("ul.navbar-list");
 
 navToggler.addEventListener("click", () => {

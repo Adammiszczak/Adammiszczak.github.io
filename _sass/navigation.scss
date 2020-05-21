@@ -1,26 +1,25 @@
-@mixin navUlStyle($direction) {
-    display: flex;
+@mixin navUlStyle($display,$direction) {
+    display: $display;
     flex-direction: $direction;
     font-size: 18px;
     margin: 0;
     padding: 0;
-    font-size: 18px;
+    border: 1px solid white;
 }
 
 @mixin navLiStyle {
     list-style: none;
     padding: 10px;
-    border: 1px solid white;
     text-align: center;
 }
 
 nav.navbar {
-    span.navbar-toggle {
+    div.navbar-toggle {
         display: none;
     }
 
-    ul {
-        @include navUlStyle(row);
+    ul.navbar-list {
+        @include navUlStyle(flex,row);
 
         li {
             @include navLiStyle;
@@ -33,22 +32,18 @@ nav.navbar {
 }
 
 @media screen and (max-width: 768px) {
-    section#main_content nav.navbar {
-        position: relative;
-    }
 
     nav.navbar {
-        span.navbar-toggle {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            cursor: pointer;
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 24px;
+        div.navbar-toggle {
+            font-size: 18px;
+            padding: 10px;
+            border-top: 1px solid white;
+            border-left: 1px solid white;
+            border-right: 1px solid white;
         }
 
-        ul {
-            @include navUlStyle(column);
+        ul.navbar-list {
+            @include navUlStyle(flex,column);
 
             li {
                 @include navLiStyle;
@@ -62,5 +57,5 @@ nav.navbar {
 }
 
 .visible {
-    display: block;
+    @include navUlStyle(flex,column);
 }
