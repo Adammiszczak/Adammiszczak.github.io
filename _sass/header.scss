@@ -1,0 +1,22 @@
+header {
+    div.container {
+        a {
+            span.header-title {
+                font-size: 30px;
+                line-height: 1.5;
+                font-weight: bold;
+                font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+                color: $jekyll-color;
+                letter-spacing: -1px;
+            }
+        }
+        div.header-subtitle {
+            font-size: 18px;
+            font-weight: 300;
+            color: #666;
+            font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+            margin-bottom: 20px;
+            letter-spacing: -0.03em;
+        }
+    }
+}
