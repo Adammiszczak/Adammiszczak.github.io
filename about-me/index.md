@@ -27,10 +27,22 @@ My commercial skills are:
 * Yaml
 
 ### Skills which I'm developing
-My skills which I'm learning are:
+My skills which I'm learning or using in non-comercial way:
 
-* React.js with many concepcts and framework
+* React.js with many concepcts and frameworks
 * Node.js
+* Puppeteer.js
+* Express.js
+
+### Soft Skills
+I have also some soft skills:
+
+* Logical thinking
+* Customer services and relations skills
+* Motivation and focus
+* Ability to negotiate
+* Communication skills and Teamwork
+* Personal skills
 
 ### Hobbies
 My hobbies are:
