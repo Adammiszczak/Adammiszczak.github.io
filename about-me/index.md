@@ -5,11 +5,9 @@ title: About me
 
 # About me 
 
-**Page under construction :)**
+My name is Adam Miszczak and I'm SEO Specialist since 2018 (with some digital marketing stuff), but my main goal is going to work as Node.js Back-end Developer (previously I was learning rather Frontend stuff). As Seo Specialist I have opportunity to develop internal tools for my team.
 
-My name is Adam Miszczak and I'm SEO Specialist for 2 years (with some digital marketing stuff), but my main goal is going to work as Front-end Developer / Webdeveloper or Front-end Engineer :).
-
-Some time ago I changed my whole career plans. Namely I was rather Sales and Customer Service guy, but once I've worked for IT company I really wanted to do technical stuff and now it's my life plan.
+Some time ago I changed my whole career plans. Namely I was Sales and Customer Service Specialist, but once I've worked for IT company I realized that I wanted to do technical stuff and now it's my life plan.
 
 ### Skills with comercial experience
 My commercial skills are:
@@ -18,27 +16,26 @@ My commercial skills are:
 * Css
 * Sass
 * Javascript
+* Typescript
+* Node.js
 * Php - basic
 * MySql - basic
+* MongoDB - basic
 * Hostings and servers knowledge
-* Regexp
-* Git
-* Jekyll and Hugo
-* Yaml
+* GitHub Actions
+* Usage of Jekyll, Hugo and many CMS (wordpress, prestashop, shoper...)
+* Unit and integration tests
 
 ### Skills which I'm developing
 My skills which I'm learning or using in non-comercial way:
 
-* React.js with many concepcts and frameworks
-* Node.js
-* Puppeteer.js
-* Express.js
+* Nest.js
 
 ### Soft Skills
 I have also some soft skills:
 
 * Logical thinking
-* Customer services and relations skills
+* Customer service and Customer relations skills
 * Motivation and focus
 * Ability to negotiate
 * Communication skills and Teamwork
