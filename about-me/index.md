@@ -9,6 +9,19 @@ My name is Adam Miszczak and I'm SEO Specialist since 2018 (with some digital ma
 
 Some time ago I changed my whole career plans. Namely I was Sales and Customer Service Specialist, but once I've worked for IT company I realized that I wanted to do technical stuff and now it's my life plan.
 
+## Current state
+Beyond my current profession as Seo Specialist with some programming elements, I have attended at mentorship program course since June 2021. The mentors work in [LocalHost Academy](https://academy.localhost-group.com/). You can read more about :).
+
+During mentorship program I develop my current skills and develop new ones. I have very frequent contact with coding experts who make code review for my solutions. I decided to follow path as Backend TS Developer. Some of learning areas are:
+
+* JS Functional Programming
+* JS OOP
+* TS Functional Programming
+* TS OOP
+* TS in Node & Async
+* JS/TS Unit and Integration Tests
+* Servers and DBs
+
 ### Skills with comercial experience
 My commercial skills are:
 
@@ -18,18 +31,20 @@ My commercial skills are:
 * Javascript
 * Typescript
 * Node.js
-* Php - basic
+* NPM
+* GitHub Actions
+* Unit and integration tests
 * MySql - basic
 * MongoDB - basic
+* Php - basic
 * Hostings and servers knowledge
-* GitHub Actions
 * Usage of Jekyll, Hugo and many CMS (wordpress, prestashop, shoper...)
-* Unit and integration tests
 
 ### Skills which I'm developing
-My skills which I'm learning or using in non-comercial way:
+My skills which I'm developing or using in non-comercial way:
 
 * Nest.js
+* Docker
 
 ### Soft Skills
 I have also some soft skills:
