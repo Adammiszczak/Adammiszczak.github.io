@@ -34,6 +34,7 @@ My commercial skills are:
 * NPM
 * GitHub Actions
 * Unit and integration tests
+* Git
 * MySql - basic
 * MongoDB - basic
 * Php - basic

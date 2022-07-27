@@ -31,11 +31,11 @@ There is no need for beautiful frontend, but the working one was enough and acce
 
 
 ### Problems
-Because of my SEO background I knew that there could be some problems with getting full and valid HTML from those eccomerces. There isn't any Shopify documentation which tells how to get the full HTML with all of resources. There could be many dependencies like whitelisted IP's, whitelisted bots, whitelisted user-agents, request requirements, anty scrapping and anty bot policies, type of device, lazy load, SSR and so on. Every of this dependency could vary HTML.
+Because of my SEO background I knew that there could be some problems with getting full and valid HTML from those eccomerces. There isn't any Shopify documentation which tells how to get the full HTML with all of resources. There could be many dependencies like whitelisted IP's, whitelisted bots, whitelisted user-agents, request requirements, antyscrapping and antybot policies, type of device, lazy load, SSR and so on. Every of this dependency could vary HTML.
 
 And there were some differences e.g. I couldn't get Schema json/ld scripts if requests are coming from my app, but... I can got it from the browser, becasue it occured that they were lazy loaded. It's not good for SEO btw. :)
 
-So that is the reason why I had to do **Chrome Extension**. It's simply scrapping HTML from the client side with all resources at HTML. With one click you can scrape HTML, view the result as HTML table and sendint this data in the background to database. This extension has also implemented other goals just with one click, namely scrapping and comparing. Of course it redirects you to application.
+So that is the reason why I had to do **Chrome Extension**. It's simply scrapping HTML from the client side with all resources at HTML. With one click you can scrape HTML, view the result as HTML table and send  this data in the background to database. This extension has also implemented other goals just with one click, namely scrapping and comparing. Of course it redirects you to application.
 
 ### Possible Future Goals
 * Integration with Google Sheets and Google Drive
