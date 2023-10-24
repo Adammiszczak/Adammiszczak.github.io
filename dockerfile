@@ -1,11 +1,16 @@
 # GH Pages dependencies https://pages.github.com/versions/
 
-# Use minimum Ruby 2.5 or later
-FROM ruby:2.7-alpine3.15
+FROM jekyll/jekyll:latest
 
-# Add Jekyll dependencies to Alpine
-RUN apk update
-RUN apk add --no-cache build-base gcc cmake git
+WORKDIR /srv/jekyll
 
-# Update the Ruby bundler and install Jekyll
-RUN gem update bundler && gem install bundler jekyll
+# Copy your Jekyll project into the container
+COPY . .
+
+RUN chmod -R 777 .
+
+# Expose the default Jekyll port
+EXPOSE 4000
+
+# Serve the Jekyll site
+CMD ["jekyll", "serve", "--trace", "--host", "0.0.0.0", "--no-watch"]
