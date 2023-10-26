@@ -1,0 +1,15 @@
+version: '3'
+services:
+  jekyll:
+    image: jekyll/jekyll:latest
+    volumes:
+      - .:/srv/jekyll
+    working_dir: /srv/jekyll
+    command: jekyll serve --watch --force_polling
+
+  webserver:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./_site:/usr/share/nginx/html

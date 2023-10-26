@@ -1,10 +1,28 @@
 theme: jekyll-theme-hacker
 title: Adam Miszczak
 email: adammiszczak1@gmail.com
-description: Blog about SEO, Javascript and many others
+description: Blog about SEO, Javascript, Java and many others
 url: https://adammiszczak.github.io/
 twitter_username: AdamMiszczak
 github_username: AdamMiszczak
 permalink: /:categories/:title
 paginate: 4
 paginate_path: posts/page:num/
+logo: /assets/img/adam_miszczak_pixelart_2.png
+image: /assets/img/adam_miszczak_pixelart_2.png
+author: Adam Miszczak
+social: 
+  name: Adam Miszczak
+  links:
+    - https://www.facebook.com/adam.miszczak.7/
+    - https://www.linkedin.com/in/adam-miszczak/
+    - https://github.com/Adammiszczak
+defaults:
+  - scope:
+      path: ""
+    values:
+      image: /assets/img/adam_miszczak_pixelart_2.png
+  - scope:
+      path: "testsite/*.md"
+    values:
+      sitemap: false
