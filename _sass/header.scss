@@ -1,6 +1,12 @@
 header {
     div.container {
         a {
+            &.centered-anchor {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+              }
+              
             span.header-title {
                 font-size: 30px;
                 line-height: 1.5;
@@ -8,6 +14,7 @@ header {
                 font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
                 color: $jekyll-color;
                 letter-spacing: -1px;
+                padding: 0 10px;
             }
         }
         div.header-subtitle {
