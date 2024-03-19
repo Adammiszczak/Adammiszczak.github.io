@@ -5,14 +5,14 @@ title: About me
 
 # About me
 
-My name is Adam Miszczak and I'm SEO Specialist since 2018 (with some digital marketing stuff), but my main goal is going to work as Back-end Developer (previously I was learning rather Frontend stuff and Backend in Node). As Seo Specialist I have opportunity to develop internal tools for my team.
+My name is Adam Miszczak and I'm SEO Specialist since 2018 (with some digital marketing stuff). Initially I was rather learning rather Frontend stuff than Backend. As Seo Specialist I have opportunity to develop internal tools for my team.
 
-Some time ago I changed my whole career plans. Namely I was Sales and Customer Service Specialist, but once I've worked for IT company I realized that I wanted to do technical stuff and now it's my life plan.
+Some time ago, I completely changed my career plans. I was previously employed as a Sales and Customer Service Specialist. However, after working for an IT company, I realized my passion lies in technical work, and now it's my life plan. SEO presents an opportunity for me to achieve this goal.
 
 ## Previous state
-Beyond my current profession as Seo Specialist with some programming elements, I have attended at mentorship program course since June 2021. The mentors work in [LocalHost Academy](https://academy.localhost-group.com/). You can read more about :).
+Beyond my current profession as an SEO Specialist with some programming elements, I have been attending a mentorship program course since June 2021. The mentors involved work in [LocalHost Academy](https://academy.localhost-group.com/). You can read more about :).
 
-During mentorship program I develop my current skills and develop new ones. I have very frequent contact with coding experts who make code review for my solutions. I wanted to follow path as Backend TS Developer. Some of learning areas are:
+During the mentorship program, I am developing my current skills and acquiring new ones. I have frequent contact with coding experts who review my solutions. I aspire to pursue a career path as a Backend TypeScript Developer. Some of the learning areas include:
 
 * JS Functional Programming
 * JS OOP
@@ -22,18 +22,22 @@ During mentorship program I develop my current skills and develop new ones. I ha
 * JS/TS Unit and Integration Tests
 * Servers and DBs
 
-## Current state from 2023
+## Current state
 
-Now in 2023 I have real opportunity to be **Java Backend Developer, so i started to learn JAVA** :) I use my knowledge from previous experience so I had learn Java tools and syntax. You can see my post about [Seo Monitor Tool](https://adammiszczak.github.io/repo-description/github-actions-seo-monitoring-and-automation) I rewrite it to Java using more OOP and good practises. It's easier to maintain, extend and it's tested, because I use TDD way. So it's my first commercial code in Java after 2 months :). But I can't show it, you know why... But my plan is to do some complex project using Java and Spring. Maybe some linktree clone :) Nevertheless, I'm going to develop it privately and publish it :)
+From 2023 I had a small episode with **Java Backend Programming** :) I used my knowledge from previous experience. You can see my post about [Seo Monitor Tool](https://adammiszczak.github.io/repo-description/github-actions-seo-monitoring-and-automation) I rewrite it to Java using more OOP and good practises. It's easier to maintain, extend and it's tested, because I use TDD way. So it's my first commercial code in Java after 2 months :). But I can't show it, you know why...
+
+Still my main language is Javascript, but this small episode with Java boostet my work abilities, theoretical and practical knowledge.
 
 ### Skills with comercial experience
 My commercial skills are:
 
-* Java
+* Javascript
+* Typescript
+* Node.js
 * GitHub Actions
 * Git
 * Unit and integration tests
-* Docker
+* Docker - basic
 * MySql - basic
 * MongoDB - basic
 * Hostings and servers knowledge
@@ -41,20 +45,19 @@ My commercial skills are:
 * Html
 * Css
 * Sass
-* Javascript
-* Typescript
-* Node.js
 * NPM
+* Java - basic
 * Php - very basic
 
 ### Skills which I'm developing
 My skills which I'm developing or using in non-comercial way:
 
-* Java
-* Spring
+* Node.js
+* Typescript
+* AI usage and integrations with AI
 
 ### Soft Skills
-I have also some soft skills:
+I have also useful soft skills:
 
 * Logical thinking
 * Customer service and Customer relations skills
