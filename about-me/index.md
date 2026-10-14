@@ -7,7 +7,7 @@ hero_eyebrow: About Adam Miszczak
 hero_heading: Search expertise built around complex e-commerce
 hero_intro: I’m a Senior SEO / GEO & AI Search Specialist focused on international enterprise e-commerce, product discovery and the technical systems that shape how products are found.
 hero_supporting: Since 2018, I’ve worked across SEO strategy and implementation. My approach connects search evidence with practical priorities for SEO, product and engineering teams.
-hero_image_alt: Adam Miszczak smiling in a black T-shirt in front of a colorful graffiti wall.
+hero_image_alt: Adam Miszczak, Senior SEO / GEO & AI Search Specialist | International enterprise E-commerce SEO / GEO & Agentic Automation
 ---
 
 {% include profile-hero.html %}

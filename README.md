@@ -1,4 +1,4 @@
-# Adam Miszczak — Enterprise SEO, GEO & AI Search
+# Adam Miszczak - Enterprise SEO, GEO & AI Search
 
 This repository is the Jekyll-based technical blog and research lab for Adam Miszczak, a **Senior SEO / GEO & AI Search Specialist focused on international enterprise e-commerce, product discovery and agentic automation**. It supports the personal brand through useful technical research; it is not the primary consulting sales site.
 

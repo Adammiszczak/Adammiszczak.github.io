@@ -4,19 +4,19 @@ title: International Enterprise E-commerce SEO, GEO & AI Search
 description: Senior SEO, GEO and AI Search specialist working across international enterprise e-commerce, product discovery and agentic automation.
 hero_eyebrow: Adam Miszczak · SEO, GEO & AI Search
 hero_heading: Senior SEO / GEO & AI Search Specialist
-hero_intro: I help international e-commerce and marketplace teams make complex search systems work — from technical SEO and product discovery to GEO, AI Search and practical automation.
+hero_intro: I help international e-commerce and marketplace teams make complex search systems work - from technical SEO and product discovery to GEO, AI Search and practical automation.
 hero_supporting: Since 2018, I’ve worked at the intersection of search and engineering, turning evidence from complex platforms into clear priorities for SEO, product and engineering teams.
-hero_image_alt: Adam Miszczak smiling in a black T-shirt in front of a colorful graffiti wall.
+hero_image_alt: Adam Miszczak, Senior SEO / GEO & AI Search Specialist, smiling in front of a colorful graffiti wall.
 ---
 
 {% include profile-hero.html %}
 
 ## Areas of focus
 
-- **Enterprise technical SEO** — crawlability, indexation, rendering and scalable site architecture.
-- **International e-commerce SEO** — marketplaces, product discovery, structured product data and Google Merchant Center.
-- **GEO and AI Search** — how AI systems access and interpret public content, and how to evaluate emerging visibility.
-- **Agentic automation** — practical workflows that support research, analysis and repeatable SEO operations.
+- **Enterprise technical SEO** - crawlability, indexation, rendering and scalable site architecture.
+- **International e-commerce SEO** - marketplaces, product discovery, structured product data and Google Merchant Center.
+- **GEO and AI Search** - how AI systems access and interpret public content, and how to evaluate emerging visibility.
+- **Agentic automation** - practical workflows that support research, analysis and repeatable SEO operations.
 
 ## Latest articles
 

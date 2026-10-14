@@ -32,8 +32,8 @@ defaults:
       path: ""
     values:
       image:
-        path: /assets/img/articles/conversational-attributes-barcelona.jpg
-        alt: "Google Search Central Live Barcelona slide about conversational product data."
+        path: /assets/img/adam-miszczak.jpg
+        alt: "Adam Miszczak, Senior SEO / GEO & AI Search Specialist | International enterprise E-commerce SEO / GEO & Agentic Automation"
   - scope:
       path: ""
       type: posts
