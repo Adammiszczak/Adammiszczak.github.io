@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "Docker support for blog"
 author: "Adam Miszczak"
-categories: [repo-description]
+categories: [history]
+section: history
+permalink: /repo-description/docker-for-blog
 technologies: [javascript, docker, jekyll, sass]
 ---
 

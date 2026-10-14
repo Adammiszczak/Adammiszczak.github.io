@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "Initial post"
 author: "Adam Miszczak"
-categories: [other]
+categories: [history]
+section: history
+permalink: /other/seo-initial-post
 ---
 
 My name is Adam Miszczak and I'm SEO Specialist for some time, but my main goal is going to work as Front-end Developer :).

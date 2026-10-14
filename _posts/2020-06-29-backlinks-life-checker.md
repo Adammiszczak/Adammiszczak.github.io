@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "Backlinks life checker"
 author: "Adam Miszczak"
-categories: [repo-description]
+categories: [history]
+section: history
+permalink: /repo-description/backlinks-life-checker
 technologies: [javascript, node.js, puppeteer.js, express.js, bootstrap]
 ---
 

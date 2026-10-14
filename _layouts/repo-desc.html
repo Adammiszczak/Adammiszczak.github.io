@@ -1,15 +1,12 @@
 ---
 layout: default
 ---
-
-<h1>{{ page.title }}</h1>
-<p> Repository Description | {{ page.date | date_to_string }} - {{ page.author }}</p>
-<p>Technologies:</p>
-<ul>  
-{% for item in page.technologies %}
-  <li> {{ item }} </li>
-{% endfor %}
-</ul>
-<a href="/" class="btn">Go back</a> 
-<hr>
-{{ content }}
+<article class="post-page">
+  <header class="page-heading">
+    <p class="eyebrow">History archive</p>
+    <h1>{{ page.title | escape }}</h1>
+    <p class="post-meta">Published {{ page.date | date: "%B %-d, %Y" }} · Adam Miszczak</p>
+    {% if page.technologies %}<p class="tag-list">{% for technology in page.technologies %}<span>{{ technology | escape }}</span>{% endfor %}</p>{% endif %}
+  </header>
+  <div class="prose">{{ content }}</div>
+</article>

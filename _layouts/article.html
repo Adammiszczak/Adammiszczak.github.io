@@ -1,0 +1,14 @@
+---
+layout: default
+---
+<article class="post-page article-page">
+  <header class="page-heading">
+    <p class="eyebrow">Article · {{ page.date | date: "%B %-d, %Y" }}</p>
+    <h1>{{ page.title | escape }}</h1>
+    {% if page.description %}<p class="lede">{{ page.description | escape }}</p>{% endif %}
+    <p class="post-meta">By <a href="{{ '/about-me/' | relative_url }}">Adam Miszczak</a></p>
+    {% if page.tags %}<p class="tag-list">{% for tag in page.tags %}<span>{{ tag | replace: "-", " " }}</span>{% endfor %}</p>{% endif %}
+    {% if page.image %}<figure class="article-hero-image"><img src="{{ page.image | relative_url }}" alt="{{ page.image_alt | default: page.title | escape }}"><figcaption>{{ page.image_caption | default: page.image_alt | default: page.title | escape }}</figcaption></figure>{% endif %}
+  </header>
+  <div class="prose">{{ content }}</div>
+</article>

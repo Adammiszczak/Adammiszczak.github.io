@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "The blog itself with Jekyll"
 author: "Adam Miszczak"
-categories: [repo-description]
+categories: [history]
+section: history
+permalink: /repo-description/blog-with-jekyll-md
 technologies: [javascript, md, jekyll, yaml, sass]
 ---
 

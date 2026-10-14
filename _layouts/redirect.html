@@ -1,15 +1,15 @@
-<html>
-	<head>
-		<meta charset="utf-8" />
-		<meta http-equiv="refresh" content="1;url={{ page.redirect }}" />
-		<link rel="canonical" href="{{ page.redirect }}" />
-
-		<script type="text/javascript">
-			window.location.href = "{{ page.redirect }}"
-		</script>
-		<title>Page Redirection</title>
-	</head>
-	<body>
-		If you are not redirected automatically, follow <a href='{{ page.redirect }}'>this link</a>.
-	</body>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <link rel="canonical" href="{{ page.redirect | absolute_url }}">
+  <meta http-equiv="refresh" content="0; url={{ page.redirect | relative_url }}">
+  <title>Page moved | {{ site.brand_name }}</title>
+  <script>window.location.replace({{ page.redirect | relative_url | jsonify }});</script>
+</head>
+<body>
+  <p>This page has moved. <a href="{{ page.redirect | relative_url }}">Continue to the new page</a>.</p>
+</body>
 </html>

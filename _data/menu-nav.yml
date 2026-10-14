@@ -1,12 +1,8 @@
-menu_title: Here is the test menu
-
-navigation:
-  - identifier: home
-    title: Home
-    url: /
-  - identifier: posts-list
-    title: Blog
-    url: /posts/
-  - identifier: about-me
-    title: About me
-    url: /about-me/
+- title: Home
+  url: /
+- title: About
+  url: /about-me/
+- title: Articles
+  url: /articles/
+- title: History
+  url: /history/

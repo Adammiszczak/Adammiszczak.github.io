@@ -1,48 +1,53 @@
-<!DOCTYPE html>
-<html lang="{{ site.lang | default: "en-US" }}">
-
+<!doctype html>
+<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
 <head>
-  <meta charset='utf-8'>
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src="https://kit.fontawesome.com/c8db903e7e.js" crossorigin="anonymous"></script>
-  <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
-
+  <meta name="color-scheme" content="light">
+  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  {% feed_meta %}
   {% seo %}
-  <link rel="stylesheet" href="/assets/css/main.css">
 </head>
-
 <body>
-
-  <header>
-    <div class="container">
-      <a class="centered-anchor" style="text-decoration: none;" href="{{ '/' | relative_url }}">
-        <img src="/assets/img/adam_miszczak_pixelart_2.png" alt="Adam Miszczak avatar" width="50">
-        <span class="header-title">{{ site.title | default: site.github.repository_name }}</span>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header">
+    <div class="site-header-inner">
+      <a class="brand" href="{{ '/' | relative_url }}">
+        <span class="brand-name">{{ site.brand_name | default: site.author.name }}</span>
+        <span class="brand-tagline">{{ site.tagline }}</span>
       </a>
-      <div class="header-subtitle">{{ site.description | default: site.github.project_tagline }}</div>
-      <section id="downloads">
-        <a href="{{ site.github.repository_url }}" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
-      </section>
-      <nav class="navbar">
-        <div class="navbar-toggle">
-          <i class="fas fa-bars" aria-hidden="true"></i>
-        </div>
-        <ul class="navbar-list">
-          {% for item in site.data.menu-nav.navigation %}
-          <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+      <nav aria-label="Main navigation">
+        <ul class="site-nav">
+          {% for item in site.data.menu-nav %}
+          <li><a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title | escape }}</a></li>
           {% endfor %}
         </ul>
       </nav>
     </div>
   </header>
 
-  <div class="container">
-    <section id="main_content">
-      {{ content }}
-    </section>
-  </div>
-  <script src="/assets/js/customScripts.js"></script>
-</body>
+  <main id="main-content" class="site-main">
+    {{ content }}
+    {% if page.date %}
+    <aside class="post-connect" aria-label="Follow and discuss this post">
+      <h2>Continue the conversation</h2>
+      <p><a href="{{ page.linkedin_url | default: 'https://www.linkedin.com/in/adam-miszczak/' }}">LinkedIn{% if page.linkedin_url %} discussion{% else %} profile{% endif %}</a>
+      <span aria-hidden="true"> · </span>
+      <a href="{{ page.substack_url | default: 'https://substack.com/@adammiszczak' }}">Substack{% if page.substack_url %} source{% else %} profile{% endif %}</a></p>
+    </aside>
+    {% endif %}
+  </main>
 
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <p><strong>Adam Miszczak</strong><br>{{ site.tagline }}</p>
+      <nav aria-label="Footer navigation">
+        <a href="{{ '/sitemap/' | relative_url }}">HTML sitemap</a>
+        <a href="https://www.linkedin.com/in/adam-miszczak/">LinkedIn</a>
+        <a href="https://substack.com/@adammiszczak">Substack</a>
+      </nav>
+      <p class="copyright">© {{ site.time | date: "%Y" }} Adam Miszczak</p>
+    </div>
+  </footer>
+</body>
 </html>

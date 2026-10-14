@@ -1,0 +1,15 @@
+<section class="profile-hero" aria-labelledby="profile-hero-title">
+  <div class="profile-copy">
+    <p class="eyebrow">{{ page.hero_eyebrow | escape }}</p>
+    <h1 id="profile-hero-title">{{ page.hero_heading | escape }}</h1>
+    <p class="profile-lede">{{ page.hero_intro | escape }}</p>
+    <p class="profile-supporting">{{ page.hero_supporting | escape }}</p>
+    <div class="profile-actions">
+      <a class="profile-button" href="{{ '/articles/' | relative_url }}">Explore articles</a>
+      <a href="https://www.linkedin.com/in/adam-miszczak/">Connect on LinkedIn</a>
+    </div>
+  </div>
+  <figure class="profile-photo">
+    <img src="{{ '/assets/img/adam-miszczak.jpg' | relative_url }}" alt="{{ page.hero_image_alt | escape }}" width="1110" height="1195" loading="eager" decoding="async">
+  </figure>
+</section>

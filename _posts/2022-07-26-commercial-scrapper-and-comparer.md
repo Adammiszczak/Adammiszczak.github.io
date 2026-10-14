@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "Commercial scrapper and records comparer"
 author: "Adam Miszczak"
-categories: [repo-description]
+categories: [history]
+section: history
+permalink: /repo-description/commercial-scrapper-and-comparer
 technologies: [javascript, typescript, node.js, nest.js, handlebars.js, mongodb, chrome api]
 ---
 

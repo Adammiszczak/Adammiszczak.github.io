@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "Github Actions SEO monitoring and automation"
 author: "Adam Miszczak"
-categories: [repo-description]
+categories: [history]
+section: history
+permalink: /repo-description/github-actions-seo-monitoring-and-automation
 technologies: [javascript, typescript, node.js, cron, github actions, mysql, slack]
 ---
 

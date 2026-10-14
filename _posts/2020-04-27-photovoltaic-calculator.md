@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "Photovoltaic Calculator"
 author: "Adam Miszczak"
-categories: [repo-description]
+categories: [history]
+section: history
+permalink: /repo-description/photovoltaic-calculator
 technologies: [javascript]
 ---
 

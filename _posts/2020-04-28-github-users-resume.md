@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "Github Users Resume"
 author: "Adam Miszczak"
-categories: [repo-description]
+categories: [history]
+section: history
+permalink: /repo-description/github-users-resume
 technologies: [javascript]
 ---
 

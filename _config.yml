@@ -1,28 +1,47 @@
-theme: jekyll-theme-hacker
-title: Adam Miszczak
+title: "Adam Miszczak | Senior SEO / GEO & AI Search Specialist"
+brand_name: Adam Miszczak
+tagline: "International enterprise E-commerce SEO / GEO / AI Search / Agentic Automation"
+lang: en
+locale: en_US
 email: adammiszczak1@gmail.com
-description: Blog about SEO, Javascript, Java and many others
-url: https://adammiszczak.github.io/
-twitter_username: AdamMiszczak
+description: "Senior SEO, GEO and AI Search specialist focused on international enterprise e-commerce, product discovery and agentic automation."
+url: https://adammiszczak.github.io
+baseurl: ""
 github_username: AdamMiszczak
 permalink: /:categories/:title
 paginate: 4
-paginate_path: posts/page:num/
-logo: /assets/img/adam_miszczak_pixelart_2.png
-image: /assets/img/adam_miszczak_pixelart_2.png
-author: Adam Miszczak
-social: 
+paginate_path: /posts/page:num/
+author:
+  name: Adam Miszczak
+  url: https://adammiszczak.github.io/about-me/
+twitter:
+  card: summary_large_image
+social:
   name: Adam Miszczak
   links:
-    - https://www.facebook.com/adam.miszczak.7/
     - https://www.linkedin.com/in/adam-miszczak/
+    - https://substack.com/@adammiszczak
     - https://github.com/Adammiszczak
+plugins:
+  - jekyll-feed
+  - jekyll-paginate
+  - jekyll-seo-tag
+  - jekyll-sitemap
 defaults:
   - scope:
       path: ""
     values:
-      image: /assets/img/adam_miszczak_pixelart_2.png
+      image:
+        path: /assets/img/articles/conversational-attributes-barcelona.jpg
+        alt: "Google Search Central Live Barcelona slide about conversational product data."
   - scope:
-      path: "testsite/*.md"
+      path: ""
+      type: posts
+    values:
+      section: history
+  - scope:
+      path: "testsite"
     values:
       sitemap: false
+exclude:
+  - testsite

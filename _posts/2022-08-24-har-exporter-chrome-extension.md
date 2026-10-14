@@ -1,8 +1,12 @@
 ---
 layout: repo-desc
-title:  "Har Exporter Chrome extension"
+title: "HAR Exporter Chrome Extension"
 author: "Adam Miszczak"
-categories: [repo-description]
+description: "A Chrome extension project for exporting browser network requests as HTTP Archive files, preserved in the history archive."
+section: history
+categories: [history]
+permalink: /article/har-exporter-chrome-extension
+tags: [technical-seo, ecommerce-seo]
 technologies: [javascript, chrome api]
 ---
 

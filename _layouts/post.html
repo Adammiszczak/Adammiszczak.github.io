@@ -1,8 +1,10 @@
 ---
 layout: default
 ---
-<h1>Here Comes the test layout</h1>
-<h1>{{ page.title }}</h1>
-<p>{{ page.date | date_to_string }} - {{ page.author }}</p>
-
-{{ content }}
+<article class="post-page">
+  <header class="page-heading">
+    <h1>{{ page.title | escape }}</h1>
+    {% if page.date %}<p class="post-meta">Published {{ page.date | date: "%B %-d, %Y" }} · Adam Miszczak</p>{% endif %}
+  </header>
+  <div class="prose">{{ content }}</div>
+</article>

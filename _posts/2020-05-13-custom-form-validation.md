@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "Custom Form Validation"
 author: "Adam Miszczak"
-categories: [repo-description]
+categories: [history]
+section: history
+permalink: /repo-description/custom-form-validation
 technologies: [javascript, regex, sass]
 ---
 

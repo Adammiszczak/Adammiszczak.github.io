@@ -2,7 +2,9 @@
 layout: repo-desc
 title:  "SEO Content Orderer"
 author: "Adam Miszczak"
-categories: [repo-description]
+categories: [history]
+section: history
+permalink: /repo-description/seo-content-orderer
 technologies: [react, javascript]
 ---
 
