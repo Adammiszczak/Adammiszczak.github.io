@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="{{ page.lang | default: site.lang }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,9 +7,9 @@
   <link rel="canonical" href="{{ page.redirect | absolute_url }}">
   <meta http-equiv="refresh" content="0; url={{ page.redirect | relative_url }}">
   <script>window.location.replace({{ page.redirect | relative_url | jsonify }});</script>
-  <title>Page moved | {{ site.brand_name }}</title>
+  <title>{% if page.lang == 'pl' %}Strona została przeniesiona{% else %}Page moved{% endif %} | {{ site.brand_name }}</title>
 </head>
 <body>
-  <p>This page has moved. <a href="{{ page.redirect | relative_url }}">Continue to the new page</a>.</p>
+  <p>{% if page.lang == 'pl' %}Ta strona została przeniesiona. <a href="{{ page.redirect | relative_url }}">Przejdź do nowej strony</a>.{% else %}This page has moved. <a href="{{ page.redirect | relative_url }}">Continue to the new page</a>.{% endif %}</p>
 </body>
 </html>

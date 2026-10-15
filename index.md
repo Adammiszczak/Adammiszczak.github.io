@@ -24,7 +24,7 @@ hero_image_alt: Adam Miszczak, Senior SEO / GEO & AI Search Specialist, smiling 
 {% assign articles = site.posts | where: "section", "articles" | where: "lang", "en" | sort: "date" | reverse %}
 {% if articles.size > 0 %}
 <ul class="article-list">
-{% for post in articles limit:3 %}
+{% for post in articles limit:5 %}
   <li>
     <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
     <span class="post-meta">{{ post.date | date: "%B %-d, %Y" }}</span>

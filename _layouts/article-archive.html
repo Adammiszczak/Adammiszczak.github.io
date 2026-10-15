@@ -1,0 +1,9 @@
+---
+layout: main-page
+---
+<h1>{{ page.archive_heading | escape }}</h1>
+<p>{{ page.archive_intro | escape }}</p>
+
+{% include article-archive-list.html %}
+
+<p>{{ page.archive_footer }}</p>

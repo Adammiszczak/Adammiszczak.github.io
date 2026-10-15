@@ -108,6 +108,10 @@ html[data-theme="dark"] .theme-toggle-icon-moon { display: none; }
 .article-card { overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: var(--surface); }
 .article-card-image img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
 .article-card-body { padding: 1.2rem; }
+.article-pagination { margin-top: 2rem; }
+.article-pagination ul { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .5rem; list-style: none; padding: 0; }
+.article-pagination a, .article-pagination span { display: grid; place-items: center; min-width: 44px; min-height: 44px; padding: 0 .8rem; border: 1px solid var(--line); border-radius: .4rem; background: var(--surface); text-decoration: none; }
+.article-pagination [aria-current="page"] { border-color: var(--accent); background: var(--accent); color: var(--paper); font-weight: 700; }
 .article-card h2 { margin: .35rem 0; font: 700 1.45rem/1.2 var(--serif); }
 .article-card h2 a { color: var(--ink); text-decoration: none; }
 .tag-list { display: flex; flex-wrap: wrap; gap: .45rem; }
