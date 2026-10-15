@@ -32,10 +32,12 @@ Keep the home and About introductions consistent by using the shared `_includes/
 2. Ground claims in observable evidence, primary documentation or clearly labeled analysis. Separate documented facts from inference, especially for AI search systems. Do not promise rankings, citations or traffic outcomes.
 3. Add new long-form posts in `_posts/` using a `YYYY-MM-DD-descriptive-slug.md` filename and `_templates/article.md` as the starting point.
 4. New expert articles need a title, date, concise description, `layout: article`, `section: articles`, `categories: [articles]`, a short list of approved broad tags, an article-specific image, descriptive `image_alt`, and the relevant `linkedin_url` and `substack_url`. Keep the post's closing social links working.
-5. Put article images in `assets/img/articles/`. Use a relevant, sufficiently clear image and accurate alt text; do not use keyword-stuffed alt text. Add captions only when they add context. Each new article should have an image.
-6. Reuse tags in `_data/taxonomy.yml`. Tags should describe durable topics, not one-off names, dates, clients, campaigns or minor variations. Avoid creating near-duplicates or an uncontrolled taxonomy.
-7. Preserve all historical posts and their existing permalinks. Do not delete or silently recategorize an old post. If a URL must change, add and verify a redirect, then update internal links and sitemap output.
-8. Do not publish confidential employer/client details, private performance data, or material that may be covered by an NDA. Anonymize examples unless the user supplies approved public information.
+5. Put article images in the assets/img/articles directory. Use a relevant, sufficiently clear image and accurate alt text; do not use keyword-stuffed alt text. Add captions only when they add context. Each new article should have an image.
+6. For new or explicitly replaced images, inspect the image and choose a concise, descriptive, lowercase, hyphen-separated filename based on its actual subject and context. Replace UUIDs, camera-generated names and generic names such as main; avoid keyword stuffing, preserve the file extension, and update every reference when renaming. Do not rename existing published assets without updating their references and checking URL impact.
+7. If alt text is missing, write concise, accurate alt text from the visible image content. Do not guess details that cannot be confirmed or stuff keywords into alt text. Set article image_alt and meaningful alt attributes on inline images; use an empty alt only for purely decorative images. Verify the text appears in generated HTML.
+8. Reuse tags in _data/taxonomy.yml. Tags should describe durable topics, not one-off names, dates, clients, campaigns or minor variations. Avoid creating near-duplicates or an uncontrolled taxonomy.
+9. Preserve all historical posts and their existing permalinks. Do not delete or silently recategorize an old post. If a URL must change, add and verify a redirect, then update internal links and sitemap output.
+10. Do not publish confidential employer/client details, private performance data, or material that may be covered by an NDA. Anonymize examples unless the user supplies approved public information.
 
 ## SEO, social cards and localization
 
