@@ -1,5 +1,6 @@
 ---
 layout: article
+translation_key: ecommerce_product_data_problem
 title: "E-commerce SEO Is Becoming a Product Data Problem"
 description: "How Merchant Center feeds, product structured data and on-page content fit together as product discovery expands into AI-powered search."
 section: articles

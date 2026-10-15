@@ -1,5 +1,6 @@
 ---
 layout: article
+translation_key: openai_chatgpt_product_feeds
 title: "OpenAI and ChatGPT Product Feeds Are Becoming SEO/GEO Infrastructure"
 date: "2026-10-14 18:30:00 +0000"
 description: "Why ChatGPT product feeds matter for enterprise e-commerce discovery, data freshness and measurement beyond advertising."

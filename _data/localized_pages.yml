@@ -14,6 +14,14 @@ google_live_deep_dive:
   en: /articles/google-search-central-live-deep-dive-seo-ai-search-questions
   pl: /pl/artykuly/google-search-central-live-barcelona-10-pytan-seo-ai-search
   x_default: /articles/google-search-central-live-deep-dive-seo-ai-search-questions
+ecommerce_product_data_problem:
+  en: /articles/ecommerce-seo-product-data-problem
+  pl: /pl/artykuly/seo-e-commerce-problem-danych-produktowych
+  x_default: /articles/ecommerce-seo-product-data-problem
+openai_chatgpt_product_feeds:
+  en: /articles/openai-chatgpt-product-feeds-seo-geo
+  pl: /pl/artykuly/openai-chatgpt-feedy-produktowe-seo-geo
+  x_default: /articles/openai-chatgpt-product-feeds-seo-geo
 sitemap:
   en: /sitemap/
   pl: /pl/mapa-strony/
