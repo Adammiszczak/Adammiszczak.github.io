@@ -26,6 +26,8 @@
 5. The article layout supplies one localized discussion call to action from `_includes/article-discussion.html`. Do not add a second copy of that call to action to the Markdown body.
 6. Build the site and run the localization checker. Inspect the generated pair, article JSON-LD, social metadata, image references, feeds, and both sitemaps before publishing.
 
+For English-to-Polish article work, use the quality stages in `AGENTS.md`: draft the complete translation first, then perform a standalone validation pass as a separate second step against the full English source. This validation checks completeness, factual and technical accuracy, idiomatic Polish, terminology, metadata, images, captions, links and synchronization before build verification.
+
 ## On-page SEO and GEO
 
 - Write original, useful pages for international e-commerce, technical SEO, product discovery, GEO and AI Search. Translate meaning and examples, not only keywords. In Polish, preserve established industry and product terms such as AI Search, AI Overviews, AI Mode, Google Merchant Center, Search Console, GEO, SEO and e-commerce; translate the surrounding explanation naturally instead of mechanically translating these terms.
