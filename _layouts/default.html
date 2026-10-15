@@ -3,7 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
+  <script>
+    (() => {
+      let theme = null;
+      try { theme = localStorage.getItem('site-theme'); } catch (error) {}
+      if (theme !== 'light' && theme !== 'dark') theme = 'light';
+      document.documentElement.dataset.theme = theme;
+    })();
+  </script>
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
   {% feed_meta %}
   {% seo %}
@@ -21,6 +29,10 @@
           {% for item in site.data.menu-nav %}
           <li><a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title | escape }}</a></li>
           {% endfor %}
+          <li><button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+            <svg class="theme-toggle-icon theme-toggle-icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
+            <svg class="theme-toggle-icon theme-toggle-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"></path></svg>
+          </button></li>
         </ul>
       </nav>
     </div>
@@ -45,9 +57,14 @@
         <a href="{{ '/sitemap/' | relative_url }}">HTML sitemap</a>
         <a href="https://www.linkedin.com/in/adam-miszczak/">LinkedIn</a>
         <a href="https://substack.com/@adammiszczak">Substack</a>
+        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
+          <svg class="theme-toggle-icon theme-toggle-icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
+          <svg class="theme-toggle-icon theme-toggle-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"></path></svg>
+        </button>
       </nav>
       <p class="copyright">© {{ site.time | date: "%Y" }} Adam Miszczak</p>
     </div>
   </footer>
+  <script src="{{ '/assets/js/theme.js' | relative_url }}" defer></script>
 </body>
 </html>

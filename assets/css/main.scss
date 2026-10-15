@@ -11,11 +11,28 @@
   --accent: #075f59;
   --accent-dark: #064943;
   --accent-soft: #e8f2ef;
+  --body-copy: #34474b;
+  --footer: #f2f3ef;
+  --focus: #d18c35;
   --serif: Georgia, "Times New Roman", serif;
   --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; color-scheme: light; }
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --ink: #e5eceb;
+  --muted: #a8b8b7;
+  --paper: #111918;
+  --surface: #192321;
+  --line: #344340;
+  --accent: #83d2c4;
+  --accent-dark: #b0e6dc;
+  --accent-soft: #243a35;
+  --body-copy: #c0cecb;
+  --footer: #151f1d;
+  --focus: #f0bd6b;
+}
 body {
   margin: 0;
   background: var(--paper);
@@ -26,7 +43,7 @@ body {
 }
 a { color: var(--accent); text-decoration-thickness: .08em; text-underline-offset: .18em; }
 a:hover { color: var(--accent-dark); }
-a:focus-visible { outline: 3px solid #d18c35; outline-offset: 3px; }
+a:focus-visible, button:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
 .skip-link {
   position: absolute; left: -9999px; top: 1rem; z-index: 10;
   background: var(--surface); padding: .7rem 1rem;
@@ -48,14 +65,26 @@ margin-inline: auto;
 .site-nav { display: flex; flex-wrap: wrap; gap: .4rem 1.4rem; list-style: none; padding: 0; margin: 0; }
 .site-nav a { color: var(--ink); font-size: .94rem; text-decoration: none; }
 .site-nav a[aria-current="page"] { color: var(--accent); font-weight: 700; }
+.theme-toggle {
+  display: inline-grid; place-items: center; flex: 0 0 auto;
+  width: 44px; height: 44px; padding: 0;
+  border: 1px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--ink); cursor: pointer;
+  touch-action: manipulation;
+}
+.theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+.theme-toggle-icon { width: 1.2rem; height: 1.2rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
+.theme-toggle-icon-sun { display: none; }
+html[data-theme="dark"] .theme-toggle-icon-sun { display: block; }
+html[data-theme="dark"] .theme-toggle-icon-moon { display: none; }
 .site-main { min-height: 65vh; padding-block: clamp(3rem, 8vw, 6.5rem); }
 .site-main h1, .page-heading h1 { max-width: 900px; margin: 0 0 1.3rem; font: 700 clamp(2.6rem, 7vw, 5.25rem)/1.07 var(--serif); letter-spacing: -.04em; }
 .site-main h2 { margin-top: 3.5rem; font: 700 clamp(1.6rem, 4vw, 2.2rem)/1.2 var(--serif); }
 .site-main h2:first-of-type { margin-top: 3rem; }
-.site-main > p:first-of-type { max-width: 820px; font-size: 1.2rem; color: #34474b; }
+.site-main > p:first-of-type { max-width: 820px; font-size: 1.2rem; color: var(--body-copy); }
 .eyebrow { margin: 0 0 .8rem; color: var(--accent); font-size: .8rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
 .page-heading { margin-bottom: 2.2rem; }
-.lede { max-width: 780px; color: #34474b; font-size: 1.2rem; }
+.lede { max-width: 780px; color: var(--body-copy); font-size: 1.2rem; }
 .post-meta, .copyright { color: var(--muted); font-size: .9rem; }
 .prose { max-width: 760px; }
 .prose img, .article-hero-image img { max-width: 100%; height: auto; }
@@ -79,11 +108,12 @@ margin-inline: auto;
 .post-connect { max-width: 760px; margin-top: 4rem; padding: 1.4rem 1.6rem; border-left: 4px solid var(--accent); background: var(--accent-soft); }
 .post-connect h2 { margin: 0; font: 700 1.3rem var(--serif); }
 .post-connect p { margin-bottom: 0; }
-.site-footer { border-top: 1px solid var(--line); background: #f2f3ef; }
+.site-footer { border-top: 1px solid var(--line); background: var(--footer); }
 .site-footer-inner { display: grid; grid-template-columns: 1fr auto; gap: 1.2rem 2rem; align-items: center; padding-block: 2rem; }
 .site-footer-inner p { margin: 0; }
 .site-footer nav { display: flex; flex-wrap: wrap; gap: .7rem 1.2rem; }
 .site-footer nav a { font-size: .92rem; }
+.site-footer nav .theme-toggle { margin-inline-start: .25rem; }
 .copyright { grid-column: 1 / -1; }
 @media (max-width: 700px) {
   body { font-size: 16px; }
@@ -109,7 +139,7 @@ margin-inline: auto;
   font: 700 clamp(2.3rem, 5vw, 4.2rem)/1.08 var(--serif);
   letter-spacing: -.04em;
 }
-.profile-lede { margin: 0 0 1rem; color: #34474b; font-size: 1.2rem; }
+.profile-lede { margin: 0 0 1rem; color: var(--body-copy); font-size: 1.2rem; }
 .profile-supporting { max-width: 650px; color: var(--muted); }
 .profile-photo { justify-self: end; width: 100%; max-width: 420px; margin: 0; }
 .profile-photo img {
