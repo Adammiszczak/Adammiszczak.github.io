@@ -1,5 +1,6 @@
 ---
 layout: article
+translation_key: google_live_deep_dive
 title: "Google Search Central Live Barcelona: 10 Enterprise SEO and AI Search Questions"
 date: 2026-10-15
 description: "Ten questions from Google Search Central Live Barcelona, checked against Google's published guidance on AI Search, product data, crawling and measurement."
@@ -133,8 +134,3 @@ Across enterprise technical SEO, international e-commerce SEO, GEO and AI Search
 For large e-commerce platforms, I would prioritize a reliable product data layer across feeds, structured data and visible pages; clear ownership of price and availability updates; and measurement tied to qualified visits and conversions. This is a practical foundation for product discovery across Google Search surfaces, without treating any feed field, schema property or preview directive as a guaranteed ranking or citation lever.
 
 I left Barcelona with sharper questions and a lot of appreciation for the Search Central community. Direct conversations help turn broad debates about AI Search into specific problems that technical SEO, product and engineering teams can test.
-
-## Continue the conversation
-
-- [Discuss the event with me on LinkedIn](https://lnkd.in/p/disgpEvQ)
-- [Read my Substack note](https://substack.com/@adammiszczak/note/c-354362248)

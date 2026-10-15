@@ -1,5 +1,6 @@
 ---
 layout: main-page
+translation_key: sitemap
 title: HTML Sitemap
 description: Browse Adam Miszczak’s articles, archive and main site pages.
 permalink: /sitemap/
@@ -18,7 +19,7 @@ permalink: /sitemap/
 
 ## Articles
 
-{% assign articles = site.posts | where: "section", "articles" | sort: "date" | reverse %}
+{% assign articles = site.posts | where: "section", "articles" | where: "lang", "en" | sort: "date" | reverse %}
 {% if articles.size > 0 %}
 <ul>
 {% for post in articles %}
@@ -31,7 +32,7 @@ permalink: /sitemap/
 
 ## History
 
-{% assign history = site.posts | where: "section", "history" | sort: "date" | reverse %}
+{% assign history = site.posts | where: "section", "history" | where: "lang", "en" | sort: "date" | reverse %}
 <ul>
 {% for post in history %}
   <li><a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a> <span class="post-meta">{{ post.date | date: "%Y-%m-%d" }}</span></li>

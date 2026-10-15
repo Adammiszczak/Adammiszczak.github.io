@@ -23,7 +23,6 @@ social:
     - https://substack.com/@adammiszczak
     - https://github.com/Adammiszczak
 plugins:
-  - jekyll-feed
   - jekyll-paginate
   - jekyll-seo-tag
   - jekyll-sitemap
@@ -31,6 +30,7 @@ defaults:
   - scope:
       path: ""
     values:
+      lang: en
       image:
         path: /assets/img/adam-miszczak.jpg
         alt: "Adam Miszczak, Senior SEO / GEO & AI Search Specialist | International enterprise E-commerce SEO / GEO & Agentic Automation"

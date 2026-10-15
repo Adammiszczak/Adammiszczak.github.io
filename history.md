@@ -9,7 +9,7 @@ permalink: /history/
 
 This archive preserves posts and projects from earlier stages of my work in SEO, software and automation. My current research and specialist articles are collected in [Articles](/articles/).
 
-{% assign history = site.posts | where: "section", "history" | sort: "date" | reverse %}
+{% assign history = site.posts | where: "section", "history" | where: "lang", "en" | sort: "date" | reverse %}
 <ul class="article-list">
 {% for post in history %}
   <li>

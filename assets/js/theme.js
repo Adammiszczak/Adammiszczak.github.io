@@ -6,8 +6,11 @@
     const isDark = theme === 'dark';
     toggles.forEach((toggle) => {
       toggle.setAttribute('aria-pressed', String(isDark));
-      toggle.setAttribute('aria-label', `Switch to ${isDark ? 'light' : 'dark'} mode`);
-      toggle.title = `Switch to ${isDark ? 'light' : 'dark'} mode`;
+      const label = toggle.dataset[isDark ? 'labelLight' : 'labelDark'];
+      if (label) {
+        toggle.setAttribute('aria-label', label);
+        toggle.title = label;
+      }
     });
   };
 

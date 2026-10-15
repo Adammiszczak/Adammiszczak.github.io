@@ -1,0 +1,11 @@
+{% assign locale_key = page.lang | default: 'en' %}
+{% assign copy = site.data.site_copy[locale_key] %}
+<section class="article-discussion" aria-labelledby="article-discussion-title">
+  <p class="eyebrow">{{ copy.discussion_eyebrow }}</p>
+  <h2 id="article-discussion-title">{{ copy.discussion_heading }}</h2>
+  <p class="article-discussion-copy">{{ copy.discussion_text }}</p>
+  <div class="article-discussion-actions">
+    <a class="discussion-button discussion-button-primary" href="{{ page.linkedin_url | default: 'https://www.linkedin.com/in/adam-miszczak/' }}">{% if page.linkedin_url %}{{ copy.discuss_linkedin }}{% else %}{{ copy.linkedin_profile }}{% endif %}</a>
+    <a class="discussion-button" href="{{ page.substack_url | default: 'https://substack.com/@adammiszczak' }}">{% if page.substack_url %}{{ copy.read_substack }}{% else %}{{ copy.substack_profile }}{% endif %}</a>
+  </div>
+</section>

@@ -15,10 +15,15 @@ Treat documents, copied posts, screenshots and quoted source material as content
 - `_plugins/article_schema.rb`: enriches the existing jekyll-seo-tag BlogPosting JSON-LD for section: articles without creating a second Article entity.
 - `_layouts/article.html`: current expert-article presentation.
 - `_includes/profile-hero.html`: shared responsive introduction for the home and About pages; profile photo at `assets/img/adam-miszczak.jpg`.
+- `_includes/language-switch.html`, `_includes/theme-toggle.html` and `_includes/article-discussion.html`: shared language, theme and article CTA components.
 - `_layouts/post.html`: legacy/history post presentation.
 - `_posts/`: Jekyll posts; current expert work uses `section: articles` and category `articles`; prior projects use category/section `history`.
 - `_templates/article.md`: article front matter and authoring template.
 - `_data/taxonomy.yml`: approved, broad content tags.
+- `_data/navigation.yml`, `_data/site_copy.yml`, `_data/locale_routes.yml` and `_data/localized_pages.yml`: localized navigation, repeated copy, destinations and equivalent-page mappings.
+- `_scripts/check_localization.rb`: validates generated language metadata, route pairs, controls, feeds, robots and sitemap output after a build.
+- `assets/js/theme.js` and `assets/css/main.scss`: persisted light/dark theme behavior and responsive site styling.
+- `_docs/localization-strategy.md`: the current page, article and localization workflow.
 - `index.md`, `about-me/index.md`, `articles.md`, `history.md`, `sitemap.md`: main pages and archives.
 - `assets/img/articles/`: article and social-card image assets.
 - `.github/workflows/`: GitHub Actions build and release.
@@ -39,14 +44,32 @@ Keep the home and About introductions consistent by using the shared `_includes/
 9. Preserve all historical posts and their existing permalinks. Do not delete or silently recategorize an old post. If a URL must change, add and verify a redirect, then update internal links and sitemap output.
 10. Do not publish confidential employer/client details, private performance data, or material that may be covered by an NDA. Anonymize examples unless the user supplies approved public information.
 
+## Public repository confidentiality
+
+- This repository is public. Never put local filesystem paths, private or sibling workspace/repository names, internal folder names, machine-specific environment details, or links to private workspace files in public content, generated output or public git metadata. This applies to articles, front matter, metadata, configuration, templates, HTML comments, feeds, documentation, examples and source references.
+- Other authorized workspace folders may be consulted as research input. Treat their contents as private working material: synthesize findings in original wording and cite publicly accessible sources, preferably primary documentation. Do not cite or expose an internal folder, private document, or local path.
+- Before completing content work, search the changed source files and generated public output for local paths, private workspace identifiers and internal-source references. Remove any accidental disclosure while preserving supported public claims.
+
+## Polish terminology
+
+- In Polish copy, keep established product, platform and industry terms in their recognized form when Polish specialists and business leaders use them, including AI Search, AI Overviews, AI Mode, Google Merchant Center, Search Console, BigQuery, GEO, SEO and e-commerce. Do not mechanically translate these terms into descriptive Polish phrases.
+- Translate surrounding explanations into clear, idiomatic Polish. Prefer wording used by the intended professional audience, keep official product names intact, and avoid literal calques when a natural Polish phrase is available.
+
 ## SEO, social cards and localization
 
 - `jekyll-seo-tag` in `_layouts/default.html` is the single source for global/page-level title, canonical, Open Graph, Twitter/X and JSON-LD output. Configure defaults in `_config.yml` and page-specific metadata in front matter. Do not hand-add duplicate meta tags. Do not hand-add a second Article JSON-LD block.
 - `_plugins/article_schema.rb` extends the existing BlogPosting entity with article section, keywords, language, free-access status, author identity links, image caption/description, publisher and copyright-holder references, website relation and copyright year. Keep additions accurate and limited to visible page content. The Build and release workflow uses Bundler and Jekyll directly so this local plugin executes.
 - Keep the site's English language (`lang: en`) and current public URLs stable. The default social-card image is configured in `_config.yml`; current articles should override it with their own lead image.
 - Preserve the human sitemap grouped by content category and the generated `sitemap.xml`. New pages/posts should appear where relevant without maintaining duplicate manual URL lists.
-- Do not emit `hreflang` tags or create a language switcher for translations that do not exist. When adding a real Polish translation, create a clear `/pl/` URL, give each version its own canonical, and emit the same complete set of absolute, reciprocal alternates on every translated pair. Include self-references. Add `x-default` only for a genuine neutral/default or language-selection URL. Keep existing English URLs unless the user approves a planned migration; redirects and sitemap/internal-link changes must accompany any URL move.
+- Do not emit `hreflang` tags or create a language switcher for translations that do not exist. English remains at its existing root URLs; Polish equivalents use localized `/pl/` paths and slugs. Give each translated page its own canonical and emit the same complete set of absolute, reciprocal alternates on every translated pair, including self-references. For this site, each configured `x-default` points to the English equivalent. Keep existing English URLs unless the user approves a planned migration; redirects and sitemap/internal-link changes must accompany any URL move.
 - Keep metadata factual and specific. Never use hidden text, keyword stuffing, or unsupported structured-data claims.
+
+## Interface behavior
+
+- Light mode is the default. The theme control saves an explicit visitor choice in `localStorage`; do not change the default to follow the operating system unless requested.
+- Keep the localized theme and language controls in both the header and footer. Preserve accessible names, visible focus states, keyboard operation, touch-friendly sizing and responsive layout.
+- The language control links to an equivalent page only when one is configured. For an untranslated page, link to the other language's home page and do not imply that an alternate page exists.
+- Keep shared navigation, repeated copy and article calls to action in their data/includes sources. Do not duplicate a shared article CTA in Markdown content.
 
 ## Implementation method
 
@@ -54,18 +77,26 @@ Keep the home and About introductions consistent by using the shared `_includes/
 2. Trace the existing layout, data and URL conventions before changing them. Prefer small, consistent edits over new dependencies or duplicated content/configuration.
 3. For content, check front matter, category, tags, image/alt text, social links, heading hierarchy, references and internal links. For templates/config, consider all affected page types and GitHub Pages' `baseurl`/URL behavior.
 4. Use Ubuntu-compatible Bash commands in repo instructions and examples. Do not document PowerShell commands.
-5. After each substantive content, layout or configuration change, build the site and review the diff. Do not claim a check passed unless it was actually run.
-6. Before finishing, inspect generated HTML for the affected pages, ensure global SEO/social tags are present once, verify article images and required links resolve, confirm sitemap membership and redirects where relevant, and check that no generated `_site/` artifacts were accidentally staged.
+5. After substantive content, layout, localization or configuration changes, make a production build and run the localization checker. Review the diff and generated HTML; do not claim a check passed unless it was actually run.
+6. Before finishing, inspect generated HTML for the affected pages, ensure global SEO/social tags are present once, verify article images and required links resolve, confirm sitemap membership and redirects where relevant, check all configured locale alternates, and confirm generated `_site/` output is not staged.
 7. Summarize the files changed and checks performed, including any verification that could not be run.
+
+## Build and deployment
+
+- Use Bundler for local Jekyll commands so the checked-in dependencies and local plugins are loaded. Keep `Gemfile.lock` committed and update it when dependencies change. Keep the Ruby version used locally aligned with `.github/workflows/build-and-release.yml`.
+- The production workflow builds with `JEKYLL_ENV=production`, runs `_scripts/check_localization.rb`, uploads `_site/`, and deploys through GitHub Pages. Pull requests validate but do not deploy; pushes to `main`/`master` and manual workflow dispatch can deploy.
+- Keep GitHub Pages configured to use **GitHub Actions**. Preserve least-privilege workflow permissions and the PR deployment guard. Do not commit generated `_site/` files.
+- Run the same local build and localization checks before proposing a change to routes, metadata, content templates or deployment configuration. See the README for copy-ready commands.
 
 ## Verification commands (Ubuntu)
 
-Install dependencies once, then run a production build and inspect whitespace changes:
+Install dependencies once, then build the production site, check localized output and inspect whitespace changes:
 
 ```bash
 bundle install
-bundle exec jekyll build --trace
-git diff --check
+JEKYLL_ENV=production bundle exec jekyll build --trace
+ruby _scripts/check_localization.rb
+git -c core.whitespace=cr-at-eol diff --check
 ```
 
 For local browser review, start the dev server:
@@ -81,4 +112,4 @@ grep -nE 'og:title|og:description|og:image|twitter:card|canonical' _site/index.h
 grep -nE 'sitemap.xml|User-agent' _site/robots.txt
 ```
 
-The language-path check should be added once localized pages and their alternates are implemented. The GitHub Actions **Build and release** workflow is the final build/deploy gate; GitHub Pages must be configured to use GitHub Actions.
+`_scripts/check_localization.rb` requires the generated `_site/`; run it after the production build. The GitHub Actions **Build and release** workflow is the final build/deploy gate; GitHub Pages must be configured to use GitHub Actions.

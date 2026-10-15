@@ -1,5 +1,10 @@
 <!doctype html>
-<html lang="{{ page.lang | default: site.lang | default: 'en' }}">
+{% assign locale_key = page.lang | default: 'en' %}
+{% assign copy = site.data.site_copy[locale_key] %}
+{% assign navigation = site.data.navigation[locale_key] %}
+{% assign translation_group = site.data.localized_pages[page.translation_key] %}
+{% assign routes = site.data.locale_routes[locale_key] %}
+<html lang="{{ locale_key }}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -13,55 +18,59 @@
     })();
   </script>
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
-  {% feed_meta %}
+  {% if translation_group %}
+    {% for alternate in translation_group %}
+      {% unless alternate[0] == 'x_default' %}
+  <link rel="alternate" hreflang="{{ alternate[0] }}" href="{{ alternate[1] | absolute_url }}">
+      {% endunless %}
+    {% endfor %}
+    {% if translation_group.x_default %}
+  <link rel="alternate" hreflang="x-default" href="{{ translation_group.x_default | absolute_url }}">
+    {% endif %}
+  {% endif %}
+  <link rel="alternate" type="application/atom+xml" title="{{ site.brand_name }} — {{ copy.feed_name }}" href="{{ routes.feed | absolute_url }}">
   {% seo %}
 </head>
 <body>
-  <a class="skip-link" href="#main-content">Skip to content</a>
+  <a class="skip-link" href="#main-content">{{ copy.skip_to_content }}</a>
   <header class="site-header">
     <div class="site-header-inner">
-      <a class="brand" href="{{ '/' | relative_url }}">
+      <a class="brand" href="{{ navigation.items[0].url | relative_url }}">
         <span class="brand-name">{{ site.brand_name | default: site.author.name }}</span>
-        <span class="brand-tagline">{{ site.tagline }}</span>
+        <span class="brand-tagline">{{ copy.tagline }}</span>
       </a>
-      <nav aria-label="Main navigation">
-        <ul class="site-nav">
-          {% for item in site.data.menu-nav %}
-          <li><a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title | escape }}</a></li>
-          {% endfor %}
-          <li><button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
-            <svg class="theme-toggle-icon theme-toggle-icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
-            <svg class="theme-toggle-icon theme-toggle-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"></path></svg>
-          </button></li>
-        </ul>
-      </nav>
+      <div class="site-header-tools">
+        <nav aria-label="{{ navigation.aria_label }}">
+          <ul class="site-nav">
+            {% for item in navigation.items %}
+            <li><a href="{{ item.url | relative_url }}"{% if page.url == item.url %} aria-current="page"{% endif %}>{{ item.title | escape }}</a></li>
+            {% endfor %}
+          </ul>
+        </nav>
+        <div class="site-header-utility">
+          {% include language-switch.html %}
+          {% include theme-toggle.html %}
+        </div>
+      </div>
     </div>
   </header>
 
   <main id="main-content" class="site-main">
     {{ content }}
-    {% if page.date %}
-    <aside class="post-connect" aria-label="Follow and discuss this post">
-      <h2>Continue the conversation</h2>
-      <p><a href="{{ page.linkedin_url | default: 'https://www.linkedin.com/in/adam-miszczak/' }}">LinkedIn{% if page.linkedin_url %} discussion{% else %} profile{% endif %}</a>
-      <span aria-hidden="true"> · </span>
-      <a href="{{ page.substack_url | default: 'https://substack.com/@adammiszczak' }}">Substack{% if page.substack_url %} source{% else %} profile{% endif %}</a></p>
-    </aside>
-    {% endif %}
   </main>
 
   <footer class="site-footer">
     <div class="site-footer-inner">
-      <p><strong>Adam Miszczak</strong><br>{{ site.tagline }}</p>
-      <nav aria-label="Footer navigation">
-        <a href="{{ '/sitemap/' | relative_url }}">HTML sitemap</a>
+      <p><strong>Adam Miszczak</strong><br>{{ copy.tagline }}</p>
+      <nav aria-label="{{ copy.footer_navigation }}">
+        <a href="{{ routes.sitemap | relative_url }}">{{ copy.sitemap }}</a>
         <a href="https://www.linkedin.com/in/adam-miszczak/">LinkedIn</a>
         <a href="https://substack.com/@adammiszczak">Substack</a>
-        <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode" aria-pressed="false">
-          <svg class="theme-toggle-icon theme-toggle-icon-sun" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"></path></svg>
-          <svg class="theme-toggle-icon theme-toggle-icon-moon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20.2 15.1A8.5 8.5 0 0 1 8.9 3.8 8.5 8.5 0 1 0 20.2 15.1Z"></path></svg>
-        </button>
       </nav>
+      <div class="site-footer-utility">
+        {% include language-switch.html %}
+        {% include theme-toggle.html %}
+      </div>
       <p class="copyright">© {{ site.time | date: "%Y" }} Adam Miszczak</p>
     </div>
   </footer>

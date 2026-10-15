@@ -1,0 +1,96 @@
+en:
+  tagline: International enterprise E-commerce SEO / GEO / AI Search / Agentic Automation
+  feed_name: English articles and posts
+  switch_to_dark: Switch to dark mode
+  switch_to_light: Switch to light mode
+  skip_to_content: Skip to content
+  language_label: Language
+  english_home_fallback: English home; this page is not translated yet
+  polish_home_fallback: Polish home; this page is not translated yet
+  sitemap: HTML sitemap
+  discussion_eyebrow: Your perspective matters
+  discussion_heading: What are you seeing in practice?
+  discussion_text: Which of these changes is already affecting your team? Share your experience on LinkedIn or continue with my notes on Substack.
+  discuss_linkedin: Add your perspective on LinkedIn
+  read_substack: Read the follow-up on Substack
+  linkedin_profile: Connect on LinkedIn
+  substack_profile: Follow on Substack
+  article_label: Article
+  by: By
+  explore_articles: Explore articles
+  connect_linkedin: Connect on LinkedIn
+  read_article: Read the article
+  browse_articles: Browse all articles
+  history_archive: History archive
+  read_background: Read my background
+  article_index_title: Articles and research
+  article_index_intro: Practical analysis of international e-commerce SEO, product discovery, GEO, AI Search and agentic automation. New articles include a lead image and links to their LinkedIn and Substack discussions.
+  no_articles: Research and practical articles on enterprise SEO, GEO and AI Search will appear here. For earlier projects and writing, visit the history archive.
+  short_updates: For shorter updates, follow me on
+  latest_articles: Latest articles
+  about_work: About my work
+  history_intro: This archive preserves posts and projects from earlier stages of my work in SEO, software and automation. My current research and specialist articles are collected in Articles.
+  sitemap_title: HTML Sitemap
+  main_pages: Main pages
+  articles_heading: Articles
+  history_heading: History
+  no_articles_published: No articles published yet.
+  sitemap_description: Browse Adam Miszczak’s articles, archive and main site pages.
+  author_name: Adam Miszczak
+  footer_navigation: Footer navigation
+  tags:
+    technical-seo: Technical SEO
+    ecommerce-seo: E-commerce SEO
+    international-seo: International SEO
+    google-merchant-center: Google Merchant Center
+    geo: GEO
+    ai-search: AI Search
+    agentic-automation: Agentic automation
+pl:
+  tagline: Międzynarodowe SEO e-commerce / GEO / AI Search / automatyzacja z agentami AI
+  feed_name: Artykuły i wpisy po polsku
+  switch_to_dark: Włącz tryb ciemny
+  switch_to_light: Włącz tryb jasny
+  skip_to_content: Przejdź do treści
+  language_label: Język
+  english_home_fallback: Strona główna po angielsku; tej strony jeszcze nie przetłumaczono
+  polish_home_fallback: Polska strona główna; tej strony nie ma jeszcze w polskiej wersji
+  sitemap: Mapa HTML
+  discussion_eyebrow: Wymieńmy się doświadczeniami
+  discussion_heading: Jak to wygląda w Twojej praktyce?
+  discussion_text: Która z tych zmian już wpływa na pracę Twojego zespołu? Podziel się doświadczeniem na LinkedIn lub przeczytaj moje dalsze notatki na Substacku.
+  discuss_linkedin: Dołącz do dyskusji na LinkedIn
+  read_substack: Przeczytaj dalsze notatki na Substacku
+  linkedin_profile: Połącz się ze mną na LinkedIn
+  substack_profile: Obserwuj mnie na Substacku
+  article_label: Artykuł
+  by: "Autor:"
+  explore_articles: Zobacz artykuły
+  connect_linkedin: Skontaktuj się na LinkedIn
+  read_article: Przeczytaj artykuł
+  browse_articles: Zobacz wszystkie artykuły
+  history_archive: Archiwum wcześniejszych projektów
+  read_background: Poznaj moje doświadczenie
+  article_index_title: Artykuły i analizy
+  article_index_intro: Praktyczne analizy dotyczące SEO w międzynarodowym e-commerce, odkrywania produktów, GEO, AI Search oraz automatyzacji procesów z agentami AI. Każdy artykuł zawiera ilustrację główną i linki do dyskusji na LinkedIn oraz Substacku.
+  no_articles: W tym miejscu będą publikowane analizy dotyczące SEO dla dużych serwisów, GEO i AI Search. Wcześniejsze projekty i teksty znajdziesz w archiwum dostępnym po angielsku.
+  short_updates: Krótsze aktualizacje publikuję na
+  latest_articles: Najnowsze artykuły
+  about_work: O mojej pracy
+  history_intro: To archiwum zawiera wcześniejsze teksty i projekty związane z SEO, oprogramowaniem i automatyzacją. Bieżące analizy znajdziesz w polskiej sekcji artykułów.
+  sitemap_title: Mapa HTML
+  main_pages: Główne strony
+  articles_heading: Artykuły
+  history_heading: Archiwum
+  no_articles_published: Nie opublikowano jeszcze artykułów.
+  sitemap_description: Przegląd polskich stron i artykułów Adama Miszczaka.
+  author_name: Adam Miszczak
+  footer_navigation: Nawigacja w stopce
+  tags:
+    technical-seo: SEO techniczne
+    ecommerce-seo: SEO e-commerce
+    international-seo: SEO międzynarodowe
+    google-merchant-center: Google Merchant Center
+    geo: GEO
+    ai-search: AI Search
+    agentic-automation: Automatyzacja z agentami AI

@@ -1,58 +1,68 @@
-# Adam Miszczak - Enterprise SEO, GEO & AI Search
+# Adam Miszczak — Enterprise SEO, GEO & AI Search
 
-This repository is the Jekyll-based technical blog and research lab for Adam Miszczak, a **Senior SEO / GEO & AI Search Specialist focused on international enterprise e-commerce, product discovery and agentic automation**. It supports the personal brand through useful technical research; it is not the primary consulting sales site.
+This repository contains Adam Miszczak's Jekyll technical blog and research lab. It supports his professional profile with practical analysis for international e-commerce, product, SEO and engineering teams. It is not the primary consulting sales site.
 
-## Site structure and content model
+## Site structure
 
-- `/` introduces Adam's expertise and highlights recent articles.
-- `/about-me/` covers background and professional focus.
-- `/articles/` lists current expert articles. New articles use the `articles` category and `section: articles`.
-- `/history/` preserves earlier programming and technical posts. Legacy posts remain in the `history` category; keep their published URLs stable.
-- `/sitemap/` is the human-readable HTML sitemap, organized by content category. `jekyll-sitemap` generates `/sitemap.xml`, and `robots.txt` points crawlers to it.
-- `_templates/article.md` is the starting point for new articles. Article images live in `assets/img/articles/`.
-- `_includes/profile-hero.html` is the shared responsive introduction for the home and About pages. Its portrait is `assets/img/adam-miszczak.jpg`.
-- `_data/taxonomy.yml` is the controlled list of broad tags. Reuse a tag where possible; add one only for a durable topic such as `geo`, `google-merchant-center`, `international-seo`, or `technical-seo`.
+- `/` is the English home page; `/about-me/`, `/articles/` and `/history/` remain at their established English URLs. English pages do not use an `/en/` prefix.
+- Polish content lives under `/pl/`, with localized paths such as `/pl/o-mnie/` and `/pl/artykuly/`. Preserve published URLs when editing or translating pages.
+- `/articles/` contains current expert articles. New English articles use `section: articles` and `categories: [articles]`.
+- `/history/` preserves earlier projects and posts. Keep their published URLs and history classification stable.
+- `/sitemap/` and `/pl/mapa-strony/` are the human-readable sitemaps. Jekyll generates `/sitemap.xml`; `robots.txt` allows all crawlers and points to it.
+- `/feed.xml` and `/pl/feed.xml` contain English and Polish posts respectively.
 
-Each new article should include a useful description, a relevant lead image with accurate alt text, a small set of broad tags, and its related LinkedIn and Substack links. Use the article's own image instead of the site-wide social-card fallback. Keep LinkedIn and Substack links available on every article page.
+## Language and theme controls
 
-## Social and search metadata
+The language switch appears in the header and footer. It links to the equivalent page when a translation exists; otherwise, it links to the other language's home page. Navigation, repeated site copy and article calls to action are localized through the files in `_data/` and `_includes/`.
 
-The default layout calls `jekyll-seo-tag` site-wide. It produces page-level titles, descriptions, canonical URLs, Open Graph properties, Twitter/X card properties and structured data from site configuration and page front matter. Keep this as the single metadata source; avoid adding duplicate hand-written `og:*` or `twitter:*` tags.
+The theme control also appears in the header and footer. Light mode is the default. A visitor's explicit choice is saved in that browser's `localStorage`; the site does not infer a theme from the operating system. Keep both controls keyboard accessible, clearly labeled in each language, and usable on narrow screens.
 
-The global social-card image and its alt text are set in `_config.yml` as front matter defaults. A page or article can override them with its own `image` value. The default currently uses the first article's Barcelona event image; replace it with a dedicated brand card when one is available.
+Translated pages have a language-specific HTML `lang`, self-referencing canonical, and matching reciprocal `hreflang` entries. Each configured `x-default` points to the English equivalent. Do not add alternates for a translation that does not exist.
 
-## Language and future localization
+## Authoring content
 
-English is the site's primary language and remains at the existing URLs. `lang: en` describes the page language; it does not limit search visibility to English-speaking countries. An English result may appear for a Polish-language search when it is relevant, but an English-only site cannot reliably target Polish-language queries.
+Use `_templates/article.md` for a new English expert article. Include a clear title, date, useful description, approved tags from `_data/taxonomy.yml`, an article-specific image with accurate alt text, and the relevant LinkedIn and Substack destinations. Ground factual claims in public sources, preferably primary documentation, and label analysis or inference clearly.
 
-If Polish content becomes a priority, publish complete, useful Polish translations under `/pl/` and pair each translated page with its English equivalent. Add a language switcher and reciprocal, self-referencing `hreflang` links for every pair (`en` and `pl`), with an `x-default` only when there is a genuine language-selection or default page. Give each translation its own canonical URL. Do not add `hreflang` before the corresponding translated pages exist. Keeping current English URLs avoids an unnecessary migration; if the whole site later moves to `/en/`, map every old URL with a permanent redirect and update internal links, canonicals and sitemaps.
+Create a Polish article as a separate post with a natural Polish title and translated slug under `/pl/artykuly/`. Give both versions the same stable `translation_key`, then add their paths and the English `x_default` to `_data/localized_pages.yml`. Keep Polish navigation and shared copy in `_data/navigation.yml` and `_data/site_copy.yml`; locale-specific destinations belong in `_data/locale_routes.yml`. Use established Polish professional terms naturally, retaining product and industry names such as AI Search, GEO, SEO, e-commerce and Google Merchant Center where appropriate.
 
-## Local preview (Ubuntu)
+Do not add a second discussion call to action to an article's Markdown body: `_layouts/article.html` includes the localized block. Preserve existing post URLs and add redirects if an approved URL change requires one.
 
-With Ruby and Bundler installed, run the Jekyll development server from the repository root:
+This is a public repository. Do not put local paths, private workspace names or links to private research files in public content, metadata, documentation or generated pages. Research from other authorized workspaces may inform an article, but cite public sources and write the analysis in original wording.
+
+See [AGENTS.md](AGENTS.md) for the full content, privacy and implementation rules, and [`_docs/localization-strategy.md`](_docs/localization-strategy.md) for the page and article localization workflow.
+
+## Local development
+
+Install the Ruby version configured in `.github/workflows/build-and-release.yml`, then install the locked dependencies once:
 
 ```bash
 bundle install
+```
+
+Start the local server from the repository root:
+
+```bash
 bundle exec jekyll serve --host 127.0.0.1 --livereload
 ```
 
-Open <http://127.0.0.1:4000/>. Jekyll rebuilds the site as files change; `--livereload` refreshes the browser after a rebuild. Stop the server with `Ctrl+C`.
+Open <http://127.0.0.1:4000/>. Jekyll rebuilds the site as files change; LiveReload refreshes the browser. Stop the server with `Ctrl+C`.
 
-The existing Docker Compose setup is another option:
+## Build and verify
 
-```bash
-docker compose up
-```
-
-It runs Jekyll's watcher and serves the generated site through Nginx at <http://localhost/>. Stop the containers with `Ctrl+C`, or run `docker compose down` in another terminal.
-
-## Build and release
-
-The **Build and release** GitHub Actions workflow builds pull requests and deploys pushes to `main` or `master`. In repository settings, set GitHub Pages' build and deployment source to **GitHub Actions**. Local build and change checks:
+Create a production build and check localized routes after the build has populated `_site/`:
 
 ```bash
-bundle exec jekyll build
-git diff --check
+JEKYLL_ENV=production bundle exec jekyll build --trace
+ruby _scripts/check_localization.rb
+git -c core.whitespace=cr-at-eol diff --check
 ```
 
-The build writes the deployable site to `_site/`. Do not commit generated output unless the deployment configuration is deliberately changed.
+The localization checker validates generated language attributes, canonical URLs, reciprocal alternates, local links on configured translated pages, language and theme controls, feeds, crawler access and sitemap membership. If a translation pair or locale route changes, update the owning data files and rerun the build and checker. Inspect the generated HTML for the affected page, including its metadata, article image and structured data.
+
+`_site/` is generated output and is ignored by Git. Do not commit it.
+
+## GitHub Pages deployment
+
+The **Build and release** workflow is the deployment path. It runs a production Jekyll build and the localization checker for pull requests and pushes to `main` or `master`. Pull requests are validated but not deployed. A successful push to either deployment branch, or a manual `workflow_dispatch`, uploads the built `_site/` artifact and deploys it to GitHub Pages.
+
+In the repository's **Settings → Pages**, set the build and deployment source to **GitHub Actions**. No separate `gh-pages` branch or committed `_site/` directory is needed. The workflow uses Bundler and the local Jekyll plugins; keep its Ruby version aligned with the version used for local builds and its deployment permissions limited to the Pages job.

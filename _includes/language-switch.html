@@ -1,0 +1,13 @@
+{% assign locale_key = page.lang | default: 'en' %}
+{% assign language_copy = site.data.site_copy[locale_key] %}
+{% assign translation_group = site.data.localized_pages[page.translation_key] %}
+{% assign english_target = translation_group.en | default: '/' %}
+{% assign polish_target = translation_group.pl | default: '/pl/' %}
+<nav class="language-switch" aria-label="{{ language_copy.language_label }}">
+  <a href="{{ english_target | relative_url }}" lang="en" aria-label="{% if translation_group %}English{% else %}{{ language_copy.english_home_fallback }}{% endif %}"{% if locale_key == 'en' %} aria-current="page"{% endif %}>EN</a>
+  {% if translation_group %}
+  <a href="{{ polish_target | relative_url }}" lang="pl" aria-label="Polski"{% if locale_key == 'pl' %} aria-current="page"{% endif %}>PL</a>
+  {% else %}
+  <a href="{{ polish_target | relative_url }}" lang="pl" aria-label="{{ language_copy.polish_home_fallback }}">PL</a>
+  {% endif %}
+</nav>

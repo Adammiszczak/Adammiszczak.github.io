@@ -17,7 +17,7 @@ module Jekyll
       site = page_drop.send(:site)
       canonical_url = page_drop.canonical_url
       data["@id"] = "#{canonical_url}#article" if canonical_url
-      data["articleSection"] = "Articles"
+      data["articleSection"] = page["lang"] == "pl" ? "Artykuły" : "Articles"
       data["inLanguage"] = page["lang"] || site["lang"] || "en"
       data["isAccessibleForFree"] = true
       website_url = site["url"]
@@ -26,7 +26,7 @@ module Jekyll
         data["isPartOf"] = { "@type" => "WebSite", "@id" => "#{website_url}/#website", "name" => site["title"], "url" => website_url }
       end
 
-      tags = Array(page["tags"]).compact.map(&:to_s).reject(&:empty?)
+      tags = Array(page["localized_keywords"] || page["tags"]).compact.map(&:to_s).reject(&:empty?)
       data["keywords"] = tags unless tags.empty?
 
       author = data["author"]

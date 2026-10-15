@@ -1,5 +1,6 @@
 ---
 layout: main-page
+translation_key: articles_archive
 title: Articles
 description: Articles and research by Adam Miszczak on enterprise e-commerce SEO, GEO, AI Search and automation.
 permalink: /articles/
@@ -9,7 +10,7 @@ permalink: /articles/
 
 Practical analysis of international e-commerce SEO, product discovery, GEO, AI Search and agentic automation. New articles include a lead image and links to their LinkedIn and Substack discussions.
 
-{% assign articles = site.posts | where: "section", "articles" | sort: "date" | reverse %}
+{% assign articles = site.posts | where: "section", "articles" | where: "lang", "en" | sort: "date" | reverse %}
 {% if articles.size > 0 %}
 <div class="article-grid">
 {% for post in articles %}

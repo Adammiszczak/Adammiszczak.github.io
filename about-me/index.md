@@ -1,5 +1,6 @@
 ---
 layout: main-page
+translation_key: about
 title: About Adam Miszczak
 description: About Adam Miszczak, Senior SEO / GEO & AI Search Specialist for international enterprise e-commerce.
 permalink: /about-me/

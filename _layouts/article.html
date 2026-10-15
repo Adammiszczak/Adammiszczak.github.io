@@ -2,13 +2,17 @@
 layout: default
 ---
 <article class="post-page article-page">
+  {% assign locale_key = page.lang | default: 'en' %}
+  {% assign copy = site.data.site_copy[locale_key] %}
+  {% assign routes = site.data.locale_routes[locale_key] %}
   <header class="page-heading">
-    <p class="eyebrow">Article · {{ page.date | date: "%B %-d, %Y" }}</p>
+    <p class="eyebrow">{% if locale_key == 'pl' %}{{ copy.article_label }} · {{ page.date | date: "%d.%m.%Y" }}{% else %}{{ copy.article_label }} · {{ page.date | date: "%B %-d, %Y" }}{% endif %}</p>
     <h1>{{ page.title | escape }}</h1>
     {% if page.description %}<p class="lede">{{ page.description | escape }}</p>{% endif %}
-    <p class="post-meta">By <a href="{{ '/about-me/' | relative_url }}">Adam Miszczak</a></p>
-    {% if page.tags %}<p class="tag-list">{% for tag in page.tags %}<span>{{ tag | replace: "-", " " }}</span>{% endfor %}</p>{% endif %}
-    {% if page.image %}<figure class="article-hero-image"><img src="{{ page.image | relative_url }}" alt="{{ page.image_alt | default: page.title | escape }}"><figcaption>{{ page.image_caption | default: page.image_alt | default: page.title | escape }}</figcaption></figure>{% endif %}
+    <p class="post-meta">{{ copy.by }} <a href="{{ routes.about | relative_url }}">Adam Miszczak</a></p>
+    {% if page.tags %}<p class="tag-list">{% for tag in page.tags %}{% assign localized_tag = copy.tags[tag] | default: tag | replace: "-", " " %}<span>{{ localized_tag }}</span>{% endfor %}</p>{% endif %}
+    {% if page.image %}{% assign image_path = page.image.path | default: page.image %}{% assign image_alt = page.image.alt | default: page.image_alt | default: page.title %}<figure class="article-hero-image"><img src="{{ image_path | relative_url }}" alt="{{ image_alt | escape }}"><figcaption>{{ page.image_caption | default: image_alt | default: page.title | escape }}</figcaption></figure>{% endif %}
   </header>
   <div class="prose">{{ content }}</div>
+  {% include article-discussion.html %}
 </article>

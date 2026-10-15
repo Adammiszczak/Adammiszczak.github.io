@@ -1,0 +1,13 @@
+en:
+  home: /
+  about: /about-me/
+  articles: /articles/
+  history: /history/
+  sitemap: /sitemap/
+  feed: /feed.xml
+pl:
+  home: /pl/
+  about: /pl/o-mnie/
+  articles: /pl/artykuly/
+  sitemap: /pl/mapa-strony/
+  feed: /pl/feed.xml

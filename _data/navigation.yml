@@ -1,0 +1,20 @@
+en:
+  aria_label: Main navigation
+  items:
+    - title: Home
+      url: /
+    - title: About
+      url: /about-me/
+    - title: Articles
+      url: /articles/
+    - title: History
+      url: /history/
+pl:
+  aria_label: Menu główne
+  items:
+    - title: Strona główna
+      url: /pl/
+    - title: O mnie
+      url: /pl/o-mnie/
+    - title: Artykuły
+      url: /pl/artykuly/

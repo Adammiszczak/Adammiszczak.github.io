@@ -1,5 +1,6 @@
 ---
 layout: main-page
+translation_key: home
 title: International Enterprise E-commerce SEO, GEO & AI Search
 description: Senior SEO, GEO and AI Search specialist working across international enterprise e-commerce, product discovery and agentic automation.
 hero_eyebrow: Adam Miszczak · SEO, GEO & AI Search
@@ -20,7 +21,7 @@ hero_image_alt: Adam Miszczak, Senior SEO / GEO & AI Search Specialist, smiling 
 
 ## Latest articles
 
-{% assign articles = site.posts | where: "section", "articles" | sort: "date" | reverse %}
+{% assign articles = site.posts | where: "section", "articles" | where: "lang", "en" | sort: "date" | reverse %}
 {% if articles.size > 0 %}
 <ul class="article-list">
 {% for post in articles limit:3 %}
