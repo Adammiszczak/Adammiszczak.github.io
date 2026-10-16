@@ -1,4 +1,5 @@
 User-agent: *
 Allow: /
+Disallow: /pagefind/
 
 Sitemap: https://adammiszczak.github.io/sitemap.xml

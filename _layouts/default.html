@@ -18,6 +18,7 @@
     })();
   </script>
   <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
+  <link rel="stylesheet" href="{{ '/pagefind/pagefind-component-ui.css' | relative_url }}">
   {% if translation_group %}
     {% for alternate in translation_group %}
       {% unless alternate[0] == 'x_default' %}
@@ -48,6 +49,7 @@
           </ul>
         </nav>
         <div class="site-header-utility">
+          <pagefind-modal-trigger placeholder="{{ copy.search }}" shortcut="mod+k"></pagefind-modal-trigger>
           {% include language-switch.html %}
           {% include theme-toggle.html %}
         </div>
@@ -55,7 +57,7 @@
     </div>
   </header>
 
-  <main id="main-content" class="site-main">
+  <main id="main-content" class="site-main" data-pagefind-body>
     {{ content }}
   </main>
 
@@ -78,6 +80,9 @@
     <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 19V5m-7 7 7-7 7 7"></path></svg>
     <span>{{ copy.back_to_top }}</span>
   </button>
+  <pagefind-config bundle-path="{{ '/pagefind/' | relative_url }}" base-url="{{ '/' | relative_url }}"></pagefind-config>
+  <pagefind-modal reset-on-close></pagefind-modal>
+  <script src="{{ '/pagefind/pagefind-component-ui.js' | relative_url }}" type="module"></script>
   <script src="{{ '/assets/js/theme.js' | relative_url }}?v=20261016" defer></script>
 </body>
 </html>

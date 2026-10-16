@@ -5,6 +5,7 @@ en:
   switch_to_light: Switch to light mode
   skip_to_content: Skip to content
   back_to_top: Back to top
+  search: Search
   language_label: Language
   english_home_fallback: English home; this page is not translated yet
   polish_home_fallback: Polish home; this page is not translated yet
@@ -54,6 +55,7 @@ pl:
   switch_to_light: Włącz tryb jasny
   skip_to_content: Przejdź do treści
   back_to_top: Wróć na górę
+  search: Szukaj
   language_label: Język
   english_home_fallback: Strona główna po angielsku; tej strony jeszcze nie przetłumaczono
   polish_home_fallback: Polska strona główna; tej strony nie ma jeszcze w polskiej wersji

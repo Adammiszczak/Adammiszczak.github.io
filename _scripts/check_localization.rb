@@ -68,6 +68,9 @@ groups.each do |key, variants|
     html = File.read(file)
     lang_match = html.match(/<html\b[^>]*\blang=["']([^"']+)["']/i)
     check(lang_match && lang_match[1] == language, "#{path}: expected html lang=#{language}")
+    check(tags(html, "pagefind-modal-trigger").length == 1, "#{path}: expected one localized Pagefind search trigger")
+    check(html.scan(/<pagefind-modal(?=[\s>])[^>]*>/i).length == 1, "#{path}: expected one Pagefind search modal")
+    check(html.match?(%r!<main\b[^>]*\bdata-pagefind-body(?:\s|>)!i), "#{path}: Pagefind must index main content only")
 
     canonicals = link_tags(html).select { |tag| attr(tag, "rel") == "canonical" }.map { |tag| attr(tag, "href") }
     check(canonicals == ["#{base_url}#{path}"], "#{path}: expected one self-canonical, got #{canonicals.inspect}")
@@ -129,7 +132,13 @@ robots = File.read(File.join(SITE_DIR, "robots.txt"))
 agents = robots.scan(/^User-agent:\s*(.+?)\s*$/).flatten
 check(agents == ["*"], "robots.txt must allow all crawlers with one wildcard user-agent rule")
 check(robots.match?(/^User-agent:\s*\*\s*\r?\nAllow:\s*\/\s*$/), "robots.txt must allow crawling of the full public site")
+check(robots.match?(%r!^Disallow:\s*/pagefind/\s*$!), "robots.txt must keep Pagefind index assets out of crawler fetches")
 check(robots.include?("Sitemap: #{base_url}/sitemap.xml"), "robots.txt must point to the generated XML sitemap")
+pagefind_dir = File.join(SITE_DIR, "pagefind")
+%w[pagefind.js pagefind-component-ui.js pagefind-component-ui.css].each do |asset|
+  check(File.file?(File.join(pagefind_dir, asset)), "Missing generated Pagefind asset: #{asset}")
+end
+check(!File.file?(File.join(SITE_DIR, "search.html")) && !File.directory?(File.join(SITE_DIR, "search")), "Search must stay in the modal without creating an indexable search page")
 
 {"en" => "/feed.xml", "pl" => "/pl/feed.xml"}.each do |language, path|
   feed_file = output_path(path)
@@ -154,5 +163,6 @@ groups.each_value do |variants|
   end
 end
 check(sitemap_urls.none? { |url| url.include?("/en/") }, "XML sitemap contains an /en/ route")
+check(sitemap_urls.none? { |url| url.include?("/pagefind/") }, "XML sitemap must not contain Pagefind index assets")
 
-puts "Localization checks passed: #{validated_pages} language pages, reciprocal hreflang pairs, wildcard crawler access, locale-specific feeds, and sitemap membership."
+puts "Site checks passed: #{validated_pages} language pages, reciprocal hreflang pairs, Pagefind modal assets without a search route, wildcard crawler access, locale-specific feeds, and sitemap membership."

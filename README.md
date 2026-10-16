@@ -47,12 +47,22 @@ bundle exec jekyll serve --host 127.0.0.1 --livereload
 
 Open <http://127.0.0.1:4000/>. Jekyll rebuilds the site as files change; LiveReload refreshes the browser. Stop the server with `Ctrl+C`.
 
+To test search locally, build the site and let Pagefind index it, then start its local preview server:
+
+```bash
+JEKYLL_ENV=production bundle exec jekyll build --trace
+npx --yes pagefind@1.5.2 --site ./_site --serve
+```
+
+Open the local URL printed by Pagefind. Search queries stay in the browser modal; the build has no dedicated search-results route.
+
 ## Build and verify
 
 Create a production build and check localized routes after the build has populated `_site/`:
 
 ```bash
 JEKYLL_ENV=production bundle exec jekyll build --trace
+npx --yes pagefind@1.5.2 --site ./_site
 ruby _scripts/check_localization.rb
 git -c core.whitespace=cr-at-eol diff --check
 ```
