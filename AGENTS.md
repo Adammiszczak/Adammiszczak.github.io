@@ -43,6 +43,7 @@ Keep the home and About introductions consistent by using the shared `_includes/
 8. Reuse tags in _data/taxonomy.yml. Tags should describe durable topics, not one-off names, dates, clients, campaigns or minor variations. Avoid creating near-duplicates or an uncontrolled taxonomy.
 9. Preserve all historical posts and their existing permalinks. Do not delete or silently recategorize an old post. If a URL must change, add and verify a redirect, then update internal links and sitemap output.
 10. Do not publish confidential employer/client details, private performance data, or material that may be covered by an NDA. Anonymize examples unless the user supplies approved public information.
+11. Attribute external analysis and visual material in every article. Name the original author or organization near the claim, statistic, quotation, or interpretation it supports. Link to the original public article, post, research, or documentation when a stable URL exists; if it does not, give enough source detail (author/organization, title or description, and date when known) for readers to identify it. Never invent a citation or link. Add a References or Sources section when an article draws on multiple external sources or readers would benefit from a consolidated list. Credit reproduced or adapted graphics in their captions with the creator and original source; do not treat alt text as a substitute for a visible image credit. Distinguish an author's reported measurements from independently verified facts and preserve the original sample, time period, caveats, and qualifications.
 
 ## Public repository confidentiality
 
@@ -84,7 +85,7 @@ For Polish translations of English articles, complete the following stages in or
 
 1. Read this file, inspect relevant files and `git status` before editing. Preserve existing user changes; do not revert unrelated work.
 2. Trace the existing layout, data and URL conventions before changing them. Prefer small, consistent edits over new dependencies or duplicated content/configuration.
-3. For content, check front matter, category, tags, image/alt text, social links, heading hierarchy, references and internal links. For templates/config, consider all affected page types and GitHub Pages' `baseurl`/URL behavior.
+3. For content, check front matter, category, tags, image/alt text, social links, heading hierarchy, references and internal links. Attribute other authors' analysis and claims inline, cite stable original sources where available, and visibly credit externally created or adapted images in captions. Never fabricate unavailable source details. For templates/config, consider all affected page types and GitHub Pages' `baseurl`/URL behavior.
 4. Use Ubuntu-compatible Bash commands in repo instructions and examples. Do not document PowerShell commands.
 5. After substantive content, layout, localization or configuration changes, make a production build and run the localization checker. Review the diff and generated HTML; do not claim a check passed unless it was actually run.
 6. Before finishing, inspect generated HTML for the affected pages, ensure global SEO/social tags are present once, verify article images and required links resolve, confirm sitemap membership and redirects where relevant, check all configured locale alternates, and confirm generated `_site/` output is not staged.
