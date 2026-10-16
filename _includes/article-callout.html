@@ -1,0 +1,7 @@
+{% assign kind = include.type | default: 'info' %}
+<aside class="article-callout article-callout-{{ kind }}" aria-label="{{ include.label | default: kind | escape }}">
+  {% if include.label %}<p class="article-callout-label">{{ include.label | escape }}</p>{% endif %}
+  {% if include.title %}<h2>{{ include.title | escape }}</h2>{% endif %}
+  {{ include.content | markdownify }}
+  {% if include.links %}<p>{% for link in include.links %}{% unless forloop.first %} · {% endunless %}<a href="{{ link.url }}">{{ link.label | escape }}</a>{% endfor %}</p>{% endif %}
+</aside>

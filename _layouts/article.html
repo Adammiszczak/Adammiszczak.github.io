@@ -15,4 +15,21 @@ layout: default
   </header>
   <div class="prose">{{ content }}</div>
   {% include article-discussion.html %}
+  {% assign current_locale = page.lang | default: 'en' %}
+  {% assign latest_articles = site.posts | where: "section", "articles" | where: "lang", current_locale | sort: "date" | reverse %}
+  {% assign displayed_articles = 0 %}
+  <nav class="article-related" aria-labelledby="latest-articles-heading">
+    <h2 id="latest-articles-heading">{{ copy.latest_articles }}</h2>
+    <ul class="article-list">
+      {% for article in latest_articles %}
+        {% if article.url != page.url and displayed_articles < 5 %}
+          <li>
+            <a href="{{ article.url | relative_url }}">{{ article.title | escape }}</a>
+            <p>{% if current_locale == 'pl' %}{{ article.date | date: "%d.%m.%Y" }}{% else %}{{ article.date | date: "%B %-d, %Y" }}{% endif %}</p>
+          </li>
+          {% assign displayed_articles = displayed_articles | plus: 1 %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+  </nav>
 </article>

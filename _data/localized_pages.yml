@@ -22,6 +22,10 @@ openai_chatgpt_product_feeds:
   en: /articles/openai-chatgpt-product-feeds-seo-geo
   pl: /pl/artykuly/openai-chatgpt-feedy-produktowe-seo-geo
   x_default: /articles/openai-chatgpt-product-feeds-seo-geo
+chatgpt_referral_attribution:
+  en: /articles/chatgpt-referral-attribution-utm-fix
+  pl: /pl/artykuly/atrybucja-ruchu-chatgpt-powrot-utm
+  x_default: /articles/chatgpt-referral-attribution-utm-fix
 sitemap:
   en: /sitemap/
   pl: /pl/mapa-strony/
