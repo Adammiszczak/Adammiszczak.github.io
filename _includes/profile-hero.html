@@ -1,6 +1,9 @@
 {% assign locale_key = page.lang | default: 'en' %}
 {% assign copy = site.data.site_copy[locale_key] %}
 {% assign routes = site.data.locale_routes[locale_key] %}
+{% assign hero_image_path = page.hero_image_src | default: '/assets/img/adam-miszczak.jpg' %}
+{% assign hero_image_width = page.hero_image_width | default: 1110 %}
+{% assign hero_image_height = page.hero_image_height | default: 1195 %}
 <section class="profile-hero" aria-labelledby="profile-hero-title">
   <div class="profile-copy">
     <p class="eyebrow">{{ page.hero_eyebrow | escape }}</p>
@@ -13,6 +16,6 @@
     </div>
   </div>
   <figure class="profile-photo">
-    <img src="{{ '/assets/img/adam-miszczak.jpg' | relative_url }}" alt="{{ page.hero_image_alt | escape }}" width="1110" height="1195" loading="eager" decoding="async">
+    <img src="{{ hero_image_path | relative_url }}" alt="{{ page.hero_image_alt | escape }}" width="{{ hero_image_width }}" height="{{ hero_image_height }}" loading="eager" decoding="async">
   </figure>
 </section>

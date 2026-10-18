@@ -4,93 +4,93 @@ lang: pl
 locale: pl_PL
 translation_key: home
 permalink: /pl/
-title: Międzynarodowe SEO e-commerce, GEO i AI Search
-description: Analizy SEO technicznego, międzynarodowego e-commerce, danych produktowych, GEO i AI Search autorstwa Adama Miszczaka.
+title: SEO dla enterprise e-commerce, GEO i AI Search — Adam Miszczak
+description: Adam Miszczak — specjalista SEO, GEO i AI Search. Międzynarodowy e-commerce, SEO techniczne, odkrywanie produktów i automatyzacja.
 author:
   name: Adam Miszczak
   url: https://adammiszczak.github.io/pl/o-mnie/
 image:
   path: /assets/img/adam-miszczak.jpg
-  alt: Adam Miszczak, specjalista SEO, GEO i AI Search dla międzynarodowego e-commerce.
-hero_eyebrow: SEO · GEO · AI Search
-hero_heading: Widoczność produktów w złożonych systemach wyszukiwania
-hero_intro: Pomagam zespołom międzynarodowego e-commerce rozumieć techniczne podstawy odkrywania produktów — od indeksowania i architektury serwisu po dane produktowe, Google Merchant Center, GEO i AI Search.
-hero_supporting: Od 2018 roku łączę analizę SEO z praktyką techniczną. Na tej stronie publikuję udokumentowane obserwacje, wyjaśniam, co wynika ze źródeł, a co pozostaje hipotezą, i przekładam wnioski na konkretne działania dla zespołów SEO, produktowych i inżynieryjnych.
-hero_image_alt: Adam Miszczak uśmiecha się na tle kolorowego muralu.
+  alt: Adam Miszczak, specjalista SEO, GEO i AI Search, uśmiecha się na tle kolorowego muralu.
+hero_eyebrow: Adam Miszczak · SEO, GEO i AI Search
+hero_heading: SEO dla dużego e-commerce i AI Search
+hero_intro: Pomagam międzynarodowym firmom e-commerce i marketplace’om rozwiązywać złożone problemy związane z wyszukiwaniem i odkrywaniem produktów. Łączę SEO techniczne, współpracę między zespołami, inżynierię i rozwijające się systemy AI Search.
+hero_supporting: Od 2018 roku pracuję na styku SEO i technologii. Łączę analizę techniczną, uporządkowane badania i automatyzację z praktycznymi realiami wdrażania zmian na złożonych platformach.
+hero_image_alt: Adam Miszczak, specjalista SEO, GEO i AI Search, uśmiecha się na tle kolorowego muralu.
 ---
 
 {% include profile-hero.html %}
 
-{% assign copy = site.data.site_copy.pl %}
-{% assign routes = site.data.locale_routes.pl %}
+## Obszary specjalizacji
 
-<section class="home-expertise" aria-labelledby="expertise-title">
-  <p class="eyebrow">Zakres analiz</p>
-  <h2 id="expertise-title">SEO, dane produktowe i nowe ścieżki odkrywania</h2>
-  <p class="section-intro">Praktyczne spojrzenie na to, jak wyszukiwarki i platformy AI znajdują, interpretują i prezentują treści oraz produkty.</p>
-  <div class="expertise-grid">
-    <article class="expertise-card">
-      <span class="expertise-number" aria-hidden="true">01</span>
-      <h3>SEO techniczne</h3>
-      <p>Indeksowanie, renderowanie, architektura i diagnoza problemów w dużych serwisach.</p>
-    </article>
-    <article class="expertise-card">
-      <span class="expertise-number" aria-hidden="true">02</span>
-      <h3>Międzynarodowe e-commerce</h3>
-      <p>Widoczność kategorii i produktów, rynki, katalogi oraz spójność danych produktowych.</p>
-    </article>
-    <article class="expertise-card">
-      <span class="expertise-number" aria-hidden="true">03</span>
-      <h3>GEO i AI Search</h3>
-      <p>Weryfikacja tego, jak systemy AI korzystają z publicznych treści i informacji o produktach.</p>
-    </article>
-    <article class="expertise-card">
-      <span class="expertise-number" aria-hidden="true">04</span>
-      <h3>Google Merchant Center</h3>
-      <p>Feed produktowy, atrybuty, aktualność danych oraz ich zgodność ze stronami sklepu.</p>
-    </article>
-  </div>
-</section>
+### SEO techniczne dla dużych serwisów
 
-<section class="home-feature" aria-labelledby="latest-title">
-  <div class="home-feature-heading">
-    <div>
-      <p class="eyebrow">Najnowsza analiza</p>
-      <h2 id="latest-title">Od dokumentacji do praktyki</h2>
-    </div>
-    <a class="text-link" href="{{ routes.articles | relative_url }}">{{ copy.browse_articles }} <span aria-hidden="true">→</span></a>
-  </div>
-  {% assign latest_article = site.posts | where: "section", "articles" | where: "lang", "pl" | sort: "date" | reverse | first %}
-  {% if latest_article %}
-  {% assign latest_image = latest_article.image.path | default: latest_article.image %}
-  <article class="featured-article">
-    {% if latest_image %}<a class="featured-article-image" href="{{ latest_article.url | relative_url }}" tabindex="-1" aria-hidden="true"><img src="{{ latest_image | relative_url }}" alt="" loading="lazy"></a>{% endif %}
-    <div class="featured-article-copy">
-      <p class="post-meta">{{ latest_article.date | date: "%d.%m.%Y" }} · {{ copy.article_label }}</p>
-      <h3><a href="{{ latest_article.url | relative_url }}">{{ latest_article.title | escape }}</a></h3>
-      <p>{{ latest_article.description | escape }}</p>
-      <a class="text-link" href="{{ latest_article.url | relative_url }}">{{ copy.read_article }} <span aria-hidden="true">→</span></a>
-    </div>
-  </article>
-  {% else %}
-  <div class="featured-article-copy"><p>{{ copy.no_articles_published }}</p></div>
-  {% endif %}
-</section>
+Dostępność witryny dla robotów wyszukiwarek, indeksacja, renderowanie, architektura dużych serwisów i diagnostyka techniczna. Analizuję, jak systemy wyszukiwania przetwarzają złożone witryny i co wpływa na ich widoczność.
 
-<section class="home-method" aria-labelledby="method-title">
-  <p class="eyebrow">Podejście badawcze</p>
-  <h2 id="method-title">Najpierw źródła i obserwacje, potem wnioski</h2>
-  <p>W analizach rozdzielam informacje potwierdzone w dokumentacji od interpretacji i hipotez. Dzięki temu zespoły mogą ocenić, co jest udokumentowaną funkcją wyszukiwarki lub systemu AI, co warto zmierzyć, a co wymaga dalszego sprawdzenia.</p>
-  <a class="text-link" href="{{ routes.about | relative_url }}">Poznaj moje doświadczenie <span aria-hidden="true">→</span></a>
-</section>
+### Międzynarodowe SEO e-commerce
 
-<section class="home-about" aria-labelledby="about-title">
-  <div>
-    <p class="eyebrow">O Adamie</p>
-    <h2 id="about-title">Techniczne doświadczenie, które wspiera strategię SEO</h2>
-  </div>
-  <div>
-    <p>Od 2018 roku pracuję w SEO. Doświadczenie w programowaniu i automatyzacji procesów pomaga mi analizować złożone problemy u źródła. Obecnie koncentruję się na międzynarodowym e-commerce, SEO dla dużych serwisów, GEO i AI Search.</p>
-    <a class="text-link" href="{{ routes.about | relative_url }}">{{ copy.read_background }} <span aria-hidden="true">→</span></a>
-  </div>
-</section>
+Widoczność w dużych katalogach produktów, na wielu rynkach i w środowisku marketplace’ów. Zajmuję się odkrywaniem produktów, danymi strukturalnymi, Google Merchant Center oraz spójnością informacji produktowych w różnych systemach.
+
+### GEO i AI Search
+
+Badam, jak systemy wyszukiwania oparte na AI pobierają, interpretują i prezentują informacje. Interesują mnie m.in. retrieval, cytowania źródeł, odkrywanie produktów, AI Overviews oraz praktyczna ocena nowych funkcji wyszukiwania.
+
+### Wdrażanie SEO we współpracy z różnymi zespołami
+
+Łączę wymagania SEO z pracą zespołów produktu, inżynierii, infrastruktury, bezpieczeństwa, prawnych i innych interesariuszy. Porządkuję złożone inicjatywy, rozpoznaję zależności i przekładam ustalenia techniczne na jasne priorytety oraz wymagania wdrożeniowe.
+
+### Programowanie, automatyzacja i ocena AI
+
+Wykorzystuję programowanie, API, analizę danych i automatyzację do badania problemów technicznych, usprawniania powtarzalnych procesów oraz oceny nowych możliwości AI. Doświadczenie inżynieryjne pomaga mi podchodzić do problemów praktycznie.
+
+## Od dowodów technicznych do praktycznych decyzji
+
+Złożone problemy SEO rzadko występują w izolacji. Zmiana na dużej platformie e-commerce może wymagać współpracy kilku zespołów, uwzględnienia zależności technicznych i ograniczeń operacyjnych oraz uzgodnienia konkurujących priorytetów. Samo rozpoznanie problemu to dopiero część pracy.
+
+Łączę analizę z wdrożeniem:
+
+- **Poznaję system:** sprawdzam, jak wyszukiwarki i platformy AI uzyskują dostęp do informacji i je przetwarzają.
+- **Ustalam priorytety:** odróżniam istotne problemy od mniej ważnych obserwacji i niepotwierdzonych założeń.
+- **Uzgadniam działania:** przekładam wymagania techniczne na konkretne zadania dla zaangażowanych zespołów.
+- **Weryfikuję efekty:** korzystam z danych, testów i monitoringu, by ocenić, czy zmiana działa zgodnie z założeniami.
+
+Celem jest tworzenie rozwiązań SEO, które są poprawne technicznie, możliwe do wdrożenia i utrzymania w złożonym środowisku.
+
+## Badania, eksperymenty i analizy techniczne
+
+Publikuję badania i praktyczne analizy dotyczące SEO dla dużych serwisów, międzynarodowego e-commerce, GEO, AI Search, danych produktowych i automatyzacji. Oddzielam funkcje opisane w dokumentacji od obserwacji i hipotez, wyjaśniam ograniczenia metodologiczne i skupiam się na wnioskach przydatnych w decyzjach technicznych oraz strategicznych.
+
+[Zobacz najnowsze artykuły]({{ '/pl/artykuly/' | relative_url }}) · [Zobacz archiwum wcześniejszych projektów (po angielsku)]({{ '/history/' | relative_url }})
+
+### Najnowsze artykuły
+
+{% assign articles = site.posts | where: "section", "articles" | where: "lang", "pl" | sort: "date" | reverse %}
+{% if articles.size > 0 %}
+<ul class="article-list">
+{% for post in articles limit:3 %}
+  <li>
+    <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+    <span class="post-meta">{{ post.date | date: "%d.%m.%Y" }}</span>
+    {% if post.description %}<p>{{ post.description | escape }}</p>{% endif %}
+  </li>
+{% endfor %}
+</ul>
+{% endif %}
+
+## O moim doświadczeniu
+
+Od 2018 roku pracuję w SEO, równolegle realizując projekty programistyczne i techniczne związane ze zbieraniem danych, rozszerzeniami przeglądarkowymi, API i automatyzacją procesów. To doświadczenie wpływa na sposób, w jaki analizuję problemy z widocznością: sprawdzam mechanizmy, ograniczenia i założenia, a potem szukam rozwiązań, które można utrzymać.
+
+Obecnie koncentruję się na międzynarodowym e-commerce, SEO technicznym, GEO i AI Search oraz na zmianach w sposobach odkrywania produktów.
+
+[Poznaj mnie bliżej]({{ '/pl/o-mnie/' | relative_url }}) · [Skontaktuj się ze mną na LinkedIn](https://www.linkedin.com/in/adam-miszczak/)
+
+## Porozmawiajmy
+
+Chętnie porozmawiam o SEO dla dużych serwisów, międzynarodowym e-commerce, AI Search, strategii technicznej i złożonych projektach wymagających współpracy wielu zespołów.
+
+[Napisz do mnie na LinkedIn](https://www.linkedin.com/in/adam-miszczak/)
+
+Adam Miszczak
+
+SEO dla dużych serwisów · Międzynarodowe e-commerce · GEO i AI Search · Inżynieria i automatyzacja
