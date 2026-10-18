@@ -4,6 +4,7 @@ lang: en
 translation_key: ai_training_common_crawl
 title: "AI Training and Common Crawl: Eight Potential SEO/GEO Benefits"
 date: "2026-10-17 00:00:00 +0000"
+permalink: /articles/ai-training-common-crawl-seo-geo
 description: "Common Crawl, training crawlers and product feeds offer different routes to AI visibility. Eight potential benefits for e-commerce, with evidence and limits."
 section: articles
 categories:
@@ -13,12 +14,16 @@ tags:
   - geo
   - ai-search
   - technical-seo
-image: /assets/img/articles/ai-training-common-crawl.png
-image_alt: "Editorial graphic reading 'Block training. Lose traffic?' and 'Training does not equal search', with two converging data pathways."
+image:
+  path: /assets/img/articles/common-crawl-training-vs-search.png
+  alt: "Editorial graphic reading 'BLOCK TRAINING. LOSE TRAFFIC?' and 'TRAINING ≠ SEARCH', with two converging data pathways."
+image_alt: "Editorial graphic reading 'BLOCK TRAINING. LOSE TRAFFIC?' and 'TRAINING ≠ SEARCH', with two converging data pathways."
 image_caption: "Training access and AI search are different mechanisms. AI-generated editorial illustration."
+linkedin_url: "https://lnkd.in/p/dYnN6vfP"
+substack_url: "https://substack.com/@adammiszczak/note/c-362349160"
 ---
 
-> "Let AI train on your website. Or lose traffic."
+**"Let AI train on your website. Or lose traffic."**
 
 {% capture training_access_note %}
 That is the provocative version.
