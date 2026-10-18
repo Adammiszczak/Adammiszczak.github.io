@@ -19,8 +19,8 @@ image:
   alt: "Editorial graphic reading 'BLOCK TRAINING. LOSE TRAFFIC?' and 'TRAINING ≠ SEARCH', with two converging data pathways."
 image_alt: "Editorial graphic reading 'BLOCK TRAINING. LOSE TRAFFIC?' and 'TRAINING ≠ SEARCH', with two converging data pathways."
 image_caption: "Training access and AI search are different mechanisms. AI-generated editorial illustration."
-linkedin_url: "https://lnkd.in/p/dYnN6vfP"
-substack_url: "https://substack.com/@adammiszczak/note/c-362349160"
+linkedin_url: "https://lnkd.in/p/dNU6TCT3"
+substack_url: "https://adammiszczak.substack.com/p/let-ai-train-on-your-website-or-lose"
 ---
 
 **"Let AI train on your website. Or lose traffic."**

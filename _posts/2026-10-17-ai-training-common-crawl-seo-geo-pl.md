@@ -26,8 +26,8 @@ image:
   alt: "Ilustracja z napisami „BLOCK TRAINING. LOSE TRAFFIC?” i „TRAINING ≠ SEARCH” oraz dwiema zbiegającymi się ścieżkami danych."
 image_alt: "Ilustracja z napisami „BLOCK TRAINING. LOSE TRAFFIC?” i „TRAINING ≠ SEARCH” oraz dwiema zbiegającymi się ścieżkami danych."
 image_caption: "Dostęp do treningu i widoczność w AI Search to różne mechanizmy. Ilustracja redakcyjna wygenerowana przez AI."
-linkedin_url: "https://lnkd.in/p/dYnN6vfP"
-substack_url: "https://substack.com/@adammiszczak/note/c-362349160"
+linkedin_url: "https://lnkd.in/p/dNU6TCT3"
+substack_url: "https://adammiszczak.substack.com/p/let-ai-train-on-your-website-or-lose"
 author:
   name: Adam Miszczak
   url: https://adammiszczak.github.io/pl/o-mnie/
