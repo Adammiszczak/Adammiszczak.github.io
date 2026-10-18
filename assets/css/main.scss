@@ -224,11 +224,19 @@ html[data-theme="dark"] .article-callout-update { --callout-tint: #1d3830; }
   .discussion-button { width: 100%; white-space: normal; }
 }
 .site-footer { border-top: 1px solid var(--line); background: var(--footer); }
-.site-footer-inner { display: grid; grid-template-columns: 1fr auto; gap: 1.2rem 2rem; align-items: center; padding-block: 2rem; }
+.site-footer-inner { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 1.2rem 2rem; align-items: center; padding-block: 2rem; }
 .site-footer-inner p { margin: 0; }
-.site-footer nav { display: flex; flex-wrap: wrap; gap: .7rem 1.2rem; }
-.site-footer nav a { font-size: .92rem; }
-.site-footer-utility { justify-content: flex-end; }
+.site-footer-actions { display: flex; min-width: 0; flex-direction: column; align-items: flex-end; gap: .8rem; }
+.site-footer-nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: .35rem .65rem; }
+.site-footer-nav a { font-size: .92rem; }
+.site-footer-nav .site-footer-sitemap { display: inline-flex; min-height: 44px; align-items: center; }
+.site-footer-nav .footer-social-link { display: grid; width: 44px; height: 44px; place-items: center; border-radius: 999px; color: var(--ink); text-decoration: none; }
+.site-footer-nav .footer-social-link:hover { background: var(--accent-soft); color: var(--accent-dark); }
+.footer-social-icon { display: block; width: 1.35rem; height: 1.35rem; fill: currentColor; }
+.footer-social-icon-linkedin { color: #0a66c2; }
+.footer-social-icon-substack { color: #ff6719; }
+.footer-social-icon-github { color: var(--ink); }
+.site-footer-utility { display: flex; flex-wrap: nowrap; align-items: center; justify-content: flex-end; gap: .6rem; }
 .copyright { grid-column: 1 / -1; }
 .selector-footer { grid-template-columns: 1fr auto auto; }
 .selector-footer .copyright { grid-column: auto; }
@@ -242,8 +250,10 @@ html[data-theme="dark"] .article-callout-update { --callout-tint: #1d3830; }
   body { font-size: 16px; }
   .article-grid { grid-template-columns: minmax(0, 1fr); }
   .site-main, .site-footer-inner { width: calc(100% - 2rem); max-width: 1080px; }
-  .site-footer-inner, .selector-footer { grid-template-columns: 1fr; gap: 1rem; }
+  .site-footer-inner, .selector-footer { grid-template-columns: minmax(0, 1fr); gap: 1rem; }
   .copyright { grid-column: auto; }
+  .site-footer-actions { align-items: flex-start; }
+  .site-footer-nav { justify-content: flex-start; }
   .site-footer-utility { justify-content: flex-start; }
   .language-choices { flex-direction: column; }
   .language-choices a { width: 100%; }

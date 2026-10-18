@@ -100,6 +100,14 @@ groups.each do |key, variants|
     check(theme_controls.length == 2, "#{path}: expected header and footer theme controls")
     expected_theme_label = language == "pl" ? "Włącz tryb ciemny" : "Switch to dark mode"
     check(theme_controls.all? { |tag| attr(tag, "aria-label") == expected_theme_label }, "#{path}: theme control label is not localized")
+    footer_social_links = tags(html, "a").select { |tag| attr(tag, "class").to_s.split.include?("footer-social-link") }
+    expected_social_urls = %w[
+      https://www.linkedin.com/in/adam-miszczak/
+      https://substack.com/@adammiszczak
+      https://github.com/Adammiszczak/Adammiszczak.github.io
+    ].to_set
+    check(footer_social_links.map { |tag| attr(tag, "href") }.to_set == expected_social_urls, "#{path}: footer social icon links are missing or incorrect")
+    check(footer_social_links.all? { |tag| attr(tag, "aria-label").to_s.length.positive? }, "#{path}: footer social icons need accessible labels")
 
     json_blocks = html.scan(%r!<script type="application/ld\+json">\s*(.*?)\s*</script>!m).map { |entry| JSON.parse(entry.first) }
     articles = json_blocks.select { |entry| entry["@type"] == "BlogPosting" }

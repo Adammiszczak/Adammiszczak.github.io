@@ -17,6 +17,7 @@ en:
   read_substack: Read the note on Substack
   linkedin_profile: Connect on LinkedIn
   substack_profile: Follow on Substack
+  github_repository: View the website repository on GitHub
   article_label: Article
   by: By
   explore_articles: Explore articles
@@ -67,6 +68,7 @@ pl:
   read_substack: Przeczytaj notatkę na Substacku
   linkedin_profile: Połącz się ze mną na LinkedIn
   substack_profile: Obserwuj mnie na Substacku
+  github_repository: Zobacz repozytorium strony w serwisie GitHub
   article_label: Artykuł
   by: "Autor:"
   explore_articles: Zobacz artykuły
