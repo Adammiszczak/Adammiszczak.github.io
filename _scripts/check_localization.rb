@@ -136,6 +136,10 @@ check(!Dir.exist?(File.join(SITE_DIR, "en")), "English content must not be moved
   check(!output_candidates(old_polish_path).any? { |candidate| File.file?(candidate) }, "Found an untranslated Polish URL that should have a localized slug: #{old_polish_path}")
 end
 
+articles_archive = File.read(output_path("/articles/"))
+check(articles_archive.scan(/<article\b[^>]*class=["']article-card["']/i).any?, "English articles archive must render published article cards")
+check(!articles_archive.include?("The first in-depth articles are in preparation."), "English articles archive must not show its empty state while articles are published")
+
 robots = File.read(File.join(SITE_DIR, "robots.txt"))
 agents = robots.scan(/^User-agent:\s*(.+?)\s*$/).flatten
 check(agents == ["*"], "robots.txt must allow all crawlers with one wildcard user-agent rule")

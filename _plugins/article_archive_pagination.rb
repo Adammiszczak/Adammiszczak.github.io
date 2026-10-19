@@ -15,7 +15,9 @@ module ArticleArchivePagination
 
       ARCHIVES.each do |lang, archive|
         articles = site.posts.docs
-          .select { |post| post.data["section"] == "articles" && post.data["lang"] == lang }
+          .select do |post|
+            post.data["section"] == "articles" && (post.data["lang"] || "en") == lang
+          end
           .sort_by { |post| [post.date, post.url] }
           .reverse
 
