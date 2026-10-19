@@ -17,6 +17,10 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      article_card_hrefs: ${{ steps.production_diagnostics.outputs.article_card_hrefs }}
+      article_html_sha256: ${{ steps.production_diagnostics.outputs.article_html_sha256 }}
+      pagefind_css_sha256: ${{ steps.production_diagnostics.outputs.pagefind_css_sha256 }}
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -32,11 +36,22 @@ jobs:
           ruby-version: "3.0"
           bundler-cache: true
       - name: Build Jekyll site
-        run: bundle exec jekyll build --trace --destination ./_site
+        run: |
+          set -o pipefail
+          bundle exec jekyll build --trace --destination ./_site 2>&1 | tee "$RUNNER_TEMP/jekyll-build.log"
         env:
           JEKYLL_ENV: production
       - name: Build Pagefind search index
-        run: npx --yes pagefind@1.5.2 --site ./_site
+        run: |
+          set -o pipefail
+          npx --yes pagefind@1.5.2 --site ./_site 2>&1 | tee "$RUNNER_TEMP/pagefind-build.log"
+      - name: Audit generated archive and deployment assets
+        id: production_diagnostics
+        run: ruby _scripts/diagnose_production_build.rb
+        env:
+          JEKYLL_ENV: production
+          JEKYLL_BUILD_LOG: ${{ runner.temp }}/jekyll-build.log
+          PAGEFIND_BUILD_LOG: ${{ runner.temp }}/pagefind-build.log
       - name: Check localized pages
         run: ruby _scripts/check_localization.rb
       - name: Upload Pages artifact
@@ -49,12 +64,22 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Checkout smoke check
+        uses: actions/checkout@v6
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Verify deployed archive and Pagefind assets
+        env:
+          PAGES_URL: ${{ steps.deployment.outputs.page_url }}
+          EXPECTED_ARTICLE_HREFS: ${{ needs.build.outputs.article_card_hrefs }}
+          EXPECTED_ARTICLE_HTML_SHA256: ${{ needs.build.outputs.article_html_sha256 }}
+          EXPECTED_PAGEFIND_CSS_SHA256: ${{ needs.build.outputs.pagefind_css_sha256 }}
+        run: ruby _scripts/check_deployed_site.rb
