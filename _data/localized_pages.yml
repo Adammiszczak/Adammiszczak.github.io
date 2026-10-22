@@ -30,6 +30,14 @@ ai_training_common_crawl:
   en: /articles/ai-training-common-crawl-seo-geo
   pl: /pl/artykuly/common-crawl-trening-ai-korzysci-seo-geo
   x_default: /articles/ai-training-common-crawl-seo-geo
+ai_prompt_monitoring:
+  en: /articles/ai-prompt-monitoring-is-broken-because-the-prompt-isnt-the-user
+  pl: /pl/artykuly/monitorowanie-promptow-ai-prompt-to-nie-uzytkownik
+  x_default: /articles/ai-prompt-monitoring-is-broken-because-the-prompt-isnt-the-user
+seo_geo_system:
+  en: /articles/seo-and-geo-should-work-as-a-system
+  pl: /pl/artykuly/seo-i-geo-jako-jeden-system
+  x_default: /articles/seo-and-geo-should-work-as-a-system
 sitemap:
   en: /sitemap/
   pl: /pl/mapa-strony/
