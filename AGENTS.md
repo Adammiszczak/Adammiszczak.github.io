@@ -56,6 +56,10 @@ Keep the home and About introductions consistent by using the shared `_includes/
 - In Polish copy, keep established product, platform and industry terms in their recognized form when Polish specialists and business leaders use them, including AI Search, AI Overviews, AI Mode, Google Merchant Center, Search Console, BigQuery, GEO, SEO and e-commerce. Do not mechanically translate these terms into descriptive Polish phrases.
 - Translate surrounding explanations into clear, idiomatic Polish. Prefer wording used by the intended professional audience, keep official product names intact, and avoid literal calques when a natural Polish phrase is available.
 
+## Headings and punctuation
+
+- Do not use em dashes (—) in headings or page titles. Use a colon, comma, or rewrite the heading so it renders cleanly across fonts and devices.
+
 ## English-to-Polish translation quality
 
 For Polish translations of English articles, complete the following stages in order. The second stage is a standalone validation pass, separate from drafting; do not combine it with the initial translation or skip it.

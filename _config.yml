@@ -11,7 +11,7 @@ github_username: AdamMiszczak
 permalink: /:categories/:title
 paginate: 4
 paginate_path: /posts/page:num/
-article_archive_page_size: 4
+article_archive_page_size: 6
 author:
   name: Adam Miszczak
   url: https://adammiszczak.github.io/about-me/

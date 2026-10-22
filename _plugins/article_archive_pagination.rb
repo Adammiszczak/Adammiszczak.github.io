@@ -71,11 +71,11 @@ module ArticleArchivePagination
     end
 
     def archive_title(lang, number)
-      lang == "pl" ? "Artykuły i analizy — strona #{number}" : "Articles and research — page #{number}"
+      lang == "pl" ? "Artykuły i analizy: strona #{number}" : "Articles and research: page #{number}"
     end
 
     def archive_heading(lang, number)
-      lang == "pl" ? "Artykuły i analizy — strona #{number}" : "Articles and research — page #{number}"
+      lang == "pl" ? "Artykuły i analizy: strona #{number}" : "Articles and research: page #{number}"
     end
 
     def archive_description(lang)
