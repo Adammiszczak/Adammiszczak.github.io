@@ -58,6 +58,123 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: ./_site
+      - name: Save the validated site for a same-repository PR preview
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: cloudflare-pr-preview-site
+          path: ./_site
+          if-no-files-found: error
+          retention-days: 1
+
+  cloudflare-pr-preview:
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download the production-equivalent build
+        uses: actions/download-artifact@v4
+        with:
+          name: cloudflare-pr-preview-site
+          path: ./_site
+      - name: Validate Cloudflare Pages project name
+        id: project
+        env:
+          PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
+        run: |
+          if [[ ! "$PAGES_PROJECT" =~ ^[a-z0-9][a-z0-9-]{0,62}$ ]]; then
+            echo "CLOUDFLARE_PAGES_PROJECT must be a lowercase Cloudflare Pages project name." >&2
+            exit 1
+          fi
+          printf 'project_name=%s\n' "$PAGES_PROJECT" >> "$GITHUB_OUTPUT"
+      - name: Deploy preview to Cloudflare Pages
+        id: cloudflare
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy ./_site --project-name=${{ steps.project.outputs.project_name }} --branch=pr-${{ github.event.pull_request.number }}
+      - name: Resolve and validate the stable preview alias URL
+        id: preview
+        env:
+          PREVIEW_ALIAS_URL: ${{ steps.cloudflare.outputs.pages-deployment-alias-url }}
+          PAGES_PROJECT: ${{ steps.project.outputs.project_name }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          python3 - <<'PY'
+          import os
+          from urllib.parse import urlsplit
+
+          expected_host = f"pr-{os.environ['PR_NUMBER']}.{os.environ['PAGES_PROJECT']}.pages.dev"
+          if not os.environ["PR_NUMBER"].isdigit():
+              raise SystemExit("GitHub returned an invalid pull request number.")
+          alias = os.environ.get("PREVIEW_ALIAS_URL", "").strip()
+          if alias:
+              parsed = urlsplit(alias)
+              if parsed.scheme != "https" or parsed.hostname != expected_host or parsed.port not in (None, 443) or parsed.username or parsed.password or parsed.query or parsed.fragment:
+                  raise SystemExit("Cloudflare returned an unexpected Pages alias URL.")
+              preview_url = f"https://{expected_host}"
+          else:
+              preview_url = f"https://{expected_host}"
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as output:
+              output.write(f"url={preview_url}\n")
+          PY
+      - name: Verify the preview is noindex
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.url }}
+        run: |
+          headers="$(curl --fail --silent --show-error --location --retry 10 --retry-all-errors --retry-delay 2 --dump-header - --output /dev/null "$PREVIEW_URL")"
+          if ! printf '%s\n' "$headers" | awk 'BEGIN { IGNORECASE = 1 } /^x-robots-tag:/ && tolower($0) ~ /noindex/ { found = 1 } END { exit !found }'; then
+            echo "Cloudflare preview did not return X-Robots-Tag: noindex." >&2
+            exit 1
+          fi
+      - name: Add or update the PR preview comment
+        uses: actions/github-script@v9
+        env:
+          PREVIEW_URL: ${{ steps.preview.outputs.url }}
+        with:
+          script: |
+            const marker = '<!-- cloudflare-pr-preview -->';
+            const pr = context.payload.pull_request;
+            const sourceMatch = (pr.body || '').match(/^Substack source URL:\s*(\S+)\s*$/im);
+            let sourceLine = '';
+            if (sourceMatch) {
+              try {
+                const source = new URL(sourceMatch[1]);
+                const host = source.hostname.toLowerCase();
+                if (source.protocol === 'https:' && !source.username && !source.password && (host === 'substack.com' || host.endsWith('.substack.com'))) {
+                  sourceLine = `\n\nSource:\n${source.href}`;
+                }
+              } catch (_) {
+                // Omit malformed source text from the generated comment.
+              }
+            }
+            const body = `${marker}\n\n## PR preview ready\n\nPreview:\n${process.env.PREVIEW_URL}${sourceLine}\n\nThis preview was generated from the same production Jekyll build used by CI.`;
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr.number,
+              per_page: 100,
+            });
+            const existing = comments.find(comment => comment.body?.includes(marker));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existing.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: pr.number,
+                body,
+              });
+            }
 
   deploy:
     if: github.event_name != 'pull_request'

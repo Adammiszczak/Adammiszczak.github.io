@@ -73,6 +73,6 @@ The localization checker validates generated language attributes, canonical URLs
 
 ## GitHub Pages deployment
 
-The **Build and release** workflow is the deployment path. It runs a production Jekyll build and the localization checker for pull requests and pushes to `main` or `master`. Pull requests are validated but not deployed. A successful push to either deployment branch, or a manual `workflow_dispatch`, uploads the built `_site/` artifact and deploys it to GitHub Pages.
+The **Build and release** workflow is the deployment path. It runs a production Jekyll build and the localization checker for pull requests and pushes to `main` or `master`. Same-repository pull requests also receive a temporary Cloudflare Pages preview; pull requests never deploy to GitHub Pages. A successful push to either deployment branch, or a manual `workflow_dispatch`, uploads the built `_site/` artifact and deploys it to GitHub Pages. See [_docs/content-automation.md](_docs/content-automation.md) for Substack import and preview setup.
 
 In the repository's **Settings → Pages**, set the build and deployment source to **GitHub Actions**. No separate `gh-pages` branch or committed `_site/` directory is needed. The workflow uses Bundler and the local Jekyll plugins; keep its Ruby version aligned with the version used for local builds and its deployment permissions limited to the Pages job.
