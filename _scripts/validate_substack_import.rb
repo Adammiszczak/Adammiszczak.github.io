@@ -101,13 +101,19 @@ end
 def validate_external_urls!(context)
   {
     "substack_url" => [context.fetch("substack_url"), "substack.com"],
-    "linkedin_url" => [context.fetch("linkedin_url"), "linkedin.com"],
+    "submitted_substack_url" => [context.fetch("submitted_substack_url"), "substack.com"],
+    "linkedin_url" => [context.fetch("linkedin_url"), "linkedin"],
   }.each do |label, (value, domain)|
     begin
       uri = URI.parse(value)
       host = uri.host&.downcase
-      valid_host = host && (host == domain || host.end_with?(".#{domain}"))
-      fail_check("#{label} must be an HTTPS URL on #{domain} or a subdomain of #{domain}.") unless uri.is_a?(URI::HTTPS) && valid_host && !uri.userinfo
+      valid_host = if domain == "linkedin"
+                     host && (host == "lnkd.in" || host == "linkedin.com" || host.end_with?(".linkedin.com"))
+                   else
+                     host && (host == domain || host.end_with?(".#{domain}"))
+                   end
+      host_description = domain == "linkedin" ? "linkedin.com, a linkedin.com subdomain, or lnkd.in" : "#{domain} or a subdomain of #{domain}"
+      fail_check("#{label} must be an HTTPS URL on #{host_description}.") unless uri.is_a?(URI::HTTPS) && valid_host && !uri.userinfo
     rescue URI::InvalidURIError
       fail_check("#{label} is malformed.")
     end
@@ -141,7 +147,8 @@ def verify_fetched_integrity!(context, metadata)
   fail_check("Candidate lead image path escapes the temporary source directory.") unless image_absolute.start_with?(WORK_DIR + File::SEPARATOR)
   fail_check("Fetched lead image must not be a symlink.") if File.symlink?(image_absolute)
   fail_check("Fetched candidate lead image changed after retrieval.") unless expected_image != "none" && File.file?(image_absolute) && Digest::SHA256.file(image_absolute).hexdigest == expected_image
-  fail_check("Fetched metadata does not preserve the supplied Substack URL.") unless metadata["source_url"] == context.fetch("substack_url")
+  fail_check("Fetched metadata does not preserve the normalized Substack URL.") unless metadata["source_url"] == context.fetch("substack_url") && metadata["normalized_source_url"] == context.fetch("substack_url")
+  fail_check("Fetched metadata does not preserve the submitted Substack URL for audit.") unless metadata["submitted_source_url"] == context.fetch("submitted_substack_url")
   fail_check("Fetched HTML path is unexpected.") unless metadata["source_html_path"] == ".automation/substack/source.html"
   fail_check("Fetched metadata path is unexpected.") unless metadata["metadata_path"] == ".automation/substack/metadata.json"
 end
@@ -161,7 +168,7 @@ def validate!
   context = read_json(CONTEXT_PATH)
   metadata = read_json(METADATA_PATH)
   {
-    "substack_url" => "SUBSTACK_URL",
+    "submitted_substack_url" => "SUBSTACK_URL",
     "linkedin_url" => "LINKEDIN_URL",
     "request_id" => "REQUEST_ID",
   }.each do |key, environment_name|
@@ -182,7 +189,7 @@ def validate!
     next unless data["substack_url"] == context.fetch("substack_url")
     { path: path, data: data, body: body }
   end
-  fail_check("Expected exactly two new article files with the supplied substack_url; found #{new_posts.length}.") unless new_posts.length == 2
+  fail_check("Expected exactly two new article files with the normalized substack_url; found #{new_posts.length}.") unless new_posts.length == 2
 
   by_language = new_posts.group_by { |post| post[:data]["lang"] }
   fail_check("The new articles must contain one lang: en and one lang: pl version.") unless by_language.keys.sort == %w[en pl] && by_language.values.all? { |items| items.length == 1 }
@@ -247,7 +254,7 @@ def validate!
     fail_check("#{label} article must not have an empty body.") if post[:body].strip.empty?
     fail_check("#{label} article headings must not contain an em dash.") if post[:body].match?(/^\s{0,3}\#{1,6}.*—/)
     fail_check("#{label} article must preserve the exact supplied linkedin_url.") unless data["linkedin_url"] == context.fetch("linkedin_url")
-    fail_check("#{label} article must preserve the exact supplied substack_url.") unless data["substack_url"] == context.fetch("substack_url")
+    fail_check("#{label} article must use the normalized Substack article URL.") unless data["substack_url"] == context.fetch("substack_url")
     fail_check("#{label} article must include a non-empty image_alt.") unless data["image_alt"].is_a?(String) && !data["image_alt"].strip.empty?
     fail_check("#{label} article must include Adam Miszczak as the author.") unless data.dig("author", "name") == "Adam Miszczak"
     expected_author_path = language == "pl" ? "/pl/o-mnie/" : "/about-me/"

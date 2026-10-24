@@ -11,7 +11,7 @@ Before Codex runs, the workflow requires a reliable source publication timestamp
 ## Workflow inputs
 
 - `substack_url`: public HTTPS article URL on `substack.com` or a subdomain.
-- `linkedin_url`: public HTTPS LinkedIn post URL on `linkedin.com` or a subdomain.
+- `linkedin_url`: public HTTPS URL on `linkedin.com`, a `linkedin.com` subdomain, or the official short-link host `lnkd.in`. The supplied URL is preserved exactly; short links are not expanded.
 - `request_id`: unique orchestration identifier containing only letters, numbers, dots, underscores, and hyphens (up to 64 characters).
 
 The conceptual Telegram command is:
@@ -49,3 +49,7 @@ gh workflow run ingest-substack.yml \
 ```
 
 Replace the sample public URLs and request identifier. n8n sends the same three inputs through the GitHub workflow-dispatch API.
+
+For example, accepted LinkedIn URLs include `https://www.linkedin.com/feed/update/urn:li:activity:123/`, `https://www.linkedin.com/posts/example`, and `https://lnkd.in/example`. Credentials, malformed URLs, and non-HTTPS URLs are rejected.
+
+The workflow retrieves the Substack source before checking for duplicates. It follows source redirects only within `substack.com` and its subdomains, then uses the safely resolved canonical article URL for duplicate detection, generated article `substack_url` front matter, and PR metadata. The originally submitted Substack URL is retained in temporary automation context for audit and is not used as the article identity. Canonical URLs outside the Substack domain family are ignored in favor of the validated resolved URL.

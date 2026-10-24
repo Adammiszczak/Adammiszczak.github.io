@@ -1,17 +1,15 @@
 ---
 layout: article
 
-# Stable identifier shared by the English and Polish versions.
-# snake_case, unique across _data/localized_pages.yml.
+# EN and PL versions must share this unique, topic-derived snake_case key.
 translation_key: example_article_key
 
 title: "Article title"
 
-# Original publication date.
+# Original source publication date.
 date: "YYYY-MM-DD HH:MM:SS +0000"
 
-# Optional. Add only when the article was genuinely updated later.
-# Do not automatically set this to the import/build date.
+# Optional. Use only for a genuine later source modification, not the import/build date.
 # last_modified_at: "YYYY-MM-DD HH:MM:SS +0000"
 
 description: "A concise and factual summary of the article and its practical takeaway."
@@ -21,31 +19,37 @@ section: articles
 categories:
   - articles
 
-# Use only existing tags from _data/taxonomy.yml.
+# Every tag must already exist in _data/taxonomy.yml.
 tags:
   - geo
 
-# Language metadata:
-# EN article:
+# English version:
 lang: en
-locale: en_US
+# Optional for English. If set, use en_US.
+# locale: en_US
 
-# For the Polish equivalent use:
+# Polish version instead uses:
 # lang: pl
 # locale: pl_PL
+
+author:
+  name: Adam Miszczak
+  # Use the URL for the article's language:
+  url: https://adammiszczak.github.io/about-me/
+  # Polish author URL: https://adammiszczak.github.io/pl/o-mnie/
 
 image: /assets/img/articles/descriptive-article-image.jpg
 
 image_alt: "Describe the meaningful visible content of the article image."
 
-# Optional. Use when the image requires attribution or additional context.
+# Optional. Localize the caption separately for EN and PL when used.
 # image_caption: "Source or contextual description."
 
-# Relevant public LinkedIn post.
-linkedin_url: ""
+# Keep the exact supplied LinkedIn URL, including lnkd.in links.
+linkedin_url: "https://www.linkedin.com/posts/example"
 
-# Original Substack article.
-substack_url: ""
+# Use the normalized Substack article URL from .automation/substack/context.json.
+substack_url: "https://example.substack.com/p/article"
 ---
 
 Write the complete article here.
@@ -60,14 +64,17 @@ Credit reproduced or adapted images visibly in image captions. Alt text does not
 
 Preserve source authorship, methodology, sample details, dates, caveats and qualifications.
 
-Use only tags defined in `_data/taxonomy.yml`.
-
 Place the lead image in `assets/img/articles/`.
 
 For translated articles:
 - use the same `translation_key`;
+- use `lang: en` for English and `lang: pl` for Polish;
+- use `locale: pl_PL` for Polish; English locale is optional and, if explicit, must be `en_US`;
+- use the localized author URL (`/about-me/` for English, `/pl/o-mnie/` for Polish);
+- include `last_modified_at` only for a genuine source modification after publication;
+- omit `image_caption` when unnecessary, and localize it for each version if used;
+- use only tags defined in `_data/taxonomy.yml`;
 - create a complete equivalent rather than a summary;
 - preserve evidence and URLs;
 - update `_data/localized_pages.yml`;
-- English remains at `/articles/...`;
-- Polish uses `/pl/artykuly/...`.
+- keep English at `/articles/...` and Polish at `/pl/artykuly/...`.

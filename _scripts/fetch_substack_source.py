@@ -61,6 +61,40 @@ def validate_request_id(request_id: str) -> None:
         fail("request_id must be 1–64 letters, numbers, dots, underscores, or hyphens; it must start with a letter/number and cannot contain '..' or end with a dot.")
 
 
+def allowed_linkedin_host(hostname: str | None) -> bool:
+    if not hostname:
+        return False
+    host = hostname.lower()
+    return host == "lnkd.in" or host == "linkedin.com" or host.endswith(".linkedin.com")
+
+
+def normalize_substack_article_url(value: str) -> str | None:
+    """Return a stable HTTPS article URL only when it stays in Substack's domain family."""
+    try:
+        parsed = urllib.parse.urlsplit(value)
+        hostname = parsed.hostname
+        port = parsed.port
+    except (AttributeError, TypeError, ValueError):
+        return None
+    if (
+        parsed.scheme.lower() != "https"
+        or not hostname
+        or hostname.endswith(".")
+        or parsed.username is not None
+        or parsed.password is not None
+        or not parsed.netloc
+        or any(ord(character) < 32 or character.isspace() for character in value)
+    ):
+        return None
+    host = hostname.lower()
+    if host != "substack.com" and not host.endswith(".substack.com"):
+        return None
+    netloc = host if port in (None, 443) else f"{host}:{port}"
+    path = parsed.path.rstrip("/") or "/"
+    # Substack article identity is in the path; discard tracking queries and fragments.
+    return urllib.parse.urlunsplit(("https", netloc, path, "", ""))
+
+
 def make_branch_name(request_id: str) -> str:
     normalized = re.sub(r"[^A-Za-z0-9_-]+", "-", request_id).strip("-_").lower() or "request"
     digest = hashlib.sha256(request_id.encode("utf-8")).hexdigest()[:8]
@@ -72,10 +106,13 @@ def validate_inputs() -> dict[str, str]:
     linkedin_url = os.environ.get("LINKEDIN_URL", "")
     request_id = os.environ.get("REQUEST_ID", "")
     checked_https_url(substack_url, ("substack.com",))
-    checked_https_url(linkedin_url, ("linkedin.com",))
+    linkedin_parts = checked_https_url(linkedin_url)
+    if not allowed_linkedin_host(linkedin_parts.hostname):
+        fail("LINKEDIN URL hostname must be linkedin.com, a linkedin.com subdomain, or lnkd.in.")
     validate_request_id(request_id)
     return {
         "substack_url": substack_url,
+        "submitted_substack_url": substack_url,
         "linkedin_url": linkedin_url,
         "request_id": request_id,
         "branch_name": make_branch_name(request_id),
@@ -110,14 +147,37 @@ def front_matter_value(path: Path, key: str) -> str | None:
     return read_scalar(found.group(1)) if found else None
 
 
-def check_duplicate(substack_url: str) -> None:
+def check_duplicate(substack_url: str, submitted_url: str) -> None:
     for path in sorted((ROOT / "_posts").rglob("*.md")):
-        if front_matter_value(path, "substack_url") == substack_url:
+        existing_url = front_matter_value(path, "substack_url")
+        if existing_url == submitted_url or normalize_substack_article_url(existing_url or "") == substack_url:
             relative = path.relative_to(ROOT).as_posix()
             fail(
-                f"This exact substack_url is already present in {relative}. "
+                f"This Substack article is already present in {relative} (normalized URL: {substack_url}). "
                 "Review that article or use its existing translation pair instead of importing it again."
             )
+
+
+def save_context(context: dict[str, str]) -> None:
+    WORK_DIR.mkdir(parents=True, exist_ok=True)
+    CONTEXT_FILE.write_text(json.dumps(context, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
+
+def load_resolved_context(inputs: dict[str, str]) -> tuple[dict[str, str], dict[str, object]]:
+    try:
+        context = json.loads(CONTEXT_FILE.read_text(encoding="utf-8"))
+        metadata = json.loads((WORK_DIR / "metadata.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"Substack source must be fetched and resolved before this step: {exc}")
+    for key in ("submitted_substack_url", "linkedin_url", "request_id", "branch_name"):
+        if context.get(key) != inputs.get(key):
+            fail(f"Temporary workflow context does not match the validated input {key}.")
+    normalized = normalize_substack_article_url(context.get("substack_url", ""))
+    if not normalized or normalized != context.get("substack_url"):
+        fail("Temporary context does not contain a normalized Substack article URL.")
+    if metadata.get("source_url") != normalized or metadata.get("submitted_source_url") != context["submitted_substack_url"]:
+        fail("Fetched metadata does not match the resolved and submitted Substack URLs.")
+    return context, metadata
 
 
 class ArticleMetadataParser(HTMLParser):
@@ -250,7 +310,7 @@ def extract_metadata(parser: ArticleMetadataParser, resolved_url: str) -> dict[s
             parser.meta.get("description"),
             parser.meta.get("twitter:description"),
         ),
-        "canonical_url": urllib.parse.urljoin(resolved_url, parser.canonical) if parser.canonical else None,
+        "canonical_url_candidate": urllib.parse.urljoin(resolved_url, parser.canonical) if parser.canonical else None,
         "date_published": first_value(
             article.get("datePublished") if isinstance(article.get("datePublished"), str) else None,
             parser.meta.get("article:published_time"),
@@ -310,7 +370,9 @@ class SafeHTTPSRedirect(urllib.request.HTTPRedirectHandler):
 
 
 def source_redirect_validator(value: str) -> None:
-    parsed = checked_https_url(value)
+    # Source documents must remain in Substack's domain family. Image fetches
+    # have a separate validator that permits public CDN hosts with SSRF checks.
+    parsed = checked_https_url(value, ("substack.com",))
     require_public_host(parsed)
 
 
@@ -356,6 +418,17 @@ def fetch_source(context: dict[str, str]) -> dict[str, object]:
     parser = ArticleMetadataParser()
     parser.feed(source_text)
     metadata = extract_metadata(parser, resolved_url)
+    normalized_resolved_url = normalize_substack_article_url(resolved_url)
+    if not normalized_resolved_url:
+        fail("Resolved Substack article URL left the allowed substack.com domain family.")
+    canonical_candidate = metadata.pop("canonical_url_candidate", None)
+    normalized_canonical_url = normalize_substack_article_url(canonical_candidate) if isinstance(canonical_candidate, str) else None
+    normalized_source_url = normalized_canonical_url or normalized_resolved_url
+    metadata["resolved_url"] = normalized_resolved_url
+    metadata["canonical_url"] = normalized_canonical_url
+    metadata["source_url"] = normalized_source_url
+    metadata["normalized_source_url"] = normalized_source_url
+    metadata["submitted_source_url"] = context["submitted_substack_url"]
     metadata["source_html_path"] = ".automation/substack/source.html"
     metadata["metadata_path"] = ".automation/substack/metadata.json"
 
@@ -392,7 +465,10 @@ def fetch_source(context: dict[str, str]) -> dict[str, object]:
         json.dumps(metadata, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
         encoding="utf-8",
     )
+    context["substack_url"] = normalized_source_url
+    save_context(context)
     print(f"Fetched source HTML ({len(payload)} bytes) and metadata to .automation/substack/.")
+    print(f"Normalized Substack source URL: {normalized_source_url}")
     if metadata.get("lead_image_path"):
         print(f"Fetched candidate lead image ({metadata['lead_image_bytes']} bytes) to {metadata['lead_image_path']}.")
     else:
@@ -451,20 +527,22 @@ def main() -> None:
         fail("Usage: fetch_substack_source.py {validate-inputs|check-duplicate|fetch|verify-source|record-integrity}")
     mode = sys.argv[1]
     inputs = validate_inputs()
-    WORK_DIR.mkdir(parents=True, exist_ok=True)
-    CONTEXT_FILE.write_text(json.dumps(inputs, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     if mode == "validate-inputs":
+        save_context(inputs)
         print("Substack URL, LinkedIn URL, and request_id are valid.")
+    elif mode == "fetch":
+        save_context(inputs)
+        fetch_source(inputs)
     elif mode == "check-duplicate":
-        check_duplicate(inputs["substack_url"])
-        print("No existing article contains this exact substack_url.")
+        context, _metadata = load_resolved_context(inputs)
+        check_duplicate(context["substack_url"], context["submitted_substack_url"])
+        print(f"No existing article contains normalized substack_url {context['substack_url']}.")
     elif mode == "verify-source":
+        load_resolved_context(inputs)
         verify_source_metadata()
     elif mode == "record-integrity":
+        load_resolved_context(inputs)
         record_integrity()
-    else:
-        check_duplicate(inputs["substack_url"])
-        fetch_source(inputs)
 
 
 if __name__ == "__main__":
