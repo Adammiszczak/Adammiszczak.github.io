@@ -48,8 +48,8 @@ image_alt: "Describe the meaningful visible content of the article image."
 # Keep the exact supplied LinkedIn URL, including lnkd.in links.
 linkedin_url: "https://www.linkedin.com/posts/example"
 
-# Use the normalized Substack article URL from .automation/substack/context.json.
-substack_url: "https://example.substack.com/p/article"
+# Use the canonical publication article URL supplied in .automation/substack/context.json.
+substack_url: "https://adammiszczak.substack.com/p/example-article"
 ---
 
 Write the complete article here.

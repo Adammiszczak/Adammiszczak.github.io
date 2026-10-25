@@ -50,7 +50,7 @@ jobs:
       - name: Install the pinned Pagefind dependency before Codex
         run: npm install --prefix "$RUNNER_TEMP/pagefind" pagefind@1.5.2
 
-      - name: Fetch Substack source and candidate lead image
+      - name: Fetch publication RSS, resolve article, and use HTML fallback when needed
         env:
           SUBSTACK_URL: ${{ inputs.substack_url }}
           LINKEDIN_URL: ${{ inputs.linkedin_url }}
@@ -64,7 +64,7 @@ jobs:
           REQUEST_ID: ${{ inputs.request_id }}
         run: python3 _scripts/fetch_substack_source.py check-duplicate
 
-      - name: Require source publication date and lead image
+      - name: Verify deterministic source body, publication date, and lead image
         env:
           SUBSTACK_URL: ${{ inputs.substack_url }}
           LINKEDIN_URL: ${{ inputs.linkedin_url }}
@@ -92,6 +92,7 @@ jobs:
           LINKEDIN_URL: ${{ inputs.linkedin_url }}
           REQUEST_ID: ${{ inputs.request_id }}
           SOURCE_HTML_SHA256: ${{ steps.source_integrity.outputs.source_html_sha256 }}
+          SOURCE_RSS_SHA256: ${{ steps.source_integrity.outputs.source_rss_sha256 }}
           METADATA_SHA256: ${{ steps.source_integrity.outputs.metadata_sha256 }}
           CONTEXT_SHA256: ${{ steps.source_integrity.outputs.context_sha256 }}
           LEAD_IMAGE_SHA256: ${{ steps.source_integrity.outputs.lead_image_sha256 }}

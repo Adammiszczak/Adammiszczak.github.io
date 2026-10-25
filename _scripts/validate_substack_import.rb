@@ -100,23 +100,27 @@ end
 
 def validate_external_urls!(context)
   {
-    "substack_url" => [context.fetch("substack_url"), "substack.com"],
-    "submitted_substack_url" => [context.fetch("submitted_substack_url"), "substack.com"],
-    "linkedin_url" => [context.fetch("linkedin_url"), "linkedin"],
-  }.each do |label, (value, domain)|
+    "substack_url" => context.fetch("substack_url"),
+    "submitted_substack_url" => context.fetch("submitted_substack_url"),
+  }.each do |label, value|
     begin
       uri = URI.parse(value)
       host = uri.host&.downcase
-      valid_host = if domain == "linkedin"
-                     host && (host == "lnkd.in" || host == "linkedin.com" || host.end_with?(".linkedin.com"))
-                   else
-                     host && (host == domain || host.end_with?(".#{domain}"))
-                   end
-      host_description = domain == "linkedin" ? "linkedin.com, a linkedin.com subdomain, or lnkd.in" : "#{domain} or a subdomain of #{domain}"
-      fail_check("#{label} must be an HTTPS URL on #{host_description}.") unless uri.is_a?(URI::HTTPS) && valid_host && !uri.userinfo
+      valid_path = uri.path.match?(%r{\A/p/[^/]+/?\z})
+      valid_port = uri.port == 443
+      fail_check("#{label} must be an HTTPS /p/<slug> URL on exactly adammiszczak.substack.com with no credentials.") unless uri.is_a?(URI::HTTPS) && host == "adammiszczak.substack.com" && valid_path && valid_port && !uri.userinfo
     rescue URI::InvalidURIError
-      fail_check("#{label} is malformed.")
+      fail_check("#{label} is malformed; expected https://adammiszczak.substack.com/p/<slug>.")
     end
+  end
+  begin
+    linkedin_value = context.fetch("linkedin_url")
+    linkedin_uri = URI.parse(linkedin_value)
+    linkedin_host = linkedin_uri.host&.downcase
+    valid_linkedin_host = linkedin_host && (linkedin_host == "lnkd.in" || linkedin_host == "linkedin.com" || linkedin_host.end_with?(".linkedin.com"))
+    fail_check("linkedin_url must use HTTPS on linkedin.com, a linkedin.com subdomain, or lnkd.in; its exact submitted value must be preserved.") unless linkedin_uri.is_a?(URI::HTTPS) && valid_linkedin_host && !linkedin_uri.userinfo
+  rescue URI::InvalidURIError
+    fail_check("linkedin_url is malformed.")
   end
   request_id = context.fetch("request_id")
   fail_check("request_id contains unsupported characters or is too long.") unless request_id.match?(/\A[A-Za-z0-9][A-Za-z0-9._-]{0,63}\z/) && !request_id.include?("..") && !request_id.end_with?(".")
@@ -140,6 +144,22 @@ def verify_fetched_integrity!(context, metadata)
     fail_check("Missing pre-Codex integrity value for #{name}.") if expected.nil? || expected.empty?
     fail_check("Fetched source file changed after retrieval: #{name}.") unless File.file?(path) && Digest::SHA256.file(path).hexdigest == expected
   end
+  rss_expected = ENV.fetch("SOURCE_RSS_SHA256", "none")
+  rss_path = File.join(WORK_DIR, "source.rss.xml")
+  if metadata["rss_fetched"]
+    fail_check("Fetched RSS file must not be a symlink.") if File.symlink?(rss_path)
+    fail_check("Missing pre-Codex integrity value for source_rss_sha256.") if rss_expected == "none" || rss_expected.empty?
+    fail_check("Fetched RSS feed changed after retrieval.") unless File.file?(rss_path) && Digest::SHA256.file(rss_path).hexdigest == rss_expected
+    fail_check("Fetched metadata has an unexpected RSS path.") unless metadata["rss_path"] == ".automation/substack/source.rss.xml"
+  else
+    fail_check("Unexpected RSS integrity value when no feed was fetched.") unless rss_expected == "none"
+  end
+  fail_check("Temporary context does not record the deterministic acquisition mode.") unless %w[rss html_fallback].include?(context["source_mode"]) && metadata["source_mode"] == context["source_mode"]
+  fail_check("Fetched metadata canonical URL differs from the deterministic workflow context.") unless metadata["canonical_url"] == context["substack_url"]
+  if metadata["source_mode"] == "rss"
+    fail_check("RSS mode requires a usable matching content:encoded article body.") unless metadata["rss_fetched"] && metadata["rss_item_found"] && metadata["rss_content_usable"]
+    fail_check("RSS matching diagnostic is missing or invalid.") unless %w[rss_link_exact rss_guid_exact article_path_exact].include?(metadata["rss_match_method"])
+  end
   expected_image = ENV.fetch("LEAD_IMAGE_SHA256", "none")
   image_path = metadata["lead_image_path"]
   fail_check("Fetched metadata has no candidate lead image.") unless image_path.is_a?(String) && !image_path.empty?
@@ -147,7 +167,7 @@ def verify_fetched_integrity!(context, metadata)
   fail_check("Candidate lead image path escapes the temporary source directory.") unless image_absolute.start_with?(WORK_DIR + File::SEPARATOR)
   fail_check("Fetched lead image must not be a symlink.") if File.symlink?(image_absolute)
   fail_check("Fetched candidate lead image changed after retrieval.") unless expected_image != "none" && File.file?(image_absolute) && Digest::SHA256.file(image_absolute).hexdigest == expected_image
-  fail_check("Fetched metadata does not preserve the normalized Substack URL.") unless metadata["source_url"] == context.fetch("substack_url") && metadata["normalized_source_url"] == context.fetch("substack_url")
+  fail_check("Fetched metadata does not preserve the normalized publication URL.") unless metadata["source_url"] == context.fetch("substack_url") && metadata["normalized_source_url"] == context.fetch("substack_url")
   fail_check("Fetched metadata does not preserve the submitted Substack URL for audit.") unless metadata["submitted_source_url"] == context.fetch("submitted_substack_url")
   fail_check("Fetched HTML path is unexpected.") unless metadata["source_html_path"] == ".automation/substack/source.html"
   fail_check("Fetched metadata path is unexpected.") unless metadata["metadata_path"] == ".automation/substack/metadata.json"
