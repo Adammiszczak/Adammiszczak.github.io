@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       substack_url:
-        description: Public URL of the Substack source article
+        description: Article URL on amiszczak.substack.com, the primary publication
         required: true
         type: string
       linkedin_url:

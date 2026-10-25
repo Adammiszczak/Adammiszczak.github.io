@@ -21,13 +21,29 @@ Translated pages have a language-specific HTML `lang`, self-referencing canonica
 
 ## Authoring content
 
-Use `_templates/article.md` for a new English expert article. Include a clear title, date, useful description, approved tags from `_data/taxonomy.yml`, an article-specific image with accurate alt text, and the relevant LinkedIn and Substack destinations. Ground factual claims in public sources, preferably primary documentation, and label analysis or inference clearly.
+Use `_templates/article.md` for a new English expert article. Include a clear title, date, useful description, approved tags from `_data/taxonomy.yml`, an article-specific image with accurate alt text, the relevant LinkedIn URL, and the canonical URL of the full article on the primary Substack publication. Ground factual claims in public sources, preferably primary documentation, and label analysis or inference clearly.
 
 Create a Polish article as a separate post with a natural Polish title and translated slug under `/pl/artykuly/`. Give both versions the same stable `translation_key`, then add their paths and the English `x_default` to `_data/localized_pages.yml`. Keep Polish navigation and shared copy in `_data/navigation.yml` and `_data/site_copy.yml`; locale-specific destinations belong in `_data/locale_routes.yml`. Use established Polish professional terms naturally, retaining product and industry names such as AI Search, GEO, SEO, e-commerce and Google Merchant Center where appropriate.
 
 Do not add a second discussion call to action to an article's Markdown body: `_layouts/article.html` includes the localized block. Preserve existing post URLs and add redirects if an approved URL change requires one.
 
 This is a public repository. Do not put local paths, private workspace names or links to private research files in public content, metadata, documentation or generated pages. Research from other authorized workspaces may inform an article, but cite public sources and write the analysis in original wording.
+
+## Editorial direction and Substack publications
+
+The content should position Adam as a senior Technical SEO, GEO and AI Search strategist who can connect Search, Product, Engineering, Data, Marketing and commercial outcomes. Write for senior practitioners and enterprise e-commerce leaders. Avoid generic SEO advice, hype and claims stronger than the evidence.
+
+Build articles through observation, verification, nuance, business implications and a practical operating model. Treat claims as confirmed, observed, hypothesis or unknown; verify current technical claims against official documentation and reliable primary sources. Keep crawling, discovery, retrieval, ranking, citations, referrals, transactions and model training distinct. Do not treat correlation as causation or traffic as the final business measure. Consider enterprise scale, international markets, data quality, implementation cost, ownership, monitoring and rollback.
+
+Use these Substack destinations consistently:
+
+- Primary publication: <https://amiszczak.substack.com> hosts the full article, is the source of truth and supplies articles to the import workflow. Its RSS feed is <https://amiszczak.substack.com/feed>.
+- Secondary publication: <https://adammiszczak.substack.com> is for short teasers that link readers to the full primary article. Do not use teaser URLs as `substack_url`.
+- Profile: <https://substack.com/@adammiszczak> is for identity and discovery, not article imports.
+
+The Substack import workflow accepts only primary publication article URLs in the form `https://amiszczak.substack.com/p/<slug>` and creates the bilingual website article pair. LinkedIn posts and secondary-publication teasers are separate distribution assets. Keep LinkedIn concise and put its source list in the first comment. Keep a teaser short, avoid duplicating the full article, and link clearly to the primary canonical URL.
+
+For article visuals, use a landscape 16:9 editorial direction with a dark navy/near-black background, high-contrast white and cyan/turquoise accents, and one clear technical visual metaphor. Avoid generic stock imagery, robot imagery, unreadable fake dashboards and decorative visuals unrelated to the argument. The automated import uses a validated source image; it does not create new image concepts.
 
 See [AGENTS.md](AGENTS.md) for the full content, privacy and implementation rules, and [`_docs/localization-strategy.md`](_docs/localization-strategy.md) for the page and article localization workflow.
 

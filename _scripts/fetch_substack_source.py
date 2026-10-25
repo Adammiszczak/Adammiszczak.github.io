@@ -28,7 +28,7 @@ MAX_IMAGE_BYTES = 15 * 1024 * 1024
 TIMEOUT_SECONDS = 25
 MAX_REDIRECTS = 5
 USER_AGENT = "AdammiszczakContentImporter/1.0 (+https://adammiszczak.github.io/)"
-PUBLICATION_HOST = "adammiszczak.substack.com"
+PUBLICATION_HOST = "amiszczak.substack.com"
 RSS_URL = f"https://{PUBLICATION_HOST}/feed"
 REQUEST_ID_PATTERN = re.compile(r"\A[A-Za-z0-9][A-Za-z0-9._-]{0,63}\Z")
 IMAGE_EXTENSIONS = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/gif": ".gif", "image/avif": ".avif"}
@@ -92,24 +92,24 @@ def _normalize_publication_article_url(value: str) -> str:
     except ValueError as exc:
         raise ValueError(f"Malformed Substack URL: {exc}") from exc
     if parsed.scheme.lower() != "https":
-        raise ValueError("Substack article URL must use HTTPS, for example https://adammiszczak.substack.com/p/<slug>.")
+        raise ValueError(f"Substack article URL must use HTTPS, for example https://{PUBLICATION_HOST}/p/<slug>.")
     if parsed.username is not None or parsed.password is not None:
         raise ValueError("Substack article URL must not contain username or password credentials.")
     if not hostname or hostname.endswith("."):
-        raise ValueError("Substack article URL must use the exact publication host adammiszczak.substack.com.")
+        raise ValueError(f"Substack article URL must use the exact publication host {PUBLICATION_HOST}.")
     host = hostname.lower()
     if "/note/" in parsed.path.lower() or parsed.path.lower().startswith("/note/"):
         raise ValueError("Substack Notes are not article sources and are intentionally rejected. Supply a /p/<slug> publication article URL.")
     if host == "substack.com" and parsed.path.lower().startswith("/@"):
-        raise ValueError("Substack profile URLs are for discovery only. Supply a publication article URL: https://adammiszczak.substack.com/p/<slug>.")
+        raise ValueError(f"Substack profile URLs are for discovery only. Supply a publication article URL: https://{PUBLICATION_HOST}/p/<slug>.")
     if host != PUBLICATION_HOST:
         if host == "substack.com" or host.endswith(".substack.com"):
             raise ValueError(f"Wrong Substack publication host {host!r}; expected exactly {PUBLICATION_HOST}.")
         raise ValueError(f"Substack article URL must use the publication host {PUBLICATION_HOST}.")
     if not parsed.path.startswith("/p/") or parsed.path.rstrip("/") == "/p":
-        raise ValueError("Expected a publication article URL in the form https://adammiszczak.substack.com/p/<slug>; profile and Note URLs are not accepted.")
+        raise ValueError(f"Expected a publication article URL in the form https://{PUBLICATION_HOST}/p/<slug>; profile and Note URLs are not accepted.")
     if parsed.path.count("/") != 2 or not parsed.path[3:]:
-        raise ValueError("Substack article path must be /p/<slug> on https://adammiszczak.substack.com.")
+        raise ValueError(f"Substack article path must be /p/<slug> on https://{PUBLICATION_HOST}.")
     if port not in (None, 443):
         raise ValueError("Substack article URL must use the standard HTTPS port.")
     query_items = urllib.parse.parse_qsl(parsed.query, keep_blank_values=True)

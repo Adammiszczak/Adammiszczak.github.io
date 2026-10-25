@@ -17,7 +17,7 @@ fetcher = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(fetcher)
 
 
-ARTICLE_URL = "https://adammiszczak.substack.com/p/beyond-prompt-monitoring"
+ARTICLE_URL = "https://amiszczak.substack.com/p/beyond-prompt-monitoring"
 
 
 def rss_item(link="", guid="", content="", extra=""):
@@ -72,7 +72,7 @@ class InputValidationTests(unittest.TestCase):
 
     def test_rejects_another_publication_host(self):
         self.assert_invalid_publication(
-            "https://another-publication.substack.com/p/story", "expected exactly"
+            "https://adammiszczak.substack.com/p/story", "expected exactly"
         )
 
     def test_rejects_malformed_url(self):
@@ -80,12 +80,12 @@ class InputValidationTests(unittest.TestCase):
 
     def test_rejects_credentials(self):
         self.assert_invalid_publication(
-            "https://user:password@adammiszczak.substack.com/p/story", "credentials"
+            "https://user:password@amiszczak.substack.com/p/story", "credentials"
         )
 
     def test_rejects_non_https(self):
         self.assert_invalid_publication(
-            "http://adammiszczak.substack.com/p/story", "must use HTTPS"
+            "http://amiszczak.substack.com/p/story", "must use HTTPS"
         )
 
     def test_rejects_private_redirect_target(self):
@@ -111,8 +111,8 @@ class RSSTests(unittest.TestCase):
 
     def test_exact_link_priority_wins_over_guid_match(self):
         items = fetcher.parse_rss_items(feed(
-            rss_item(link="https://adammiszczak.substack.com/p/other", guid=ARTICLE_URL),
-            rss_item(link=ARTICLE_URL, guid="https://adammiszczak.substack.com/p/another"),
+            rss_item(link="https://amiszczak.substack.com/p/other", guid=ARTICLE_URL),
+            rss_item(link=ARTICLE_URL, guid="https://amiszczak.substack.com/p/another"),
         ))
         item, method = fetcher.match_rss_item(items, ARTICLE_URL)
         self.assertEqual(fetcher.rss_item_metadata(item)["article_url"], ARTICLE_URL)
@@ -126,7 +126,7 @@ class RSSTests(unittest.TestCase):
         self.assertEqual(method, "article_path_exact")
 
     def test_item_absent(self):
-        items = fetcher.parse_rss_items(feed(rss_item(link="https://adammiszczak.substack.com/p/other")))
+        items = fetcher.parse_rss_items(feed(rss_item(link="https://amiszczak.substack.com/p/other")))
         item, method = fetcher.match_rss_item(items, ARTICLE_URL)
         self.assertIsNone(item)
         self.assertIsNone(method)

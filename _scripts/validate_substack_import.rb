@@ -15,6 +15,7 @@ WORK_DIR = File.join(ROOT, ".automation", "substack")
 CONTEXT_PATH = File.join(WORK_DIR, "context.json")
 METADATA_PATH = File.join(WORK_DIR, "metadata.json")
 ALLOWED_IMAGE_EXTENSIONS = %w[.jpg .jpeg .png .webp .gif .avif].freeze
+SUBSTACK_PUBLICATION_HOST = "amiszczak.substack.com".freeze
 
 def fail_check(message)
   escaped = message.gsub("%", "%25").gsub("\r", "%0D").gsub("\n", "%0A")
@@ -108,9 +109,9 @@ def validate_external_urls!(context)
       host = uri.host&.downcase
       valid_path = uri.path.match?(%r{\A/p/[^/]+/?\z})
       valid_port = uri.port == 443
-      fail_check("#{label} must be an HTTPS /p/<slug> URL on exactly adammiszczak.substack.com with no credentials.") unless uri.is_a?(URI::HTTPS) && host == "adammiszczak.substack.com" && valid_path && valid_port && !uri.userinfo
+      fail_check("#{label} must be an HTTPS /p/<slug> URL on exactly #{SUBSTACK_PUBLICATION_HOST} with no credentials.") unless uri.is_a?(URI::HTTPS) && host == SUBSTACK_PUBLICATION_HOST && valid_path && valid_port && !uri.userinfo
     rescue URI::InvalidURIError
-      fail_check("#{label} is malformed; expected https://adammiszczak.substack.com/p/<slug>.")
+      fail_check("#{label} is malformed; expected https://#{SUBSTACK_PUBLICATION_HOST}/p/<slug>.")
     end
   end
   begin
