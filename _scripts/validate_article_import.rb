@@ -114,12 +114,9 @@ def normalize_substack_url(value)
   valid = uri.is_a?(URI::HTTPS) && uri.host&.downcase == SUBSTACK_PUBLICATION_HOST && uri.port == 443 &&
           !uri.userinfo && valid_path
   fail_check("Substack reference must use https://#{SUBSTACK_PUBLICATION_HOST}/p/<slug>.") unless valid
-  kept_query = URI.decode_www_form(uri.query.to_s).reject do |key, _item|
-    key.downcase.start_with?("utm_") || %w[fbclid gclid mc_cid mc_eid ref source].include?(key.downcase)
-  end
   uri.host = SUBSTACK_PUBLICATION_HOST
   uri.path = normalized_path
-  uri.query = kept_query.empty? ? nil : URI.encode_www_form(kept_query)
+  uri.query = nil
   uri.fragment = nil
   uri.to_s
 rescue URI::InvalidURIError, ArgumentError
@@ -195,12 +192,12 @@ def verify_fetched_integrity!(context, metadata)
               document["version"].to_s == context["doc_version"] &&
               document["mimeType"] == "application/vnd.google-apps.document" &&
               document["parents"].is_a?(Array) && document["parents"].include?(source_folder_id) &&
-              [true, false].include?(document["canDownload"])
+              document["canDownload"] == true
   fail_check("Google Doc metadata does not match the trusted workflow snapshot.") unless doc_valid
   image_valid = image.is_a?(Hash) && image["id"] == context["image_file_id"] &&
                 image["version"].to_s == context["image_version"] &&
                 image["parents"].is_a?(Array) && image["parents"].include?(source_folder_id) &&
-                [true, false].include?(image["canDownload"]) && expected_image_extension &&
+                image["canDownload"] == true && expected_image_extension &&
                 File.extname(image_path) == expected_image_extension
   fail_check("Lead-image metadata does not match the trusted workflow snapshot.") unless image_valid
   fail_check("Metadata must identify the deterministic source paths.") unless metadata["source_path"] == ".automation/content-source/source.md" && metadata["metadata_path"] == ".automation/content-source/metadata.json"
@@ -305,7 +302,7 @@ def validate!
   fail_check("Both article dates must preserve the trusted published_at timestamp.") unless en_date == expected_date && pl_date == expected_date
   expected_filename_date = context.fetch("published_at").to_s[0, 10]
   [en, pl].each do |post|
-    fail_check("Post filename date must match the Substack publication date.") unless File.basename(post[:path])[0, 10] == expected_filename_date
+    fail_check("Post filename date must match the trusted published_at date.") unless File.basename(post[:path])[0, 10] == expected_filename_date
   end
   %w[en pl].zip([en, pl]).each do |language, post|
     data = post[:data]
@@ -346,7 +343,7 @@ def validate!
   fail_check("Referenced article image must be a regular file, not a symlink.") if File.symlink?(image_file)
   fail_check("Referenced article image does not exist or is empty.") unless File.file?(image_file) && File.size(image_file).positive?
   fetched_image = File.expand_path(metadata.fetch("lead_image_path"), ROOT)
-  fail_check("The article image must preserve the validated Substack lead image bytes.") unless Digest::SHA256.file(image_file).hexdigest == Digest::SHA256.file(fetched_image).hexdigest
+  fail_check("The article image must preserve the validated Google Drive lead image bytes.") unless Digest::SHA256.file(image_file).hexdigest == Digest::SHA256.file(fetched_image).hexdigest
 
   fail_check("If last_modified_at is set, it must be set consistently for both translations.") unless !!en_data["last_modified_at"] == !!pl_data["last_modified_at"]
   if en_data["last_modified_at"] || pl_data["last_modified_at"]

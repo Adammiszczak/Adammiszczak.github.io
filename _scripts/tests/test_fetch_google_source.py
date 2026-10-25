@@ -89,10 +89,11 @@ class InputValidationTests(unittest.TestCase):
         result = fetcher.validate_inputs(workflow_inputs(LAST_MODIFIED_AT="2026-10-25T10:30:00+01:00"))
         self.assertEqual(result["last_modified_at"], "2026-10-25T10:30:00+01:00")
 
-    def test_normalizes_tracking_and_fragment_from_substack_reference(self):
-        result = fetcher.validate_inputs(workflow_inputs(
-            SUBSTACK_URL=ARTICLE_URL + "?utm_source=telegram&section=comments#top"))
-        self.assertEqual(result["substack_url"], ARTICLE_URL + "?section=comments")
+    def test_normalizes_all_query_parameters_and_fragment_from_substack_reference(self):
+        for suffix in ("?utm_source=telegram", "?section=comments", "?foo=bar&section=comments#top", "#top"):
+            with self.subTest(suffix=suffix):
+                result = fetcher.validate_inputs(workflow_inputs(SUBSTACK_URL=ARTICLE_URL + suffix))
+                self.assertEqual(result["substack_url"], ARTICLE_URL)
 
     def test_rejects_invalid_content_id(self):
         for value in ("Bad-ID", "../article", "-leading", "trailing-", "with space"):
@@ -285,6 +286,17 @@ class DuplicateAndPackageTests(unittest.TestCase):
             (posts / "old.md").write_text('---\ntitle: Different title\nsubstack_url: "' + ARTICLE_URL + '?utm_source=test#part"\n---\n', encoding="utf-8")
             with self.assertRaisesRegex(ValueError, "Duplicate canonical article"):
                 fetcher.check_duplicate(ARTICLE_URL, root=root)
+
+    def test_duplicate_detection_ignores_arbitrary_incoming_query_and_fragment(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            posts = root / "_posts"
+            posts.mkdir()
+            existing = "https://amiszczak.substack.com/p/foo"
+            incoming = fetcher.validate_inputs(workflow_inputs(SUBSTACK_URL=existing + "?section=comments"))["substack_url"]
+            (posts / "old.md").write_text('---\ntitle: Existing\nsubstack_url: "' + existing + '"\n---\n', encoding="utf-8")
+            with self.assertRaisesRegex(ValueError, "Duplicate canonical article"):
+                fetcher.check_duplicate(incoming, root=root)
 
     def test_acquisition_generates_context_metadata_and_exact_source_image(self):
         with tempfile.TemporaryDirectory() as temporary:

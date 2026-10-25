@@ -36,7 +36,6 @@ IMAGE_EXTENSIONS = {
     "image/gif": ".gif",
     "image/avif": ".avif",
 }
-TRACKING_QUERY_NAMES = {"fbclid", "gclid", "mc_cid", "mc_eid", "ref", "source"}
 INTEGRITY_FILES = ("source.md", "context.json", "metadata.json")
 
 
@@ -72,11 +71,7 @@ def normalize_substack_url(value: str) -> str:
     normalized_path = parsed.path.rstrip("/")
     if not normalized_path.startswith("/p/") or normalized_path.count("/") != 2 or not normalized_path[3:]:
         raise ValueError("substack_url must use the exact article path /p/<slug>.")
-    query_items = urllib.parse.parse_qsl(parsed.query, keep_blank_values=True)
-    kept = [(key, item) for key, item in query_items
-            if not key.lower().startswith("utm_") and key.lower() not in TRACKING_QUERY_NAMES]
-    query = urllib.parse.urlencode(kept, doseq=True)
-    return urllib.parse.urlunsplit(("https", "amiszczak.substack.com", normalized_path, query, ""))
+    return urllib.parse.urlunsplit(("https", "amiszczak.substack.com", normalized_path, "", ""))
 
 
 def allowed_linkedin_url(value: str) -> bool:
