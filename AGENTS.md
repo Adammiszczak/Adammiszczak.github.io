@@ -55,13 +55,18 @@ Keep these stages distinct: crawling, URL discovery, raw HTML retrieval, JavaScr
 
 Connect technical work to decisions and business measures such as qualified traffic, conversion rate, orders, revenue, GMV, contribution margin, repeat purchase, loyalty, retention, customer lifetime value, refunds, cancellations and operational cost. Explain what a measurement enables a team to decide. Consider enterprise and marketplace scale, international markets, large URL sets, multiple sellers and variants, faceted navigation, feeds, stale inventory, implementation effort, engineering cost, data quality, ownership, monitoring and rollback. Consider collaboration with Paid Search, Paid Social, CRM, affiliates, creators, Product, Engineering, Analytics, Commercial and marketplace operations.
 
-### Substack publication roles
+### Publication roles and content automation
 
-- Primary publication: `https://amiszczak.substack.com` is the source of truth for full articles and automated imports. Its RSS feed, `https://amiszczak.substack.com/feed`, is the primary machine-readable article transport.
-- Secondary publication: `https://adammiszczak.substack.com` is reserved for short teasers that link to the full primary article. A teaser should not duplicate the full article or become its canonical `substack_url`.
-- Profile: `https://substack.com/@adammiszczak` is for identity and discovery; it is not an article source.
+- Google Sheet: publishing manifest managed by n8n, with stable `content_id`, Google Drive file IDs and version snapshots, publication timestamps, and public URLs.
+- Google Doc: complete editorial article source and source of truth for automated imports.
+- Google Drive binary: lead image source.
+- `https://amiszczak.substack.com/p/<slug>`: public full-article publication/reference URL. It is not fetched by article automation.
+- LinkedIn URL: public social/discussion reference. Preserve the exact value supplied to automation, including `lnkd.in` links.
+- Telegram `/publish <content_id>`: operator trigger. n8n resolves the manifest and dispatches the article workflow.
+- GitHub Actions: deterministic Drive acquisition, editorial transformation, validation, and normal pull-request creation.
+- GitHub Pages: production. Cloudflare Pages is only for pull-request previews. A human must merge; there is no auto-merge.
 
-Use `https://amiszczak.substack.com/p/<slug>` for canonical full-article URLs. The automated import accepts only that publication host and creates the bilingual Jekyll article pair. It does not generate LinkedIn posts or secondary-publication teasers. Full Substack articles are typically 1,200–2,500 words when the topic supports that depth; do not add length without useful evidence, nuance or implementation detail.
+The canonical public article URL must use exactly `https://amiszczak.substack.com/p/<slug>`. Reject profile URLs, `/note/` URLs, and article paths on other Substack publications. Keep the secondary publication `https://adammiszczak.substack.com` for short teasers that link to the full primary article; a teaser must not duplicate the full article or become its canonical `substack_url`. The profile `https://substack.com/@adammiszczak` is for identity and discovery, not an article source. The import creates only the bilingual Jekyll article pair; it does not generate LinkedIn posts or secondary-publication teasers. Full Substack articles are typically 1,200–2,500 words when the topic supports that depth; do not add length without useful evidence, nuance or implementation detail.
 
 ### Channel and visual guidance
 
@@ -69,7 +74,7 @@ LinkedIn is the shorter distribution layer: communicate one strong idea, use a c
 
 A secondary-publication teaser should be short, normally 3–6 paragraphs and 4–6 bullets, use the same title/subtitle and hero image when appropriate, and finish with a clear link to the full primary article. Do not include the full article or a long references list in the teaser.
 
-Use a consistent landscape 16:9 editorial image direction: dark navy or near-black, high-contrast white with cyan/turquoise accents, and one technical metaphor such as crawler paths, data streams, index layers, retrieval architecture or a business-value pipeline. Avoid bright rainbow palettes, generic stock illustrations, robot photos, unreadable fake dashboards and decorative images unrelated to the argument. For a separately requested new visual concept, present 3–4 distinct options for selection before creating the final individual PNG. The Substack import workflow uses its validated source image and does not invent a replacement.
+Use a consistent landscape 16:9 editorial image direction: dark navy or near-black, high-contrast white with cyan/turquoise accents, and one technical metaphor such as crawler paths, data streams, index layers, retrieval architecture or a business-value pipeline. Avoid bright rainbow palettes, generic stock illustrations, robot photos, unreadable fake dashboards and decorative images unrelated to the argument. For a separately requested new visual concept, present 3–4 distinct options for selection before creating the final individual PNG. The article import workflow uses the version-checked Google Drive source image and does not invent a replacement.
 
 ## Public repository confidentiality
 

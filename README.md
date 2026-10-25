@@ -29,19 +29,15 @@ Do not add a second discussion call to action to an article's Markdown body: `_l
 
 This is a public repository. Do not put local paths, private workspace names or links to private research files in public content, metadata, documentation or generated pages. Research from other authorized workspaces may inform an article, but cite public sources and write the analysis in original wording.
 
-## Editorial direction and Substack publications
+## Editorial direction and publication channels
 
 The content should position Adam as a senior Technical SEO, GEO and AI Search strategist who can connect Search, Product, Engineering, Data, Marketing and commercial outcomes. Write for senior practitioners and enterprise e-commerce leaders. Avoid generic SEO advice, hype and claims stronger than the evidence.
 
 Build articles through observation, verification, nuance, business implications and a practical operating model. Treat claims as confirmed, observed, hypothesis or unknown; verify current technical claims against official documentation and reliable primary sources. Keep crawling, discovery, retrieval, ranking, citations, referrals, transactions and model training distinct. Do not treat correlation as causation or traffic as the final business measure. Consider enterprise scale, international markets, data quality, implementation cost, ownership, monitoring and rollback.
 
-Use these Substack destinations consistently:
+Content automation uses the Google Sheet as its publishing manifest, the Google Doc as the complete editorial source, and a Google Drive binary as the lead image source. Substack URLs are public publication references, and LinkedIn URLs are social/discussion references. The Telegram command `/publish <content_id>` triggers n8n to resolve the manifest and dispatch GitHub Actions; the workflow acquires the exact Drive versions, generates and validates the EN/PL article pair, and opens a normal pull request. GitHub Pages remains production, Cloudflare Pages serves PR previews, and a human merges each PR.
 
-- Primary publication: <https://amiszczak.substack.com> hosts the full article, is the source of truth and supplies articles to the import workflow. Its RSS feed is <https://amiszczak.substack.com/feed>.
-- Secondary publication: <https://adammiszczak.substack.com> is for short teasers that link readers to the full primary article. Do not use teaser URLs as `substack_url`.
-- Profile: <https://substack.com/@adammiszczak> is for identity and discovery, not article imports.
-
-The Substack import workflow accepts only primary publication article URLs in the form `https://amiszczak.substack.com/p/<slug>` and creates the bilingual website article pair. LinkedIn posts and secondary-publication teasers are separate distribution assets. Keep LinkedIn concise and put its source list in the first comment. Keep a teaser short, avoid duplicating the full article, and link clearly to the primary canonical URL.
+Use `https://amiszczak.substack.com/p/<slug>` for a full article's canonical public reference. The workflow accepts only that host and article path; it never fetches Substack. `https://adammiszczak.substack.com` remains for short teasers that link to the full article. `https://substack.com/@adammiszczak` is for identity and discovery. LinkedIn posts and secondary-publication teasers are separate distribution assets. Keep LinkedIn concise and put its source list in the first comment. Keep a teaser short, avoid duplicating the full article, and link clearly to the primary canonical URL.
 
 For article visuals, use a landscape 16:9 editorial direction with a dark navy/near-black background, high-contrast white and cyan/turquoise accents, and one clear technical visual metaphor. Avoid generic stock imagery, robot imagery, unreadable fake dashboards and decorative visuals unrelated to the argument. The automated import uses a validated source image; it does not create new image concepts.
 
@@ -89,6 +85,6 @@ The localization checker validates generated language attributes, canonical URLs
 
 ## GitHub Pages deployment
 
-The **Build and release** workflow is the deployment path. It runs a production Jekyll build and the localization checker for pull requests and pushes to `main` or `master`. Same-repository pull requests also receive a temporary Cloudflare Pages preview; pull requests never deploy to GitHub Pages. A successful push to either deployment branch, or a manual `workflow_dispatch`, uploads the built `_site/` artifact and deploys it to GitHub Pages. See [_docs/content-automation.md](_docs/content-automation.md) for Substack import and preview setup.
+The **Build and release** workflow is the deployment path. It runs a production Jekyll build and the localization checker for pull requests and pushes to `main` or `master`. Same-repository pull requests also receive a temporary Cloudflare Pages preview; pull requests never deploy to GitHub Pages. A successful push to either deployment branch, or a manual `workflow_dispatch`, uploads the built `_site/` artifact and deploys it to GitHub Pages. See [_docs/content-automation.md](_docs/content-automation.md) for Google Drive article acquisition and preview setup.
 
 In the repository's **Settings → Pages**, set the build and deployment source to **GitHub Actions**. No separate `gh-pages` branch or committed `_site/` directory is needed. The workflow uses Bundler and the local Jekyll plugins; keep its Ruby version aligned with the version used for local builds and its deployment permissions limited to the Pages job.

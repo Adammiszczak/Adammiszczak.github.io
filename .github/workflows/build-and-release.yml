@@ -139,7 +139,7 @@ jobs:
           script: |
             const marker = '<!-- cloudflare-pr-preview -->';
             const pr = context.payload.pull_request;
-            const sourceMatch = (pr.body || '').match(/^Substack source URL:\s*(\S+)\s*$/im);
+            const sourceMatch = (pr.body || '').match(/^Substack reference URL:\s*(\S+)\s*$/im);
             let sourceLine = '';
             if (sourceMatch) {
               try {

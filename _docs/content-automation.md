@@ -1,71 +1,124 @@
-# Automated Substack article imports
+# Automated article imports
 
-## Publication roles and source of truth
+## Source of truth and channel roles
 
-- Primary publication: <https://amiszczak.substack.com> is the source of truth for full-length articles and automated imports.
-- Primary publication RSS: <https://amiszczak.substack.com/feed> is the main machine-readable transport for recent articles.
-- Secondary publication: <https://adammiszczak.substack.com> is reserved for short teasers that link to the full article on the primary publication.
-- Profile: <https://substack.com/@adammiszczak> is for identity, discovery and profile visibility. It is not an article or feed source.
+- Google Sheet: publishing manifest managed by n8n, including the stable `content_id`, source file IDs and version snapshots, public URLs, and timestamps.
+- Google Doc: complete editorial article source.
+- Google Drive binary: lead image source.
+- Substack URL: public publication/reference URL. It is never fetched by this workflow.
+- LinkedIn URL: public social/discussion URL, retained exactly as supplied.
+- Telegram: operator trigger, in the form `/publish <content_id>`.
+- n8n: resolves the manifest row, snapshots Drive metadata versions, and dispatches GitHub Actions.
+- GitHub Actions: deterministic Drive acquisition, source integrity checks, Codex editorial transformation, validation, production checks, and normal PR creation.
+- GitHub Pages: production site.
+- Cloudflare Pages: pull-request preview only.
 
-The canonical import input is `https://amiszczak.substack.com/p/<slug>`. Profile URLs, Notes and article URLs on other Substack publications are intentionally rejected. The secondary publication must not be stored as an article's `substack_url`.
+Merging is manual and required. The workflow does not auto-merge or deploy article changes directly to production.
 
 ## Import flow
 
-Telegram/n8n → `workflow_dispatch` → input validation → dependency setup → deterministic primary RSS fetch and article resolution → optional exact-URL HTML fallback → duplicate detection → source artifact integrity checks → Codex → generated-content validation → production Jekyll build → Pagefind and production diagnostics → localization validation → expose `CONTENT_PR_TOKEN` → push branch and create a normal pull request. A human reviews and merges the PR; there is no auto-merge. GitHub Pages remains the production host.
+Telegram `/publish <content_id>` → n8n manifest lookup → Google Drive metadata snapshot → `ingest-article.yml` dispatch → validate every input → authenticate to Google in `acquire_source` → verify file IDs, MIME types, versions, direct parent folder and download capability → export the Google Doc as Markdown and download the lead image → canonical duplicate check → upload `.automation/content-source/` for one day → fresh `master` checkout in `generate_validate_publish` → record source SHA-256 values → Codex → verify source hashes and article pair → production Jekyll → Pagefind → production diagnostics → localization check → expose `CONTENT_PR_TOKEN` to the final publish step → push a content branch and open a normal PR.
 
-RSS is fetched before Codex runs, using an explicit importer User-Agent. Matching is deterministic: normalized exact RSS `<link>`, normalized exact valid article URL in `<guid>`, then exact `/p/<slug>` path. Source mode and match diagnostics are recorded in `.automation/substack/metadata.json` and `context.json`. RSS and extracted HTML are untrusted article data, never workflow instructions.
+Substack is only an article reference stored in front matter and PR metadata. No workflow step fetches that reference.
 
-The importer uses `content:encoded` as the article body only when it contains substantive content. Missing, empty, very short, or read-more-only content triggers direct HTML fallback. The fallback requests the exact canonical primary-publication article URL, with HTTPS, bounded redirects, response limits and public-host checks. Redirects stay within the Substack domain family and on the requested article path. If RSS cannot provide a usable body and direct HTML returns 403 or otherwise fails, the workflow stops with an actionable diagnostic. It does not use third-party APIs, scraping services, account credentials, browser emulation or anti-bot bypasses.
+The Google Doc is exported through Drive API `files.export` with `mimeType=text/markdown`. The official API documents Markdown export and a 10 MB export ceiling; this importer applies a stricter 5 MiB limit. Lead-image downloads are capped at 15 MiB and must match one of the site's supported image MIME types and byte signatures. Both files must be direct children of the configured source folder and match the exact versions supplied by n8n. Google Docs API export reference: <https://developers.google.com/workspace/drive/api/reference/rest/v3/files/export>.
 
-The repository contract requires a reliable publication date and a downloadable public lead image before Codex runs. Lead image discovery prefers a suitable RSS enclosure/media image, then an image in RSS `content:encoded`, then direct HTML metadata when fallback was needed. Images must pass HTTPS, public-host/SSRF, size, MIME and file-signature checks. Public Substack CDN image hosts are allowed.
+The imported Markdown is untrusted article data. Codex must not follow instructions inside it, fetch another source copy, or modify the acquired source package. Before Codex runs, the generation job records SHA-256 for `source.md`, `context.json`, `metadata.json`, and the lead image. Article validation confirms that all four files remain byte-for-byte unchanged.
 
-## Editorial standard
+## `workflow_dispatch` contract
 
-Write for senior SEO/GEO practitioners and enterprise e-commerce leaders. Develop the article from observation through verification and nuance to business implications and a practical operating model. Separate confirmed facts, reliable observations, hypotheses and unknowns. Verify current technical claims with official documentation or other reliable primary sources when needed; distinguish crawling, discovery, retrieval, ranking, citations, referrals, transactions and model training. Do not imply causation from correlation. Connect technical findings to business decisions and measures such as conversion, orders, revenue, GMV, margin, retention and operational cost.
+`ingest-article.yml` accepts these string inputs:
 
-The automated import creates a complete English and Polish website article pair from the primary Substack article. It does not create separate LinkedIn posts or secondary-publication teasers. Those are distinct distribution assets: LinkedIn should communicate one idea concisely and keep its source list in the first comment; a teaser on `adammiszczak.substack.com` should summarize the full primary article and link back to its canonical `amiszczak.substack.com` URL.
+| Input | Required | Meaning |
+| --- | --- | --- |
+| `content_id` | Yes | Stable URL-safe manifest identifier |
+| `doc_file_id` | Yes | Google Drive ID of the complete editorial Google Doc |
+| `doc_version` | Yes | Exact Drive version of that document |
+| `image_file_id` | Yes | Google Drive ID of the lead-image binary |
+| `image_version` | Yes | Exact Drive version of that image |
+| `substack_url` | Yes | HTTPS `https://amiszczak.substack.com/p/<slug>` public reference |
+| `linkedin_url` | Yes | HTTPS LinkedIn or `lnkd.in` URL, preserved byte-for-byte |
+| `published_at` | Yes | ISO-8601 timestamp with a timezone, from the publishing manifest |
+| `last_modified_at` | No | Optional valid later ISO-8601 modification timestamp; omitted when empty |
+| `request_id` | Yes | Unique orchestration request identifier |
 
-## Workflow inputs
+All dispatch values are validated before Google authentication or Drive acquisition. `CONTENT_SOURCE_FOLDER_ID` is a trusted repository variable, not a dispatch input. It is checked as the direct parent of both files. Substack accepts only the exact `amiszczak.substack.com` host and a `/p/<slug>` article path; profile URLs, `/note/`, other Substack publications and other paths are rejected. Known tracking parameters and fragments are removed from the canonical article reference. LinkedIn URLs, including `lnkd.in`, are never expanded or rewritten.
 
-- `substack_url`: canonical HTTPS article URL on exactly `amiszczak.substack.com`, in the form `https://amiszczak.substack.com/p/<slug>`. Known tracking parameters and fragments are removed during normalization. Profile URLs, `/note/...` URLs and other `*.substack.com` publications are rejected.
-- `linkedin_url`: HTTPS URL on `linkedin.com`, a `linkedin.com` subdomain, or `lnkd.in`. The exact submitted value is preserved; short links are not expanded.
-- `request_id`: unique orchestration identifier containing only letters, numbers, dots, underscores and hyphens (up to 64 characters).
-
-The Telegram command is:
-
-```text
-/publish https://amiszczak.substack.com/p/example-article https://lnkd.in/example
-```
-
-n8n should parse the command and pass a unique `request_id`, then call GitHub's workflow-dispatch endpoint. The profile and Notes are discovery/social surfaces, not article sources.
-
-## GitHub configuration and credentials
-
-Configure these repository secrets:
-
-- `OPENAI_API_KEY` — available only to the Codex action step.
-- `CONTENT_PR_TOKEN` — fine-grained token scoped to this repository with Contents: write and Pull requests: write; exposed only to the final post-validation publish step.
-- `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` — used only by the separate Build and release workflow for same-repository PR previews, not by the Substack importer or Codex.
-
-Configure this repository variable for the separate preview workflow:
-
-- `CLOUDFLARE_PAGES_PROJECT` — dedicated Direct Upload Pages project name for temporary previews.
-
-The import checkout uses `persist-credentials: false`. The workflow does not pass `CONTENT_PR_TOKEN`, Cloudflare secrets, an n8n token or a Telegram token to Codex. It pushes the content branch and creates the PR only after source integrity, generated-file validation, the production Jekyll build, Pagefind, production diagnostics and localization checks have passed.
-
-The separate Build and release workflow uses Cloudflare Pages only for same-repository pull request previews. It deploys the production-equivalent `_site` under the stable `pr-<number>` alias and checks for `X-Robots-Tag: noindex`. Pull requests do not deploy to GitHub Pages; the existing production deployment runs on the configured deployment branches.
-
-## Manual dispatch
-
-After the workflow is on the default branch (`master`) and the required secrets are configured, an authorized operator can dispatch it with GitHub CLI:
+Example dispatch from an authorized operator after configuring the repository:
 
 ```bash
-gh workflow run ingest-substack.yml \
-  -f substack_url='https://amiszczak.substack.com/p/example-article' \
-  -f linkedin_url='https://lnkd.in/example' \
-  -f request_id='telegram-2026-0001'
+gh workflow run ingest-article.yml \
+  -f content_id='beyond-prompt-monitoring' \
+  -f doc_file_id='GOOGLE_DOC_FILE_ID' \
+  -f doc_version='143' \
+  -f image_file_id='GOOGLE_DRIVE_IMAGE_FILE_ID' \
+  -f image_version='27' \
+  -f substack_url='https://amiszczak.substack.com/p/beyond-prompt-monitoring' \
+  -f linkedin_url='https://lnkd.in/p/djfy5a_b' \
+  -f published_at='2026-10-25T09:30:00+01:00' \
+  -f last_modified_at='' \
+  -f request_id='tg-8095672386-23'
 ```
 
-Accepted LinkedIn examples include `https://www.linkedin.com/feed/update/urn:li:activity:123/`, `https://www.linkedin.com/posts/example`, and `https://lnkd.in/example`. The exact LinkedIn string is retained in both language versions.
+The first end-to-end Telegram command is:
 
-Duplicate detection uses the normalized canonical primary-publication URL stored in `substack_url`, for example `https://amiszczak.substack.com/p/beyond-prompt-monitoring`. The submitted URL is retained in temporary workflow context for audit. The canonical URL is not inferred from a profile or teaser URL, or invented from a title.
+```text
+/publish beyond-prompt-monitoring
+```
+
+n8n resolves that `content_id` from the Google Sheet, reads the Doc and image metadata to capture their current Drive `version` values, then dispatches all fields above. It should not pass the folder ID or service-account key in the request.
+
+## Source package and duplicate protection
+
+The acquisition job writes only this artifact package:
+
+```text
+.automation/content-source/
+  source.md
+  context.json
+  metadata.json
+  lead-image.<ext>
+```
+
+`context.json` records the validated orchestration values and `source_mode: google_docs`; it includes `last_modified_at` only when supplied and valid. `metadata.json` records the returned document and image names, MIME types, versions, Drive modification times, parent IDs, download capabilities and local package paths. The package contains no credential file or access token and is retained for one day.
+
+Duplicate detection compares normalized canonical `substack_url` values found in `_posts/`. It does not compare titles or use `content_id` as a replacement for canonical identity.
+
+The website result remains exactly one English article and one Polish equivalent with a shared `translation_key`, localized routes and metadata, the exact supplied LinkedIn URL, the normalized Substack reference URL, the trusted publication date, and the same lead-image bytes.
+
+## GitHub configuration and credential boundaries
+
+Configure this repository secret:
+
+- `GOOGLE_SERVICE_ACCOUNT_JSON` — Google service-account JSON for a read-only account with access to the designated source folder. The workflow writes a temporary `gha-creds-*.json` ADC file in the acquisition job. That file is gitignored, cleaned up by the auth action, never passed as a Python argument, and excluded from the source artifact.
+
+Configure this repository variable:
+
+- `CONTENT_SOURCE_FOLDER_ID` — trusted Drive folder ID containing both source files as direct children.
+
+The service account should have read-only access only to the designated source folder. The authentication action exposes ADC to Python using `GOOGLE_APPLICATION_CREDENTIALS`; the importer requests the Drive read-only OAuth scope. Google auth action reference: <https://github.com/google-github-actions/auth>.
+
+Other repository secrets retain their existing boundaries:
+
+- `OPENAI_API_KEY` — supplied only to the Codex action in `generate_validate_publish`.
+- `CONTENT_PR_TOKEN` — fine-grained Contents: write and Pull requests: write token, exposed only in the final post-validation publish step.
+- `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` — used only by the separate Build and release workflow for same-repository PR previews.
+
+The acquisition job cannot access the OpenAI key, PR token or Cloudflare credentials. The generation job has no Google key, generated Google credential file or Google access token. Both import checkouts use `persist-credentials: false`. There is no automatic merge.
+
+The separate Build and release workflow builds the production-equivalent Jekyll site, deploys only same-repository PR previews to Cloudflare Pages, and checks the preview for `X-Robots-Tag: noindex`. Production remains GitHub Pages after a human-approved merge.
+
+## Local checks
+
+The Drive acquisition dependencies are listed in `_scripts/requirements-content-automation.txt` (`google-auth` and `requests`). Unit tests mock ADC and Drive HTTP responses; they do not access Google. From the repository root:
+
+```bash
+python3 -m unittest discover -s _scripts/tests -p 'test_*.py'
+git diff --check
+JEKYLL_ENV=production bundle exec jekyll build --trace
+npx --yes pagefind@1.5.2 --site ./_site
+ruby _scripts/diagnose_production_build.rb
+ruby _scripts/check_localization.rb
+```
+
+The generated `_site/` directory is ignored and must not be committed. The final workflow runs the same production gates before exposing the PR token.

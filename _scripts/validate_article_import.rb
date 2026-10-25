@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
-# Validate a Codex-generated EN/PL Substack article pair before any PR token is used.
+# Validate a Codex-generated EN/PL article pair before any PR token is used.
 require "date"
 require "digest"
+require "fileutils"
 require "json"
 require "open3"
 require "pathname"
@@ -11,15 +12,22 @@ require "uri"
 require "yaml"
 
 ROOT = File.expand_path("..", __dir__)
-WORK_DIR = File.join(ROOT, ".automation", "substack")
+WORK_DIR = File.join(ROOT, ".automation", "content-source")
 CONTEXT_PATH = File.join(WORK_DIR, "context.json")
 METADATA_PATH = File.join(WORK_DIR, "metadata.json")
+PR_DIR = File.join(ROOT, ".automation", "article-import")
+PR_CONTEXT_PATH = File.join(PR_DIR, "context.json")
+PR_BODY_PATH = File.join(PR_DIR, "pr-body.md")
 ALLOWED_IMAGE_EXTENSIONS = %w[.jpg .jpeg .png .webp .gif .avif].freeze
 SUBSTACK_PUBLICATION_HOST = "amiszczak.substack.com".freeze
+IMAGE_MIME_EXTENSIONS = {
+  "image/jpeg" => ".jpg", "image/png" => ".png", "image/webp" => ".webp",
+  "image/gif" => ".gif", "image/avif" => ".avif",
+}.freeze
 
 def fail_check(message)
   escaped = message.gsub("%", "%25").gsub("\r", "%0D").gsub("\n", "%0A")
-  puts "::error title=Substack import validation failed::#{escaped}"
+  puts "::error title=Article import validation failed::#{escaped}"
   abort("ERROR: #{message}")
 end
 
@@ -99,20 +107,35 @@ def image_path_for(data, label)
   path
 end
 
+def normalize_substack_url(value)
+  uri = URI.parse(value)
+  normalized_path = uri.path.sub(%r{/+\z}, "")
+  valid_path = normalized_path.start_with?("/p/") && normalized_path.count("/") == 2 && !normalized_path.delete_prefix("/p/").empty?
+  valid = uri.is_a?(URI::HTTPS) && uri.host&.downcase == SUBSTACK_PUBLICATION_HOST && uri.port == 443 &&
+          !uri.userinfo && valid_path
+  fail_check("Substack reference must use https://#{SUBSTACK_PUBLICATION_HOST}/p/<slug>.") unless valid
+  kept_query = URI.decode_www_form(uri.query.to_s).reject do |key, _item|
+    key.downcase.start_with?("utm_") || %w[fbclid gclid mc_cid mc_eid ref source].include?(key.downcase)
+  end
+  uri.host = SUBSTACK_PUBLICATION_HOST
+  uri.path = normalized_path
+  uri.query = kept_query.empty? ? nil : URI.encode_www_form(kept_query)
+  uri.fragment = nil
+  uri.to_s
+rescue URI::InvalidURIError, ArgumentError
+  fail_check("Substack reference is malformed; expected https://#{SUBSTACK_PUBLICATION_HOST}/p/<slug>.")
+end
+
 def validate_external_urls!(context)
-  {
-    "substack_url" => context.fetch("substack_url"),
-    "submitted_substack_url" => context.fetch("submitted_substack_url"),
-  }.each do |label, value|
-    begin
-      uri = URI.parse(value)
-      host = uri.host&.downcase
-      valid_path = uri.path.match?(%r{\A/p/[^/]+/?\z})
-      valid_port = uri.port == 443
-      fail_check("#{label} must be an HTTPS /p/<slug> URL on exactly #{SUBSTACK_PUBLICATION_HOST} with no credentials.") unless uri.is_a?(URI::HTTPS) && host == SUBSTACK_PUBLICATION_HOST && valid_path && valid_port && !uri.userinfo
-    rescue URI::InvalidURIError
-      fail_check("#{label} is malformed; expected https://#{SUBSTACK_PUBLICATION_HOST}/p/<slug>.")
-    end
+  begin
+    value = context.fetch("substack_url")
+    uri = URI.parse(value)
+    host = uri.host&.downcase
+    valid_path = uri.path.start_with?("/p/") && uri.path.sub(%r{/+\z}, "").count("/") == 2 && !uri.path.sub(%r{/+\z}, "").delete_prefix("/p/").empty?
+    valid_port = uri.port == 443
+    fail_check("substack_url must be an HTTPS /p/<slug> URL on exactly #{SUBSTACK_PUBLICATION_HOST} with no credentials.") unless uri.is_a?(URI::HTTPS) && host == SUBSTACK_PUBLICATION_HOST && valid_path && valid_port && !uri.userinfo && uri.fragment.nil?
+  rescue URI::InvalidURIError, KeyError
+    fail_check("substack_url is malformed; expected https://#{SUBSTACK_PUBLICATION_HOST}/p/<slug>.")
   end
   begin
     linkedin_value = context.fetch("linkedin_url")
@@ -128,50 +151,59 @@ def validate_external_urls!(context)
   normalized = request_id.gsub(/[^A-Za-z0-9_-]+/, "-").gsub(/\A[-_]+|[-_]+\z/, "").downcase
   normalized = "request" if normalized.empty?
   digest = Digest::SHA256.hexdigest(request_id)[0, 8]
-  expected_branch = "content/substack-#{normalized[0, 48]}-#{digest}"
+  expected_branch = "content/google-docs-#{normalized[0, 48]}-#{digest}"
   fail_check("Temporary branch name is invalid or no longer matches request_id.") unless context["branch_name"] == expected_branch
+  content_id = context.fetch("content_id")
+  fail_check("content_id contains unsupported characters or is too long.") unless content_id.match?(/\A[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?\z/)
 end
 
 def verify_fetched_integrity!(context, metadata)
-  [File.join(ROOT, ".automation"), WORK_DIR, CONTEXT_PATH, METADATA_PATH, File.join(WORK_DIR, "source.html")].each do |path|
-    fail_check("Fetched working files must not be symlinks: #{path.delete_prefix(ROOT + File::SEPARATOR)}") if File.symlink?(path)
+  [File.join(ROOT, ".automation"), WORK_DIR, CONTEXT_PATH, METADATA_PATH,
+   File.join(WORK_DIR, "source.md")].each do |path|
+    fail_check("Source package files must not be symlinks: #{path.delete_prefix(ROOT + File::SEPARATOR)}") if File.symlink?(path)
   end
-  {
-    "source_html_sha256" => File.join(WORK_DIR, "source.html"),
-    "metadata_sha256" => METADATA_PATH,
-    "context_sha256" => CONTEXT_PATH,
-  }.each do |name, path|
-    expected = ENV[name.upcase]
-    fail_check("Missing pre-Codex integrity value for #{name}.") if expected.nil? || expected.empty?
-    fail_check("Fetched source file changed after retrieval: #{name}.") unless File.file?(path) && Digest::SHA256.file(path).hexdigest == expected
-  end
-  rss_expected = ENV.fetch("SOURCE_RSS_SHA256", "none")
-  rss_path = File.join(WORK_DIR, "source.rss.xml")
-  if metadata["rss_fetched"]
-    fail_check("Fetched RSS file must not be a symlink.") if File.symlink?(rss_path)
-    fail_check("Missing pre-Codex integrity value for source_rss_sha256.") if rss_expected == "none" || rss_expected.empty?
-    fail_check("Fetched RSS feed changed after retrieval.") unless File.file?(rss_path) && Digest::SHA256.file(rss_path).hexdigest == rss_expected
-    fail_check("Fetched metadata has an unexpected RSS path.") unless metadata["rss_path"] == ".automation/substack/source.rss.xml"
-  else
-    fail_check("Unexpected RSS integrity value when no feed was fetched.") unless rss_expected == "none"
-  end
-  fail_check("Temporary context does not record the deterministic acquisition mode.") unless %w[rss html_fallback].include?(context["source_mode"]) && metadata["source_mode"] == context["source_mode"]
-  fail_check("Fetched metadata canonical URL differs from the deterministic workflow context.") unless metadata["canonical_url"] == context["substack_url"]
-  if metadata["source_mode"] == "rss"
-    fail_check("RSS mode requires a usable matching content:encoded article body.") unless metadata["rss_fetched"] && metadata["rss_item_found"] && metadata["rss_content_usable"]
-    fail_check("RSS matching diagnostic is missing or invalid.") unless %w[rss_link_exact rss_guid_exact article_path_exact].include?(metadata["rss_match_method"])
-  end
-  expected_image = ENV.fetch("LEAD_IMAGE_SHA256", "none")
+  fail_check("Source context must use Google Docs acquisition.") unless context["source_mode"] == "google_docs" && metadata["source_mode"] == "google_docs"
+  expected_paths = %w[context.json metadata.json source.md]
   image_path = metadata["lead_image_path"]
-  fail_check("Fetched metadata has no candidate lead image.") unless image_path.is_a?(String) && !image_path.empty?
-  image_absolute = File.expand_path(image_path, ROOT)
-  fail_check("Candidate lead image path escapes the temporary source directory.") unless image_absolute.start_with?(WORK_DIR + File::SEPARATOR)
-  fail_check("Fetched lead image must not be a symlink.") if File.symlink?(image_absolute)
-  fail_check("Fetched candidate lead image changed after retrieval.") unless expected_image != "none" && File.file?(image_absolute) && Digest::SHA256.file(image_absolute).hexdigest == expected_image
-  fail_check("Fetched metadata does not preserve the normalized publication URL.") unless metadata["source_url"] == context.fetch("substack_url") && metadata["normalized_source_url"] == context.fetch("substack_url")
-  fail_check("Fetched metadata does not preserve the submitted Substack URL for audit.") unless metadata["submitted_source_url"] == context.fetch("submitted_substack_url")
-  fail_check("Fetched HTML path is unexpected.") unless metadata["source_html_path"] == ".automation/substack/source.html"
-  fail_check("Fetched metadata path is unexpected.") unless metadata["metadata_path"] == ".automation/substack/metadata.json"
+  fail_check("Fetched metadata has no lead image path.") unless image_path.is_a?(String) && image_path.match?(%r{\A\.automation/content-source/lead-image\.(?:jpg|png|webp|gif|avif)\z})
+  expected_paths << File.basename(image_path)
+  actual_paths = Dir.children(WORK_DIR).sort
+  fail_check("Source artifact package contains unexpected files.") unless actual_paths == expected_paths.sort
+
+  source_path = File.join(WORK_DIR, "source.md")
+  image_absolute = File.join(ROOT, image_path)
+  hashes = {
+    "SOURCE_MD_SHA256" => source_path,
+    "CONTEXT_SHA256" => CONTEXT_PATH,
+    "METADATA_SHA256" => METADATA_PATH,
+    "LEAD_IMAGE_SHA256" => image_absolute,
+  }
+  hashes.each do |name, path|
+    expected = ENV[name]
+    fail_check("Missing pre-Codex integrity value for #{name.downcase}.") if expected.nil? || expected.empty?
+    fail_check("Source artifact changed after acquisition: #{name.downcase}.") unless File.file?(path) && Digest::SHA256.file(path).hexdigest == expected
+    fail_check("Source artifact must be a regular non-symlink file: #{name.downcase}.") if File.symlink?(path)
+  end
+  source = File.binread(source_path).force_encoding(Encoding::UTF_8)
+  fail_check("Imported Google Markdown must be valid UTF-8.") unless source.valid_encoding?
+  fail_check("Imported Google Markdown must be non-empty.") if source.strip.empty?
+  document = metadata["document"]
+  image = metadata["image"]
+  expected_image_extension = image.is_a?(Hash) ? IMAGE_MIME_EXTENSIONS[image["mimeType"]] : nil
+  source_folder_id = ENV.fetch("CONTENT_SOURCE_FOLDER_ID", "")
+  doc_valid = document.is_a?(Hash) && document["id"] == context["doc_file_id"] &&
+              document["version"].to_s == context["doc_version"] &&
+              document["mimeType"] == "application/vnd.google-apps.document" &&
+              document["parents"].is_a?(Array) && document["parents"].include?(source_folder_id) &&
+              [true, false].include?(document["canDownload"])
+  fail_check("Google Doc metadata does not match the trusted workflow snapshot.") unless doc_valid
+  image_valid = image.is_a?(Hash) && image["id"] == context["image_file_id"] &&
+                image["version"].to_s == context["image_version"] &&
+                image["parents"].is_a?(Array) && image["parents"].include?(source_folder_id) &&
+                [true, false].include?(image["canDownload"]) && expected_image_extension &&
+                File.extname(image_path) == expected_image_extension
+  fail_check("Lead-image metadata does not match the trusted workflow snapshot.") unless image_valid
+  fail_check("Metadata must identify the deterministic source paths.") unless metadata["source_path"] == ".automation/content-source/source.md" && metadata["metadata_path"] == ".automation/content-source/metadata.json"
 end
 
 def verify_git_remote!
@@ -189,11 +221,23 @@ def validate!
   context = read_json(CONTEXT_PATH)
   metadata = read_json(METADATA_PATH)
   {
-    "submitted_substack_url" => "SUBSTACK_URL",
+    "content_id" => "CONTENT_ID",
+    "doc_file_id" => "DOC_FILE_ID",
+    "doc_version" => "DOC_VERSION",
+    "image_file_id" => "IMAGE_FILE_ID",
+    "image_version" => "IMAGE_VERSION",
     "linkedin_url" => "LINKEDIN_URL",
+    "published_at" => "PUBLISHED_AT",
     "request_id" => "REQUEST_ID",
   }.each do |key, environment_name|
     fail_check("Temporary workflow context no longer matches the workflow input #{key}.") unless context[key] == ENV.fetch(environment_name, nil)
+  end
+  fail_check("Temporary context does not contain the normalized canonical Substack URL.") unless context["substack_url"] == normalize_substack_url(ENV.fetch("SUBSTACK_URL", ""))
+  submitted_modified_at = ENV.fetch("LAST_MODIFIED_AT", "")
+  if submitted_modified_at.empty?
+    fail_check("last_modified_at must be omitted when the workflow input is empty.") if context.key?("last_modified_at")
+  else
+    fail_check("Temporary context no longer matches the workflow input last_modified_at.") unless context["last_modified_at"] == submitted_modified_at
   end
   validate_external_urls!(context)
   verify_fetched_integrity!(context, metadata)
@@ -232,7 +276,7 @@ def validate!
   fail_check("Article image extension must preserve the downloaded source image format.") unless image_extension == source_image_extension
   fail_check("Article image filename must be lowercase and descriptive.") unless image_changes.first.match?(%r{\Aassets/img/articles/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:jpg|jpeg|png|webp|gif|avif)\z})
   fail_check("Unexpected generated or unrelated files changed: #{(other_changes - image_changes).join(', ')}") unless (other_changes - image_changes).empty?
-  fail_check("The source HTML must not be committed.") if changes.any? { |_code, path| path.end_with?(".html") }
+  fail_check("Automation source files must not be committed.") if changes.any? { |_code, path| path.start_with?(".automation/") }
 
   baseline_mapping = YAML.safe_load(git_output("show", "HEAD:#{mapping_path}"), permitted_classes: [Date, Time], aliases: false)
   current_mapping = read_yaml(File.join(ROOT, mapping_path))
@@ -255,12 +299,10 @@ def validate!
   expected_group = { "en" => en_path, "pl" => pl_path, "x_default" => en_path }
   fail_check("localized_pages.yml paths do not match the new articles: expected #{expected_group.inspect}, got #{group.inspect}.") unless group == expected_group
 
-  metadata_published = metadata["date_published"]
-  fail_check("Substack metadata has no reliable publication date; the workflow will not invent one.") if metadata_published.nil? || metadata_published.to_s.empty?
-  expected_date = parse_time(metadata_published, "Substack publication date")
+  expected_date = parse_time(context.fetch("published_at"), "published_at workflow input")
   en_date = parse_time(en_data["date"], "English article date")
   pl_date = parse_time(pl_data["date"], "Polish article date")
-  fail_check("Both article dates must preserve the Substack publication timestamp.") unless en_date.to_i == expected_date.to_i && pl_date.to_i == expected_date.to_i
+  fail_check("Both article dates must preserve the trusted published_at timestamp.") unless en_date.to_i == expected_date.to_i && pl_date.to_i == expected_date.to_i
   expected_filename_date = expected_date.strftime("%Y-%m-%d")
   [en, pl].each do |post|
     fail_check("Post filename date must match the Substack publication date.") unless File.basename(post[:path])[0, 10] == expected_filename_date
@@ -308,12 +350,12 @@ def validate!
 
   fail_check("If last_modified_at is set, it must be set consistently for both translations.") unless !!en_data["last_modified_at"] == !!pl_data["last_modified_at"]
   if en_data["last_modified_at"] || pl_data["last_modified_at"]
-    modified = metadata["date_modified"]
-    fail_check("last_modified_at is only allowed when Substack has a real modification timestamp.") if modified.nil? || modified.to_s.empty?
-    expected_modified = parse_time(modified, "Substack modification date")
+    modified = context["last_modified_at"]
+    fail_check("last_modified_at is only allowed when supplied as a valid workflow input.") if modified.nil? || modified.to_s.empty?
+    expected_modified = parse_time(modified, "last_modified_at")
     fail_check("last_modified_at must represent a later source modification.") unless expected_modified > expected_date
     [en_data["last_modified_at"], pl_data["last_modified_at"]].compact.each do |value|
-      fail_check("last_modified_at must match Substack's real modification timestamp.") unless parse_time(value, "last_modified_at").to_i == expected_modified.to_i
+      fail_check("last_modified_at must match the supplied real modification timestamp.") unless parse_time(value, "last_modified_at").to_i == expected_modified.to_i
     end
   end
 
@@ -326,18 +368,23 @@ def validate!
 
   title = en_data.fetch("title").gsub(/[\r\n\t]+/, " ").gsub(/\s{2,}/, " ").strip
   fail_check("English title contains control characters unsuitable for a PR title.") if title.match?(/[[:cntrl:]]/)
-  context.merge!(
+  pr_context = context.merge(
     "en_article_path" => en[:path],
     "pl_article_path" => pl[:path],
     "image_path" => image_changes.first,
     "translation_key" => translation_key,
     "english_title" => title,
   )
-  File.write(CONTEXT_PATH, JSON.pretty_generate(context) + "\n", mode: "w", encoding: "UTF-8")
+  [PR_DIR, PR_CONTEXT_PATH, PR_BODY_PATH].each do |path|
+    fail_check("PR manifest paths must not be symlinks.") if File.symlink?(path)
+  end
+  FileUtils.mkdir_p(PR_DIR)
+  File.write(PR_CONTEXT_PATH, JSON.pretty_generate(pr_context) + "\n", mode: "w", encoding: "UTF-8")
   body = <<~BODY
-    Automated Substack import
+    Automated article import
 
-    Substack source URL: #{context.fetch('substack_url')}
+    Substack reference URL: #{context.fetch('substack_url')}
+    content_id: #{context.fetch('content_id')}
     LinkedIn URL: #{context.fetch('linkedin_url')}
     request_id: #{context.fetch('request_id')}
     English article: #{en[:path]}
@@ -351,8 +398,8 @@ def validate!
     - [ ] Image/caption reviewed
     - [ ] Preview reviewed
   BODY
-  File.write(File.join(WORK_DIR, "pr-body.md"), body, mode: "w", encoding: "UTF-8")
-  puts "Validated EN/PL article pair, approved tags, exact social destinations, localization mapping, image, and source dates."
+  File.write(PR_BODY_PATH, body, mode: "w", encoding: "UTF-8")
+  puts "Validated EN/PL article pair, approved tags, exact social destinations, localization mapping, lead-image bytes, and trusted timestamps."
   puts "English: #{en[:path]} -> #{en_path}"
   puts "Polish: #{pl[:path]} -> #{pl_path}"
   puts "translation_key: #{translation_key}"
@@ -372,7 +419,7 @@ def git_blob(path)
 end
 
 def publish!
-  context = read_json(CONTEXT_PATH)
+  context = read_json(PR_CONTEXT_PATH)
   token = ENV["CONTENT_PR_TOKEN"]
   fail_check("CONTENT_PR_TOKEN is required only for the post-validation publishing step.") if token.nil? || token.empty?
   paths = [context.fetch("en_article_path"), context.fetch("pl_article_path"), context.fetch("image_path"), "_data/localized_pages.yml"]
@@ -390,7 +437,7 @@ def publish!
     "GIT_CONFIG_NOSYSTEM" => "1",
     "GIT_CONFIG_GLOBAL" => "/dev/null",
   }
-  run!("git", "-c", "core.hooksPath=/dev/null", "-c", "credential.helper=", "commit", "-m", "Automated Substack import: #{context.fetch('english_title')}", environment: git_environment)
+  run!("git", "-c", "core.hooksPath=/dev/null", "-c", "credential.helper=", "commit", "-m", "Automated article import: #{context.fetch('english_title')}", environment: git_environment)
 
   askpass = File.join(Dir.tmpdir, "content-pr-askpass-#{Process.pid}")
   File.write(askpass, <<~'SH', mode: "w", perm: 0o700)
@@ -432,7 +479,7 @@ def publish!
     "--base", "master",
     "--head", context.fetch("branch_name"),
     "--title", "Content: #{context.fetch('english_title')}",
-    "--body-file", File.join(WORK_DIR, "pr-body.md"),
+    "--body-file", PR_BODY_PATH,
     environment: gh_environment,
   )
 end
@@ -444,5 +491,5 @@ when "validate"
 when "publish"
   publish!
 else
-  fail_check("Usage: ruby _scripts/validate_substack_import.rb {validate|publish}")
+  fail_check("Usage: ruby _scripts/validate_article_import.rb {validate|publish}")
 end

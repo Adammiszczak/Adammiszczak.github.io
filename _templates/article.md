@@ -6,10 +6,10 @@ translation_key: example_article_key
 
 title: "Article title"
 
-# Original source publication date.
+# Trusted published_at timestamp from the publishing manifest.
 date: "YYYY-MM-DD HH:MM:SS +0000"
 
-# Optional. Use only for a genuine later source modification, not the import/build date.
+# Optional. Include only when a genuine later last_modified_at value was supplied.
 # last_modified_at: "YYYY-MM-DD HH:MM:SS +0000"
 
 description: "A concise and factual summary of the article and its practical takeaway."
@@ -48,7 +48,7 @@ image_alt: "Describe the meaningful visible content of the article image."
 # Keep the exact supplied LinkedIn URL, including lnkd.in links.
 linkedin_url: "https://www.linkedin.com/posts/example"
 
-# Use the canonical article URL from the primary publication, supplied in context.json.
+# Public publication reference from context.json. It is not fetched by article automation.
 substack_url: "https://amiszczak.substack.com/p/example-article"
 ---
 
