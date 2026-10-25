@@ -76,6 +76,20 @@ jobs:
           CONTENT_SOURCE_FOLDER_ID: ${{ vars.CONTENT_SOURCE_FOLDER_ID }}
         run: python3 _scripts/fetch_google_source.py validate-inputs
 
+      - name: Reject an already imported canonical Substack reference
+        env:
+          CONTENT_ID: ${{ inputs.content_id }}
+          DOC_FILE_ID: ${{ inputs.doc_file_id }}
+          DOC_VERSION: ${{ inputs.doc_version }}
+          IMAGE_FILE_ID: ${{ inputs.image_file_id }}
+          IMAGE_VERSION: ${{ inputs.image_version }}
+          SUBSTACK_URL: ${{ inputs.substack_url }}
+          LINKEDIN_URL: ${{ inputs.linkedin_url }}
+          PUBLISHED_AT: ${{ inputs.published_at }}
+          LAST_MODIFIED_AT: ${{ inputs.last_modified_at }}
+          REQUEST_ID: ${{ inputs.request_id }}
+        run: python3 _scripts/fetch_google_source.py check-duplicate
+
       - name: Install the small Google acquisition dependency set
         run: python3 -m pip install --disable-pip-version-check -r _scripts/requirements-content-automation.txt
 
@@ -133,7 +147,7 @@ jobs:
         id: source_integrity
         run: python3 _scripts/fetch_google_source.py record-integrity
 
-      - name: Run deterministic acquisition and validator tests
+      - name: Run source acquisition tests
         run: python3 -m unittest discover -s _scripts/tests -p 'test_*.py'
 
       - name: Set up Node.js

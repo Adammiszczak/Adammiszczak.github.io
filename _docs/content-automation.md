@@ -17,7 +17,7 @@ Merging is manual and required. The workflow does not auto-merge or deploy artic
 
 ## Import flow
 
-Telegram `/publish <content_id>` → n8n manifest lookup → Google Drive metadata snapshot → `ingest-article.yml` dispatch → validate every input → authenticate to Google in `acquire_source` → verify file IDs, MIME types, versions, direct parent folder and download capability → export the Google Doc as Markdown and download the lead image → canonical duplicate check → upload `.automation/content-source/` for one day → fresh `master` checkout in `generate_validate_publish` → record source SHA-256 values → Codex → verify source hashes and article pair → production Jekyll → Pagefind → production diagnostics → localization check → expose `CONTENT_PR_TOKEN` to the final publish step → push a content branch and open a normal PR.
+Telegram `/publish <content_id>` → n8n manifest lookup → Google Drive metadata snapshot → `ingest-article.yml` dispatch → validate every input and reject a canonical duplicate → authenticate to Google in `acquire_source` → verify file IDs, MIME types, versions, direct parent folder and download capability → export the Google Doc as Markdown and download the lead image → recheck Drive versions → upload `.automation/content-source/` for one day → fresh `master` checkout in `generate_validate_publish` → record source SHA-256 values → Codex → verify source hashes and article pair → production Jekyll → Pagefind → production diagnostics → localization check → expose `CONTENT_PR_TOKEN` to the final publish step → push a content branch and open a normal PR.
 
 Substack is only an article reference stored in front matter and PR metadata. No workflow step fetches that reference.
 

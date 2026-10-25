@@ -285,6 +285,13 @@ def validate_file_metadata(metadata: dict[str, Any], *, file_id: str, expected_v
         raise ValueError(f"Drive {label} cannot be exported or downloaded by the service account.")
 
 
+def stable_metadata_snapshot(metadata: dict[str, Any]) -> tuple[Any, ...]:
+    capabilities = metadata.get("capabilities", {})
+    return (metadata.get("id"), metadata.get("name"), metadata.get("mimeType"),
+            str(metadata.get("version", "")), metadata.get("modifiedTime"), metadata.get("trashed"),
+            tuple(metadata.get("parents", [])), capabilities.get("canDownload"))
+
+
 def markdown_is_substantive(source: str) -> bool:
     visible = re.sub(r"[`*_>#~\[\](){}|]", " ", source)
     visible = re.sub(r"https?://\S+", " ", visible)
@@ -363,6 +370,21 @@ def acquire_source(inputs: dict[str, str], *, folder_id: str, client: DriveClien
     image_bytes = drive.download_image(inputs["image_file_id"])
     validate_image(image_bytes, image_mime)
 
+    # Drive exports and binary downloads return the latest content. Recheck both
+    # version snapshots after transfer so an edit during acquisition cannot pass.
+    final_doc_metadata = drive.get_metadata(inputs["doc_file_id"])
+    validate_file_metadata(final_doc_metadata, file_id=inputs["doc_file_id"],
+                           expected_version=inputs["doc_version"], folder_id=folder_id,
+                           expected_mime=GOOGLE_DOC_MIME, label="Google Doc")
+    final_image_metadata = drive.get_metadata(inputs["image_file_id"])
+    validate_file_metadata(final_image_metadata, file_id=inputs["image_file_id"],
+                           expected_version=inputs["image_version"], folder_id=folder_id,
+                           expected_mime=image_mime, label="lead image")
+    if stable_metadata_snapshot(doc_metadata) != stable_metadata_snapshot(final_doc_metadata):
+        raise ValueError("Google Doc metadata changed during source acquisition; dispatch the current version again.")
+    if stable_metadata_snapshot(image_metadata) != stable_metadata_snapshot(final_image_metadata):
+        raise ValueError("Lead-image metadata changed during source acquisition; dispatch the current version again.")
+
     clean_previous_source_files(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     source_path = output_dir / "source.md"
@@ -431,13 +453,17 @@ def write_github_outputs(values: dict[str, str]) -> None:
 
 
 def main() -> None:
-    if len(sys.argv) != 2 or sys.argv[1] not in {"validate-inputs", "acquire", "record-integrity"}:
-        raise ValueError("Usage: fetch_google_source.py {validate-inputs|acquire|record-integrity}")
+    if len(sys.argv) != 2 or sys.argv[1] not in {"validate-inputs", "check-duplicate", "acquire", "record-integrity"}:
+        raise ValueError("Usage: fetch_google_source.py {validate-inputs|check-duplicate|acquire|record-integrity}")
     mode = sys.argv[1]
     if mode == "validate-inputs":
         values = validate_inputs()
         validate_drive_id(os.environ.get("CONTENT_SOURCE_FOLDER_ID", ""), "CONTENT_SOURCE_FOLDER_ID")
         print(f"Validated workflow inputs for content_id={values['content_id']}.")
+    elif mode == "check-duplicate":
+        values = validate_inputs()
+        check_duplicate(values["substack_url"])
+        print(f"No existing article uses canonical URL {values['substack_url']}.")
     elif mode == "acquire":
         values = validate_inputs()
         folder_id = os.environ.get("CONTENT_SOURCE_FOLDER_ID", "")

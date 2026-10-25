@@ -349,6 +349,28 @@ class DuplicateAndPackageTests(unittest.TestCase):
                                        root=root, work_dir=root / ".automation" / "content-source")
             self.assertEqual(len(client.session.calls), 1)
 
+    def test_version_change_during_export_and_download_fails(self):
+        class ChangingDocSession(FakeSession):
+            def __init__(self):
+                super().__init__()
+                self.doc_reads = 0
+
+            def get(self, url, **kwargs):
+                if url.endswith("/" + DOC_ID):
+                    self.doc_reads += 1
+                    value = self.doc
+                    if self.doc_reads > 1:
+                        value = dict(self.doc, version="144")
+                    self.calls.append((url, kwargs.get("params"), kwargs.get("timeout"), True, False))
+                    return FakeResponse(json.dumps(value).encode())
+                return super().get(url, **kwargs)
+
+        with tempfile.TemporaryDirectory() as temporary, self.assertRaisesRegex(ValueError, "version mismatch"):
+            root = Path(temporary)
+            fetcher.acquire_source(fetcher.validate_inputs(workflow_inputs()), folder_id=FOLDER_ID,
+                                   client=fetcher.DriveClient(ChangingDocSession()), root=root,
+                                   work_dir=root / ".automation" / "content-source")
+
 
 if __name__ == "__main__":
     unittest.main()

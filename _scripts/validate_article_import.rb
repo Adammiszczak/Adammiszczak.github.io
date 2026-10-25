@@ -181,8 +181,8 @@ def verify_fetched_integrity!(context, metadata)
   hashes.each do |name, path|
     expected = ENV[name]
     fail_check("Missing pre-Codex integrity value for #{name.downcase}.") if expected.nil? || expected.empty?
-    fail_check("Source artifact changed after acquisition: #{name.downcase}.") unless File.file?(path) && Digest::SHA256.file(path).hexdigest == expected
     fail_check("Source artifact must be a regular non-symlink file: #{name.downcase}.") if File.symlink?(path)
+    fail_check("Source artifact changed after acquisition: #{name.downcase}.") unless File.file?(path) && Digest::SHA256.file(path).hexdigest == expected
   end
   source = File.binread(source_path).force_encoding(Encoding::UTF_8)
   fail_check("Imported Google Markdown must be valid UTF-8.") unless source.valid_encoding?
@@ -302,8 +302,8 @@ def validate!
   expected_date = parse_time(context.fetch("published_at"), "published_at workflow input")
   en_date = parse_time(en_data["date"], "English article date")
   pl_date = parse_time(pl_data["date"], "Polish article date")
-  fail_check("Both article dates must preserve the trusted published_at timestamp.") unless en_date.to_i == expected_date.to_i && pl_date.to_i == expected_date.to_i
-  expected_filename_date = expected_date.strftime("%Y-%m-%d")
+  fail_check("Both article dates must preserve the trusted published_at timestamp.") unless en_date == expected_date && pl_date == expected_date
+  expected_filename_date = context.fetch("published_at").to_s[0, 10]
   [en, pl].each do |post|
     fail_check("Post filename date must match the Substack publication date.") unless File.basename(post[:path])[0, 10] == expected_filename_date
   end
@@ -355,7 +355,7 @@ def validate!
     expected_modified = parse_time(modified, "last_modified_at")
     fail_check("last_modified_at must represent a later source modification.") unless expected_modified > expected_date
     [en_data["last_modified_at"], pl_data["last_modified_at"]].compact.each do |value|
-      fail_check("last_modified_at must match the supplied real modification timestamp.") unless parse_time(value, "last_modified_at").to_i == expected_modified.to_i
+      fail_check("last_modified_at must match the supplied real modification timestamp.") unless parse_time(value, "last_modified_at") == expected_modified
     end
   end
 
