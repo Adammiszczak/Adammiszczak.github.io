@@ -104,6 +104,7 @@ groups.each do |key, variants|
     expected_social_urls = %w[
       https://www.linkedin.com/in/adam-miszczak/
       https://substack.com/@adammiszczak
+      https://amiszczak.substack.com/
       https://github.com/Adammiszczak/Adammiszczak.github.io
     ].to_set
     check(footer_social_links.map { |tag| attr(tag, "href") }.to_set == expected_social_urls, "#{path}: footer social icon links are missing or incorrect")
