@@ -51,7 +51,7 @@ permissions:
 jobs:
   acquire_source:
     name: Acquire deterministic Google Drive source
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
@@ -127,7 +127,7 @@ jobs:
   generate_validate_publish:
     name: Generate, validate, and publish pull request
     needs: acquire_source
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     permissions:
       contents: read
     steps:
@@ -155,17 +155,30 @@ jobs:
         with:
           node-version: 22
 
-      - name: Set up Ruby and install locked dependencies
+      - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.0"
-          bundler-cache: true
+
+      - name: Install locked Ruby dependencies outside the checkout
+        run: |
+          bundle config get path
+          bundle install --jobs 4 --retry 3
         env:
           BUNDLE_APP_CONFIG: ${{ runner.temp }}/article-import-bundle-config
           BUNDLE_PATH: ${{ runner.temp }}/article-import-bundle
 
       - name: Install the pinned Pagefind dependency before Codex
         run: npm install --prefix "$RUNNER_TEMP/pagefind" pagefind@1.5.2
+
+      - name: Confirm dependency setup left the checkout clean
+        run: |
+          changes="$(git status --porcelain --untracked-files=all)"
+          if [ -n "$changes" ]; then
+            printf '%s\n' "$changes"
+            echo "Dependency setup changed files in the checkout; stopping before Codex."
+            exit 1
+          fi
 
       - name: Run Codex with repository instructions
         uses: openai/codex-action@v1
