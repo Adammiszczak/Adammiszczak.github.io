@@ -160,12 +160,18 @@ jobs:
         with:
           ruby-version: "3.0"
           bundler-cache: true
+        env:
+          BUNDLE_APP_CONFIG: ${{ runner.temp }}/article-import-bundle-config
+          BUNDLE_PATH: ${{ runner.temp }}/article-import-bundle
 
       - name: Install the pinned Pagefind dependency before Codex
         run: npm install --prefix "$RUNNER_TEMP/pagefind" pagefind@1.5.2
 
       - name: Run Codex with repository instructions
         uses: openai/codex-action@v1
+        env:
+          BUNDLE_APP_CONFIG: ${{ runner.temp }}/article-import-bundle-config
+          BUNDLE_PATH: ${{ runner.temp }}/article-import-bundle
         with:
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           permission-profile: ":workspace"
@@ -197,6 +203,8 @@ jobs:
         env:
           JEKYLL_ENV: production
           JEKYLL_BUILD_LOG: ${{ runner.temp }}/jekyll-build.log
+          BUNDLE_APP_CONFIG: ${{ runner.temp }}/article-import-bundle-config
+          BUNDLE_PATH: ${{ runner.temp }}/article-import-bundle
 
       - name: Build Pagefind search index
         run: |
