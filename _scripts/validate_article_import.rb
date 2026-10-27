@@ -440,6 +440,7 @@ def publish!
   paths.each do |path|
     fail_check("Staged bytes differ from the files that passed validation: #{path}") unless git_blob(path) == File.binread(File.join(ROOT, path))
   end
+  run!("git", "checkout", "-b", context.fetch("branch_name"))
   git_environment = {
     "GIT_CONFIG_NOSYSTEM" => "1",
     "GIT_CONFIG_GLOBAL" => "/dev/null",
