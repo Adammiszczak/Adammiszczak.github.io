@@ -18,7 +18,7 @@ image:
   alt: "Editorial graphic showing search, AI, paid media, affiliates, CRM and merchant operations feeding into one customer journey."
 image_alt: "Editorial graphic showing search, AI, paid media, affiliates, CRM and merchant operations feeding into one customer journey."
 linkedin_url: "https://lnkd.in/p/ddQnv7hf"
-substack_url: "https://adammiszczak.substack.com/p/seo-and-geo-should-work-as-a-system"
+substack_url: "https://amiszczak.substack.com/p/seo-and-geo-should-work-as-a-system"
 author:
   name: Adam Miszczak
   url: https://adammiszczak.github.io/about-me/

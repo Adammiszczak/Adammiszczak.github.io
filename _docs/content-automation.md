@@ -109,7 +109,9 @@ Other repository secrets retain their existing boundaries:
 
 The acquisition job cannot access the OpenAI key, PR token or Cloudflare credentials. The generation job has no Google key, generated Google credential file or Google access token. Both import checkouts use `persist-credentials: false`. There is no automatic merge.
 
-The separate Build and release workflow builds the production-equivalent Jekyll site, deploys only same-repository PR previews to Cloudflare Pages, and checks the preview for `X-Robots-Tag: noindex`. When a PR closes, it replaces the preview with a closed notice and deletes superseded deployments for that PR. Cloudflare keeps the latest deployment for each branch, so the `pr-N` alias remains as a small closed notice while the article content and older deployment URLs are removed. Production remains GitHub Pages after a human-approved merge.
+The separate Build and release workflow builds the production-equivalent Jekyll site, deploys only same-repository PR previews to Cloudflare Pages, and checks the preview for `X-Robots-Tag: noindex`. When a PR closes, it replaces the preview with a closed notice and deletes superseded deployments for that PR. Cloudflare keeps the latest deployment for each branch, so the `pr-N` alias remains as a small closed notice while the article content and older deployment URLs are removed. For a PR closed before this cleanup was added, run **Build and release** manually with `cleanup_closed_pr` set to that closed PR's number; the workflow verifies it is closed and skips the production deploy. Production remains GitHub Pages after a human-approved merge.
+
+The `CONTENT_PR_REVIEWER` variable selects who is requested to review. The `CONTENT_PR_TOKEN` owner becomes the PR author, so it must belong to a separate automation bot account. GitHub cannot accept an approval from the PR author.
 
 ## Local checks
 

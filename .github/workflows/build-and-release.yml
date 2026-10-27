@@ -7,6 +7,12 @@ on:
     branches: [main, master]
     types: [opened, synchronize, reopened, ready_for_review, closed]
   workflow_dispatch:
+    inputs:
+      cleanup_closed_pr:
+        description: Optional closed PR number whose Cloudflare preview should be cleaned up
+        required: false
+        default: ""
+        type: string
 
 permissions:
   contents: read
@@ -17,7 +23,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.event_name != 'pull_request' || github.event.action != 'closed'
+    if: (github.event_name != 'pull_request' || github.event.action != 'closed') && (github.event_name != 'workflow_dispatch' || inputs.cleanup_closed_pr == '')
     runs-on: ubuntu-24.04
     outputs:
       article_card_hrefs: ${{ steps.production_diagnostics.outputs.article_card_hrefs }}
@@ -180,17 +186,18 @@ jobs:
             }
 
   cleanup-cloudflare-pr-preview:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository
+    if: (github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'workflow_dispatch' && inputs.cleanup_closed_pr != '')
     runs-on: ubuntu-latest
     permissions:
       contents: read
       issues: write
+      pull-requests: read
     steps:
       - name: Validate Cloudflare Pages project name and PR number
         id: project
         env:
           PAGES_PROJECT: ${{ vars.CLOUDFLARE_PAGES_PROJECT }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_NUMBER: ${{ github.event_name == 'pull_request' && github.event.pull_request.number || inputs.cleanup_closed_pr }}
         run: |
           if [[ ! "$PAGES_PROJECT" =~ ^[a-z0-9][a-z0-9-]{0,62}$ ]]; then
             echo "CLOUDFLARE_PAGES_PROJECT must be a lowercase Cloudflare Pages project name." >&2
@@ -202,6 +209,23 @@ jobs:
           fi
           printf 'project_name=%s\n' "$PAGES_PROJECT" >> "$GITHUB_OUTPUT"
           printf 'branch_name=pr-%s\n' "$PR_NUMBER" >> "$GITHUB_OUTPUT"
+          printf 'pr_number=%s\n' "$PR_NUMBER" >> "$GITHUB_OUTPUT"
+      - name: Verify a manually selected PR is closed
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/github-script@v9
+        env:
+          PR_NUMBER: ${{ steps.project.outputs.pr_number }}
+        with:
+          script: |
+            const number = Number(process.env.PR_NUMBER);
+            const response = await github.rest.pulls.get({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: number,
+            });
+            if (response.data.state !== 'closed') {
+              core.setFailed(`PR #${number} is still open; refusing to clean an active preview.`);
+            }
       - name: Prepare a closed-preview page
         run: |
           mkdir -p ./_closed-preview
@@ -232,14 +256,14 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy ./_closed-preview --project-name=${{ steps.project.outputs.project_name }} --branch=${{ steps.project.outputs.branch_name }} --commit-message="PR #${{ github.event.pull_request.number }} closed; preview content removed"
+          command: pages deploy ./_closed-preview --project-name=${{ steps.project.outputs.project_name }} --branch=${{ steps.project.outputs.branch_name }} --commit-message="PR #${{ steps.project.outputs.pr_number }} closed; preview content removed"
       - name: Delete superseded deployments for the PR branch
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           PAGES_PROJECT: ${{ steps.project.outputs.project_name }}
           PR_BRANCH: ${{ steps.project.outputs.branch_name }}
-          PREVIEW_HOST: pr-${{ github.event.pull_request.number }}.${{ steps.project.outputs.project_name }}.pages.dev
+          PREVIEW_HOST: pr-${{ steps.project.outputs.pr_number }}.${{ steps.project.outputs.project_name }}.pages.dev
         run: |
           python3 - <<'PY'
           import json
@@ -263,20 +287,28 @@ jobs:
               try:
                   with urlopen(request, timeout=30) as response:
                       payload = json.load(response)
-              except (HTTPError, URLError) as error:
-                  raise SystemExit(f"Cloudflare Pages API request failed: {error}")
+              except HTTPError as error:
+                  try:
+                      error_payload = json.loads(error.read().decode("utf-8"))
+                      details = "; ".join(item.get("message", "") for item in error_payload.get("errors", []) if item.get("message"))
+                  except (UnicodeDecodeError, json.JSONDecodeError):
+                      details = ""
+                  suffix = f": {details}" if details else ""
+                  raise SystemExit(f"Cloudflare Pages API request failed (HTTP {error.code}){suffix}")
+              except URLError as error:
+                  raise SystemExit(f"Cloudflare Pages API request failed: {error.reason}")
               if not payload.get("success"):
                   raise SystemExit("Cloudflare Pages API returned an unsuccessful response.")
               return payload
 
           deployments = []
           for page in range(1, 1001):
-              query = urlencode({"env": "preview", "per_page": 100, "page": page})
+              query = urlencode({"env": "preview", "per_page": 20, "page": page})
               batch = api(f"{base}?{query}").get("result", [])
               if not isinstance(batch, list):
                   raise SystemExit("Cloudflare returned an invalid deployment list.")
               deployments.extend(batch)
-              if len(batch) < 100:
+              if len(batch) < 20:
                   break
           else:
               raise SystemExit("Cloudflare deployment pagination exceeded the safety limit.")
@@ -304,6 +336,7 @@ jobs:
           print(f"Removed superseded deployments for {branch}; retained only its closed-preview deployment.")
           PY
       - name: Mark the PR preview comment as closed
+        if: github.event_name == 'pull_request'
         uses: actions/github-script@v9
         with:
           script: |
@@ -327,7 +360,7 @@ jobs:
             }
 
   deploy:
-    if: github.event_name != 'pull_request'
+    if: github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || inputs.cleanup_closed_pr == '')
     needs: build
     runs-on: ubuntu-latest
     permissions:

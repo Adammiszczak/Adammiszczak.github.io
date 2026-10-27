@@ -26,7 +26,7 @@ image:
   alt: "Ilustracja pokazująca wyszukiwarki, AI, płatne media, programy partnerskie, CRM i sprzedaż jako elementy jednej ścieżki klienta."
 image_alt: "Ilustracja pokazująca wyszukiwarki, AI, płatne media, programy partnerskie, CRM i sprzedaż jako elementy jednej ścieżki klienta."
 linkedin_url: "https://lnkd.in/p/ddQnv7hf"
-substack_url: "https://adammiszczak.substack.com/p/seo-and-geo-should-work-as-a-system"
+substack_url: "https://amiszczak.substack.com/p/seo-and-geo-should-work-as-a-system"
 author:
   name: Adam Miszczak
   url: https://adammiszczak.github.io/pl/o-mnie/
