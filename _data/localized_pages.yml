@@ -50,3 +50,7 @@ ai_search_multi_index_infrastructure:
   en: /articles/ai-providers-cant-rent-search-forever
   pl: /pl/artykuly/dostawcy-ai-nie-moga-wiecznie-polegac-na-cudzych-wyszukiwarkach
   x_default: /articles/ai-providers-cant-rent-search-forever
+llms_txt_agent_navigation:
+  en: /articles/llmstxt-is-not-the-new-robotstxt
+  pl: /pl/artykuly/llms-txt-to-nie-nowy-robots-txt
+  x_default: /articles/llmstxt-is-not-the-new-robotstxt
