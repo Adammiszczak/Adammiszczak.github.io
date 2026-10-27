@@ -27,7 +27,6 @@ def workflow_inputs(**overrides):
         "IMAGE_FILE_ID": IMAGE_ID, "IMAGE_VERSION": "27", "SUBSTACK_URL": ARTICLE_URL,
         "LINKEDIN_URL": LINKEDIN_URL, "PUBLISHED_AT": "2026-10-25T09:30:00+01:00",
         "LAST_MODIFIED_AT": "", "REQUEST_ID": "tg-8095672386-23",
-        "GITHUB_RUN_ID": "40500000000", "GITHUB_RUN_ATTEMPT": "1",
     }
     values.update(overrides)
     return values
