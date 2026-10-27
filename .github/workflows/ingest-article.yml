@@ -180,6 +180,15 @@ jobs:
             exit 1
           fi
 
+      - name: Validate the default pull request reviewer
+        env:
+          CONTENT_PR_REVIEWER: ${{ vars.CONTENT_PR_REVIEWER }}
+        run: |
+          if [[ ! "$CONTENT_PR_REVIEWER" =~ ^[A-Za-z0-9-]+$ ]]; then
+            echo "Set the CONTENT_PR_REVIEWER Actions variable to the GitHub login that should review imported articles." >&2
+            exit 1
+          fi
+
       - name: Run Codex with repository instructions
         uses: openai/codex-action@v1
         env:
@@ -237,4 +246,5 @@ jobs:
       - name: Push validated content and create a normal pull request
         env:
           CONTENT_PR_TOKEN: ${{ secrets.CONTENT_PR_TOKEN }}
+          CONTENT_PR_REVIEWER: ${{ vars.CONTENT_PR_REVIEWER }}
         run: ruby _scripts/validate_article_import.rb publish

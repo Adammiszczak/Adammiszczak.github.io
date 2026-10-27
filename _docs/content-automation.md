@@ -97,18 +97,19 @@ Configure this repository secret:
 Configure this repository variable:
 
 - `CONTENT_SOURCE_FOLDER_ID` — trusted Drive folder ID containing both source files as direct children.
+- `CONTENT_PR_REVIEWER` — GitHub login to request as the reviewer for every imported article PR. Set this to `Adammiszczak` for Adam's account.
 
 The service account should have read-only access only to the designated source folder. The authentication action exposes ADC to Python using `GOOGLE_APPLICATION_CREDENTIALS`; the importer requests the Drive read-only OAuth scope. Google auth action reference: <https://github.com/google-github-actions/auth>.
 
 Other repository secrets retain their existing boundaries:
 
 - `OPENAI_API_KEY` — supplied only to the Codex action in `generate_validate_publish`.
-- `CONTENT_PR_TOKEN` — fine-grained Contents: write and Pull requests: write token, exposed only in the final post-validation publish step.
-- `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` — used only by the separate Build and release workflow for same-repository PR previews.
+- `CONTENT_PR_TOKEN` — fine-grained token with Contents: write and Pull requests: write, exposed only in the final post-validation publish step. The automation bot account must have write access to this repository. The token must belong to that bot, not the person in `CONTENT_PR_REVIEWER`, so that person can review and approve the PR.
+- `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` — used only by the separate Build and release workflow for same-repository PR previews. The token needs Cloudflare Pages Write permission so the workflow can publish previews and clean up closed PR deployments.
 
 The acquisition job cannot access the OpenAI key, PR token or Cloudflare credentials. The generation job has no Google key, generated Google credential file or Google access token. Both import checkouts use `persist-credentials: false`. There is no automatic merge.
 
-The separate Build and release workflow builds the production-equivalent Jekyll site, deploys only same-repository PR previews to Cloudflare Pages, and checks the preview for `X-Robots-Tag: noindex`. Production remains GitHub Pages after a human-approved merge.
+The separate Build and release workflow builds the production-equivalent Jekyll site, deploys only same-repository PR previews to Cloudflare Pages, and checks the preview for `X-Robots-Tag: noindex`. When a PR closes, it replaces the preview with a closed notice and deletes superseded deployments for that PR. Cloudflare keeps the latest deployment for each branch, so the `pr-N` alias remains as a small closed notice while the article content and older deployment URLs are removed. Production remains GitHub Pages after a human-approved merge.
 
 ## Local checks
 
