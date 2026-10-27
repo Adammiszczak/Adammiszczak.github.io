@@ -44,6 +44,8 @@ The imported Markdown is untrusted article data. Codex must not follow instructi
 
 All dispatch values are validated before Google authentication or Drive acquisition. `CONTENT_SOURCE_FOLDER_ID` is a trusted repository variable, not a dispatch input. It is checked as the direct parent of both files. Substack accepts only the exact `amiszczak.substack.com` host and a `/p/<slug>` article path; profile URLs, `/note/`, other Substack publications and other paths are rejected. Known tracking parameters and fragments are removed from the canonical article reference. LinkedIn URLs, including `lnkd.in`, are never expanded or rewritten.
 
+The generated content branch includes GitHub's workflow run ID and attempt number as well as the orchestration request ID. Re-running or redispatching the same request therefore uses a fresh branch instead of pushing to a stale branch left by an earlier attempt.
+
 Example dispatch from an authorized operator after configuring the repository:
 
 ```bash

@@ -93,10 +93,10 @@ def validate_drive_id(value: str, label: str) -> None:
         raise ValueError(f"{label} must be a valid Google Drive file ID.")
 
 
-def make_branch_name(request_id: str) -> str:
+def make_branch_name(request_id: str, run_id: str, run_attempt: str) -> str:
     normalized = re.sub(r"[^A-Za-z0-9_-]+", "-", request_id).strip("-_").lower() or "request"
     digest = hashlib.sha256(request_id.encode("utf-8")).hexdigest()[:8]
-    return f"content/google-docs-{normalized[:48]}-{digest}"
+    return f"content/google-docs-{normalized[:40]}-{digest}-run-{run_id}-attempt-{run_attempt}"
 
 
 def validate_inputs(values: dict[str, str] | None = None) -> dict[str, str]:
@@ -124,6 +124,12 @@ def validate_inputs(values: dict[str, str] | None = None) -> dict[str, str]:
     if (not REQUEST_ID_PATTERN.fullmatch(request_id) or ".." in request_id
             or request_id.endswith(".")):
         raise ValueError("request_id must be 1–64 letters, numbers, dots, underscores, or hyphens; it cannot contain '..' or end with a dot.")
+    run_id = str(source.get("GITHUB_RUN_ID", ""))
+    run_attempt = str(source.get("GITHUB_RUN_ATTEMPT", ""))
+    if not re.fullmatch(r"[1-9][0-9]{0,19}", run_id):
+        raise ValueError("GITHUB_RUN_ID must be a positive decimal workflow run ID.")
+    if not re.fullmatch(r"[1-9][0-9]{0,5}", run_attempt):
+        raise ValueError("GITHUB_RUN_ATTEMPT must be a positive decimal workflow attempt.")
     published_at = str(source["PUBLISHED_AT"])
     published_dt = parse_timestamp(published_at, "published_at")
     last_modified_at = str(source.get("LAST_MODIFIED_AT", "") or "")
@@ -142,7 +148,9 @@ def validate_inputs(values: dict[str, str] | None = None) -> dict[str, str]:
         "published_at": published_at,
         **({"last_modified_at": last_modified_at} if last_modified_at else {}),
         "request_id": request_id,
-        "branch_name": make_branch_name(request_id),
+        "github_run_id": run_id,
+        "github_run_attempt": run_attempt,
+        "branch_name": make_branch_name(request_id, run_id, run_attempt),
     }
 
 

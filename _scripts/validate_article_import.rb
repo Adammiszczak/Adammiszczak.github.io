@@ -145,11 +145,16 @@ def validate_external_urls!(context)
   end
   request_id = context.fetch("request_id")
   fail_check("request_id contains unsupported characters or is too long.") unless request_id.match?(/\A[A-Za-z0-9][A-Za-z0-9._-]{0,63}\z/) && !request_id.include?("..") && !request_id.end_with?(".")
+  run_id = context.fetch("github_run_id", "")
+  run_attempt = context.fetch("github_run_attempt", "")
+  fail_check("Workflow run ID or attempt is missing or invalid.") unless run_id.match?(/\A[1-9][0-9]{0,19}\z/) && run_attempt.match?(/\A[1-9][0-9]{0,5}\z/)
+  fail_check("Temporary branch run ID does not match this GitHub Actions run.") unless ENV["GITHUB_RUN_ID"] == run_id
+  fail_check("Temporary branch attempt does not match this GitHub Actions attempt.") unless ENV["GITHUB_RUN_ATTEMPT"] == run_attempt
   normalized = request_id.gsub(/[^A-Za-z0-9_-]+/, "-").gsub(/\A[-_]+|[-_]+\z/, "").downcase
   normalized = "request" if normalized.empty?
   digest = Digest::SHA256.hexdigest(request_id)[0, 8]
-  expected_branch = "content/google-docs-#{normalized[0, 48]}-#{digest}"
-  fail_check("Temporary branch name is invalid or no longer matches request_id.") unless context["branch_name"] == expected_branch
+  expected_branch = "content/google-docs-#{normalized[0, 40]}-#{digest}-run-#{run_id}-attempt-#{run_attempt}"
+  fail_check("Temporary branch name is invalid or no longer matches this request and workflow attempt.") unless context["branch_name"] == expected_branch
   content_id = context.fetch("content_id")
   fail_check("content_id contains unsupported characters or is too long.") unless content_id.match?(/\A[a-z0-9](?:[a-z0-9-]{0,78}[a-z0-9])?\z/)
 end
