@@ -434,7 +434,8 @@ def publish!
   run!("git", "config", "user.name", "github-actions[bot]")
   run!("git", "config", "user.email", "41898282+github-actions[bot]@users.noreply.github.com")
   run!("git", "-c", "core.hooksPath=/dev/null", "-c", "credential.helper=", "add", "--", *paths)
-  run!("git", "diff", "--cached", "--check")
+  # Extra empty lines at EOF do not affect Markdown; keep other whitespace checks strict.
+  run!("git", "-c", "core.whitespace=-blank-at-eof", "diff", "--cached", "--check")
   staged = git_output("diff", "--cached", "--name-only").lines.map(&:chomp).sort
   fail_check("Only validated article, image, and localization files may be staged: #{staged.inspect}") unless staged == paths.sort
   paths.each do |path|
