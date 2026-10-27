@@ -42,3 +42,7 @@ sitemap:
   en: /sitemap/
   pl: /pl/mapa-strony/
   x_default: /sitemap/
+ai_bot_observability:
+  en: /articles/beyond-prompt-monitoring
+  pl: /pl/artykuly/obserwowalnosc-botow-ai-wiecej-niz-monitorowanie-promptow
+  x_default: /articles/beyond-prompt-monitoring
