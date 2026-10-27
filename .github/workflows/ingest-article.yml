@@ -182,10 +182,10 @@ jobs:
 
       - name: Validate the default pull request reviewer
         env:
-          CONTENT_PR_REVIEWER: ${{ vars.CONTENT_PR_REVIEWER }}
+          CONTENT_PR_REVIEWER: ${{ vars.CONTENT_PR_REVIEWER || 'Adammiszczak' }}
         run: |
           if [[ ! "$CONTENT_PR_REVIEWER" =~ ^[A-Za-z0-9-]+$ ]]; then
-            echo "Set the CONTENT_PR_REVIEWER Actions variable to the GitHub login that should review imported articles." >&2
+            echo "CONTENT_PR_REVIEWER must be a valid GitHub login." >&2
             exit 1
           fi
 
@@ -246,5 +246,5 @@ jobs:
       - name: Push validated content and create a normal pull request
         env:
           CONTENT_PR_TOKEN: ${{ secrets.CONTENT_PR_TOKEN }}
-          CONTENT_PR_REVIEWER: ${{ vars.CONTENT_PR_REVIEWER }}
+          CONTENT_PR_REVIEWER: ${{ vars.CONTENT_PR_REVIEWER || 'Adammiszczak' }}
         run: ruby _scripts/validate_article_import.rb publish

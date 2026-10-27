@@ -94,17 +94,17 @@ Configure this repository secret:
 
 - `GOOGLE_SERVICE_ACCOUNT_JSON` — Google service-account JSON for a read-only account with access to the designated source folder. The workflow writes a temporary `gha-creds-*.json` ADC file in the acquisition job. That file is gitignored, cleaned up by the auth action, never passed as a Python argument, and excluded from the source artifact.
 
-Configure this repository variable:
+Configure this repository variable if you want to override the default reviewer:
 
 - `CONTENT_SOURCE_FOLDER_ID` — trusted Drive folder ID containing both source files as direct children.
-- `CONTENT_PR_REVIEWER` — GitHub login to request as the reviewer for every imported article PR. Set this to `Adammiszczak` for Adam's account.
+- `CONTENT_PR_REVIEWER` — optional GitHub login to request as the reviewer for every imported article PR. Defaults to `Adammiszczak` when unset.
 
 The service account should have read-only access only to the designated source folder. The authentication action exposes ADC to Python using `GOOGLE_APPLICATION_CREDENTIALS`; the importer requests the Drive read-only OAuth scope. Google auth action reference: <https://github.com/google-github-actions/auth>.
 
 Other repository secrets retain their existing boundaries:
 
 - `OPENAI_API_KEY` — supplied only to the Codex action in `generate_validate_publish`.
-- `CONTENT_PR_TOKEN` — fine-grained token with Contents: write and Pull requests: write, exposed only in the final post-validation publish step. The automation bot account must have write access to this repository. The token must belong to that bot, not the person in `CONTENT_PR_REVIEWER`, so that person can review and approve the PR.
+- `CONTENT_PR_TOKEN` — fine-grained token with Contents: write and Pull requests: write, exposed only in the final post-validation publish step. The automation bot account must have write access to this repository. The token must belong to that bot, not the person in `CONTENT_PR_REVIEWER` (or its default, `Adammiszczak`), so that person can review and approve the PR.
 - `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` — used only by the separate Build and release workflow for same-repository PR previews. The token needs Cloudflare Pages Write permission so the workflow can publish previews and clean up closed PR deployments.
 
 The acquisition job cannot access the OpenAI key, PR token or Cloudflare credentials. The generation job has no Google key, generated Google credential file or Google access token. Both import checkouts use `persist-credentials: false`. There is no automatic merge.

@@ -447,7 +447,7 @@ def publish!
   token = ENV["CONTENT_PR_TOKEN"]
   fail_check("CONTENT_PR_TOKEN is required only for the post-validation publishing step.") if token.nil? || token.empty?
   reviewer = ENV.fetch("CONTENT_PR_REVIEWER", "").strip
-  fail_check("Set the CONTENT_PR_REVIEWER Actions variable to the GitHub login that should review imported articles.") unless reviewer.match?(/\A[A-Za-z0-9-]+\z/)
+  fail_check("CONTENT_PR_REVIEWER must be a valid GitHub login.") unless reviewer.match?(/\A[A-Za-z0-9-]+\z/)
   paths = [context.fetch("en_article_path"), context.fetch("pl_article_path"), context.fetch("image_path"), "_data/localized_pages.yml"]
   fail_check("Git staging area must be empty before the publishing step.") unless git_success?("diff", "--cached", "--quiet")
   run!("git", "config", "user.name", "github-actions[bot]")
