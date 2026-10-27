@@ -207,11 +207,12 @@ def verify_git_remote!
   repository = ENV.fetch("GITHUB_REPOSITORY", "")
   server = ENV.fetch("GITHUB_SERVER_URL", "https://github.com").sub(%r{/+$}, "")
   fail_check("Missing GitHub repository context.") if repository.empty? || repository.include?("\n")
-  expected = "#{server}/#{repository}.git".downcase
+  expected = "#{server}/#{repository}".downcase
+  accepted_urls = [expected, "#{expected}.git"]
   fetch_url = git_output("remote", "get-url", "origin").strip.downcase
   push_url = git_output("remote", "get-url", "--push", "origin").strip.downcase
-  fail_check("The origin fetch URL changed during Codex execution.") unless fetch_url == expected
-  fail_check("The origin push URL changed during Codex execution.") unless push_url == expected
+  fail_check("The origin fetch URL does not point to this GitHub repository.") unless accepted_urls.include?(fetch_url)
+  fail_check("The origin push URL does not point to this GitHub repository.") unless accepted_urls.include?(push_url)
 end
 
 def validate!
