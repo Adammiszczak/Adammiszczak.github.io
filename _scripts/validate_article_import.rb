@@ -275,6 +275,12 @@ def validate!
   fail_check("Article image filename must be lowercase and descriptive.") unless image_changes.first.match?(%r{\Aassets/img/articles/[a-z0-9]+(?:-[a-z0-9]+)*\.(?:jpg|jpeg|png|webp|gif|avif)\z})
   fail_check("Unexpected generated or unrelated files changed: #{(other_changes - image_changes).join(', ')}") unless (other_changes - image_changes).empty?
   fail_check("Automation source files must not be committed.") if changes.any? { |_code, path| path.start_with?(".automation/") }
+  trailing_whitespace = [en[:path], pl[:path]].flat_map do |path|
+    File.foreach(File.join(ROOT, path)).with_index(1).filter_map do |line, line_number|
+      "#{path}:#{line_number}" if line.match?(/[ \t]+(?:\r?\n)?\z/)
+    end
+  end
+  fail_check("Generated Markdown must not contain trailing whitespace; use blank lines instead of hard-break spaces: #{trailing_whitespace.join(', ')}") unless trailing_whitespace.empty?
 
   baseline_mapping = YAML.safe_load(git_output("show", "HEAD:#{mapping_path}"), permitted_classes: [Date, Time], aliases: false)
   current_mapping = read_yaml(File.join(ROOT, mapping_path))
@@ -406,8 +412,11 @@ end
 def run!(*arguments, environment: {})
   safe_environment = process_environment(environment)
   stdout, stderr, status = Open3.capture3(safe_environment, *arguments, chdir: ROOT)
+  unless status.success?
+    detail = [stderr, stdout].reject(&:empty?).join("\n").strip
+    fail_check("#{arguments.first} failed: #{detail}")
+  end
   print stdout unless stdout.empty?
-  fail_check("#{arguments.first} failed: #{stderr.strip}") unless status.success?
 end
 
 def git_blob(path)
