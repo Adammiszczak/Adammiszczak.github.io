@@ -253,9 +253,8 @@ class MarkdownAndImageValidationTests(unittest.TestCase):
         with patch.object(fetcher, "MAX_IMAGE_BYTES", 5), self.assertRaisesRegex(ValueError, "limit"):
             fetcher.DriveClient(LargeSession()).download_image(IMAGE_ID)
 
-    def test_rejects_image_wrong_mime_trashed_parent_and_version(self):
+    def test_rejects_trashed_image_wrong_parent_and_version(self):
         examples = (
-            (metadata(IMAGE_ID, "lead.jpg", "image/svg+xml", "27"), "MIME type"),
             (metadata(IMAGE_ID, "lead.jpg", "image/jpeg", "27", trashed=True), "trashed"),
             (metadata(IMAGE_ID, "lead.jpg", "image/jpeg", "27", parents=["wrong-folder-123456"]), "direct child"),
             (metadata(IMAGE_ID, "lead.jpg", "image/jpeg", "28"), "version mismatch"),
@@ -278,6 +277,25 @@ class MarkdownAndImageValidationTests(unittest.TestCase):
 
 
 class DuplicateAndPackageTests(unittest.TestCase):
+    def test_detected_image_bytes_override_mismatched_drive_mime(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            work_dir = root / ".automation" / "content-source"
+            image_metadata = metadata(IMAGE_ID, "lead.jpg", "image/svg+xml", "27")
+            result = fetcher.acquire_source(
+                fetcher.validate_inputs(workflow_inputs()),
+                folder_id=FOLDER_ID,
+                client=fetcher.DriveClient(FakeSession(image=image_metadata)),
+                root=root,
+                work_dir=work_dir,
+            )
+
+            metadata_result = json.loads((work_dir / "metadata.json").read_text(encoding="utf-8"))
+            self.assertEqual(metadata_result["image"]["mimeType"], "image/jpeg")
+            self.assertEqual(metadata_result["image"]["driveMimeType"], "image/svg+xml")
+            self.assertEqual((work_dir / "lead-image.jpg").read_bytes(), JPEG)
+            self.assertEqual(result["lead_image_path"], ".automation/content-source/lead-image.jpg")
+
     def test_duplicate_detection_uses_normalized_canonical_url(self):
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
