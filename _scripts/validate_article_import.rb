@@ -333,10 +333,20 @@ def validate!
   captions = [en_data["image_caption"], pl_data["image_caption"]]
   fail_check("Image captions must be provided and localized for both articles, or omitted from both.") unless captions.all?(&:nil?) || captions.all? { |caption| caption.is_a?(String) && !caption.strip.empty? }
   fail_check("EN and PL image captions must be localized separately.") if captions.all? && captions.first == captions.last
-  fail_check("English and Polish articles must share the same approved tags.") unless en_data["tags"].is_a?(Array) && pl_data["tags"].is_a?(Array) && en_data["tags"].sort == pl_data["tags"].sort
+  en_tags = en_data["tags"]
+  pl_tags = pl_data["tags"]
+  unless en_tags.is_a?(Array) && pl_tags.is_a?(Array)
+    fail_check("Both articles must define tags as arrays; EN=#{en_tags.inspect}, PL=#{pl_tags.inspect}.")
+  end
+  unless en_tags.all? { |tag| tag.is_a?(String) } && pl_tags.all? { |tag| tag.is_a?(String) }
+    fail_check("Article tags must all be strings; EN=#{en_tags.inspect}, PL=#{pl_tags.inspect}.")
+  end
+  unless en_tags.sort == pl_tags.sort
+    fail_check("English and Polish articles must share the same tags; EN=#{en_tags.inspect}, PL=#{pl_tags.inspect}.")
+  end
   taxonomy = read_yaml(File.join(ROOT, "_data", "taxonomy.yml"))
   approved_tags = Array(taxonomy["tags"])
-  tags = Array(en_data["tags"])
+  tags = en_tags
   fail_check("Both articles must use at least one approved taxonomy tag.") if tags.empty?
   fail_check("Choose a short list of no more than four approved taxonomy tags.") if tags.length > 4
   invalid_tags = tags - approved_tags
