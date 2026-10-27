@@ -46,3 +46,7 @@ ai_bot_observability:
   en: /articles/beyond-prompt-monitoring
   pl: /pl/artykuly/obserwowalnosc-botow-ai-wiecej-niz-monitorowanie-promptow
   x_default: /articles/beyond-prompt-monitoring
+ai_search_multi_index_infrastructure:
+  en: /articles/ai-providers-cant-rent-search-forever
+  pl: /pl/artykuly/dostawcy-ai-nie-moga-wiecznie-polegac-na-cudzych-wyszukiwarkach
+  x_default: /articles/ai-providers-cant-rent-search-forever
