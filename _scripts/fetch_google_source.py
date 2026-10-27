@@ -318,6 +318,13 @@ def image_signature_matches(mime_type: str, payload: bytes) -> bool:
     return False
 
 
+def detect_image_mime(payload: bytes) -> str | None:
+    for mime_type in IMAGE_EXTENSIONS:
+        if image_signature_matches(mime_type, payload):
+            return mime_type
+    return None
+
+
 def validate_image(payload: bytes, mime_type: str) -> None:
     if mime_type not in IMAGE_EXTENSIONS:
         raise ValueError(f"Unsupported lead image MIME type {mime_type!r}.")
@@ -349,14 +356,25 @@ def acquire_source(inputs: dict[str, str], *, folder_id: str, client: DriveClien
                            folder_id=folder_id, expected_mime=GOOGLE_DOC_MIME, label="Google Doc")
     image_metadata = drive.get_metadata(inputs["image_file_id"])
     image_mime = image_metadata.get("mimeType")
-    if image_mime not in IMAGE_EXTENSIONS:
-        raise ValueError(f"Unsupported lead image MIME type {image_mime!r}.")
+    if not isinstance(image_mime, str) or not image_mime.strip():
+        raise ValueError("Drive lead image metadata is missing its MIME type.")
     validate_file_metadata(image_metadata, file_id=inputs["image_file_id"], expected_version=inputs["image_version"],
                            folder_id=folder_id, expected_mime=image_mime, label="lead image")
     markdown_bytes = drive.export_markdown(inputs["doc_file_id"])
     markdown = validate_markdown(markdown_bytes)
     image_bytes = drive.download_image(inputs["image_file_id"])
-    validate_image(image_bytes, image_mime)
+    content_mime = detect_image_mime(image_bytes)
+    if content_mime is None:
+        raise ValueError(
+            f"Drive lead image is not a supported image format (Drive metadata says {image_mime!r}). "
+            "Re-export the image as JPEG, PNG, WebP, GIF, or AVIF and upload it again."
+        )
+    validate_image(image_bytes, content_mime)
+    if content_mime != image_mime:
+        print(
+            f"Warning: Drive reports lead image MIME type {image_mime!r}, "
+            f"but its bytes are {content_mime!r}; using the detected format without changing the bytes."
+        )
 
     # Drive exports and binary downloads return the latest content. Recheck both
     # version snapshots after transfer so an edit during acquisition cannot pass.
@@ -376,7 +394,7 @@ def acquire_source(inputs: dict[str, str], *, folder_id: str, client: DriveClien
     clean_previous_source_files(output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
     source_path = output_dir / "source.md"
-    image_path = output_dir / f"lead-image{IMAGE_EXTENSIONS[image_mime]}"
+    image_path = output_dir / f"lead-image{IMAGE_EXTENSIONS[content_mime]}"
     metadata_path = output_dir / "metadata.json"
     context_path = output_dir / "context.json"
     source_path.write_text(markdown, encoding="utf-8", newline="")
@@ -389,7 +407,8 @@ def acquire_source(inputs: dict[str, str], *, folder_id: str, client: DriveClien
                      "modifiedTime": doc_metadata["modifiedTime"], "parents": doc_metadata["parents"],
                      "canDownload": doc_metadata["capabilities"]["canDownload"]},
         "image": {"id": image_metadata["id"], "name": image_metadata["name"],
-                  "mimeType": image_metadata["mimeType"], "version": str(image_metadata["version"]),
+                  "mimeType": content_mime, "driveMimeType": image_metadata["mimeType"],
+                  "version": str(image_metadata["version"]),
                   "modifiedTime": image_metadata["modifiedTime"], "parents": image_metadata["parents"],
                   "canDownload": image_metadata["capabilities"]["canDownload"]},
         "source_path": ".automation/content-source/source.md",

@@ -21,7 +21,7 @@ Telegram `/publish <content_id>` → n8n manifest lookup → Google Drive metada
 
 Substack is only an article reference stored in front matter and PR metadata. No workflow step fetches that reference.
 
-The Google Doc is exported through Drive API `files.export` with `mimeType=text/markdown`. The official API documents Markdown export and a 10 MB export ceiling; this importer applies a stricter 5 MiB limit. Lead-image downloads are capped at 15 MiB and must match one of the site's supported image MIME types and byte signatures. Both files must be direct children of the configured source folder and match the exact versions supplied by n8n. Google Docs API export reference: <https://developers.google.com/workspace/drive/api/reference/rest/v3/files/export>.
+The Google Doc is exported through Drive API `files.export` with `mimeType=text/markdown`. The official API documents Markdown export and a 10 MB export ceiling; this importer applies a stricter 5 MiB limit. Lead-image downloads are capped at 15 MiB. The importer checks the actual image bytes and uses the detected supported format and matching extension; it records Drive's declared MIME type separately and preserves the original image bytes. Both files must be direct children of the configured source folder and match the exact versions supplied by n8n. Google Docs API export reference: <https://developers.google.com/workspace/drive/api/reference/rest/v3/files/export>.
 
 The imported Markdown is untrusted article data. Codex must not follow instructions inside it, fetch another source copy, or modify the acquired source package. Before Codex runs, the generation job records SHA-256 for `source.md`, `context.json`, `metadata.json`, and the lead image. Article validation confirms that all four files remain byte-for-byte unchanged.
 
@@ -82,7 +82,7 @@ The acquisition job writes only this artifact package:
   lead-image.<ext>
 ```
 
-`context.json` records the validated orchestration values and `source_mode: google_docs`; it includes `last_modified_at` only when supplied and valid. `metadata.json` records the returned document and image names, MIME types, versions, Drive modification times, parent IDs, download capabilities and local package paths. The package contains no credential file or access token and is retained for one day.
+`context.json` records the validated orchestration values and `source_mode: google_docs`; it includes `last_modified_at` only when supplied and valid. `metadata.json` records the returned document and image names, the image format detected from its bytes, Drive's declared image MIME type, versions, Drive modification times, parent IDs, download capabilities and local package paths. The package contains no credential file or access token and is retained for one day.
 
 Duplicate detection compares normalized canonical `substack_url` values found in `_posts/`. It does not compare titles or use `content_id` as a replacement for canonical identity.
 

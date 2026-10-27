@@ -192,6 +192,7 @@ def verify_fetched_integrity!(context, metadata)
   document = metadata["document"]
   image = metadata["image"]
   expected_image_extension = image.is_a?(Hash) ? IMAGE_MIME_EXTENSIONS[image["mimeType"]] : nil
+  drive_image_mime_recorded = image.is_a?(Hash) && image["driveMimeType"].is_a?(String) && !image["driveMimeType"].empty?
   source_folder_id = ENV.fetch("CONTENT_SOURCE_FOLDER_ID", "")
   doc_valid = document.is_a?(Hash) && document["id"] == context["doc_file_id"] &&
               document["version"].to_s == context["doc_version"] &&
@@ -202,7 +203,7 @@ def verify_fetched_integrity!(context, metadata)
   image_valid = image.is_a?(Hash) && image["id"] == context["image_file_id"] &&
                 image["version"].to_s == context["image_version"] &&
                 image["parents"].is_a?(Array) && image["parents"].include?(source_folder_id) &&
-                image["canDownload"] == true && expected_image_extension &&
+                image["canDownload"] == true && expected_image_extension && drive_image_mime_recorded &&
                 File.extname(image_path) == expected_image_extension
   fail_check("Lead-image metadata does not match the trusted workflow snapshot.") unless image_valid
   fail_check("Metadata must identify the deterministic source paths.") unless metadata["source_path"] == ".automation/content-source/source.md" && metadata["metadata_path"] == ".automation/content-source/metadata.json"
