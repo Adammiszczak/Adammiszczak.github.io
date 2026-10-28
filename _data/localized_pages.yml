@@ -54,3 +54,7 @@ llms_txt_agent_navigation:
   en: /articles/llmstxt-is-not-the-new-robotstxt
   pl: /pl/artykuly/llms-txt-to-nie-nowy-robots-txt
   x_default: /articles/llmstxt-is-not-the-new-robotstxt
+seo_geo_agent_layer:
+  en: /articles/seo-geo-needs-an-agent-layer
+  pl: /pl/artykuly/seo-geo-potrzebuje-warstwy-obslugi-agentow
+  x_default: /articles/seo-geo-needs-an-agent-layer
