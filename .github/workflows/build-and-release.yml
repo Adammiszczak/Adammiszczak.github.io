@@ -18,8 +18,9 @@ permissions:
   contents: read
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event_name == 'workflow_dispatch' && inputs.cleanup_closed_pr != '' && format('cleanup-pr-{0}', inputs.cleanup_closed_pr) || github.ref }}
+  cancel-in-progress: false
+  queue: max
 
 jobs:
   build:

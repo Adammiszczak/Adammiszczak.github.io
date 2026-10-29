@@ -13,6 +13,12 @@ layout: default
     {% if page.tags %}<p class="tag-list">{% for tag in page.tags %}{% assign localized_tag = copy.tags[tag] | default: tag | replace: "-", " " %}<span>{{ localized_tag }}</span>{% endfor %}</p>{% endif %}
     {% if page.image %}{% assign image_path = page.image.path | default: page.image %}{% assign image_alt = page.image.alt | default: page.image_alt | default: page.title %}<figure class="article-hero-image"><img src="{{ image_path | relative_url }}" alt="{{ image_alt | escape }}"><figcaption>{{ page.image_caption | default: image_alt | default: page.title | escape }}</figcaption></figure>{% endif %}
   </header>
+  <details class="article-toc" data-article-toc open>
+    <summary>{% if locale_key == 'pl' %}W tym artykule{% else %}In this article{% endif %}</summary>
+    <nav aria-label="{% if locale_key == 'pl' %}Spis treści artykułu{% else %}Article contents{% endif %}">
+      <ol data-article-toc-list></ol>
+    </nav>
+  </details>
   <div class="prose">{{ content }}</div>
   {% include article-discussion.html %}
   {% assign current_locale = page.lang | default: 'en' %}
@@ -33,3 +39,4 @@ layout: default
     </ul>
   </nav>
 </article>
+<script src="{{ '/assets/js/article-toc.js' | relative_url }}?v=20261029" defer></script>
