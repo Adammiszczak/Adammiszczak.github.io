@@ -120,11 +120,12 @@ For Polish translations of English articles, complete the following stages in or
 
 1. Read this file, inspect relevant files and `git status` before editing. Preserve existing user changes; do not revert unrelated work.
 2. Trace the existing layout, data and URL conventions before changing them. Prefer small, consistent edits over new dependencies or duplicated content/configuration.
-3. For content, check front matter, category, tags, image/alt text, social links, heading hierarchy, references and internal links. Attribute other authors' analysis and claims inline, cite stable original sources where available, and visibly credit externally created or adapted images in captions. Never fabricate unavailable source details. For templates/config, consider all affected page types and GitHub Pages' `baseurl`/URL behavior.
-4. Use Ubuntu-compatible Bash commands in repo instructions and examples. Do not document PowerShell commands.
-5. After substantive content, layout, localization or configuration changes, make a production build and run the localization checker. Review the diff and generated HTML; do not claim a check passed unless it was actually run.
-6. Before finishing, inspect generated HTML for the affected pages, ensure global SEO/social tags are present once, verify article images and required links resolve, confirm sitemap membership and redirects where relevant, check all configured locale alternates, and confirm generated `_site/` output is not staged.
-7. Summarize the files changed and checks performed, including any verification that could not be run.
+3. Keep article content responsive at narrow viewport widths. Long URLs and other unbroken link text must wrap within the article column; code blocks, including syntax-highlighted `<pre><code>` output, must not force page-wide horizontal overflow. Check both rendered code and links when reviewing articles with long tokens.
+4. For content, check front matter, category, tags, image/alt text, social links, heading hierarchy, references and internal links. Attribute other authors' analysis and claims inline, cite stable original sources where available, and visibly credit externally created or adapted images in captions. Never fabricate a citation or link. For templates/config, consider all affected page types and GitHub Pages' `baseurl`/URL behavior.
+5. Use Ubuntu-compatible Bash commands in repo instructions and examples. Do not document PowerShell commands.
+6. After substantive content, layout, localization or configuration changes, make a production build and run the localization checker. Review the diff and generated HTML; do not claim a check passed unless it was actually run.
+7. Before finishing, inspect generated HTML for the affected pages, ensure global SEO/social tags are present once, verify article images and required links resolve, confirm sitemap membership and redirects where relevant, check all configured locale alternates, and confirm generated `_site/` output is not staged.
+8. Summarize the files changed and checks performed, including any verification that could not be run.
 
 ## Build and deployment
 

@@ -150,6 +150,9 @@ html[data-theme="dark"] .theme-toggle-icon-moon { display: none; }
 .prose { max-width: 760px; }
 .prose, .prose * { min-width: 0; }
 .prose img, .article-hero-image img { max-width: 100%; height: auto; }
+.prose a { overflow-wrap: anywhere; }
+.prose pre { max-width: 100%; white-space: pre-wrap; overflow-wrap: anywhere; word-break: break-word; }
+.prose pre code { white-space: inherit; }
 .article-inline-image { margin: 2rem 0; }
 .article-inline-image img { display: block; width: 100%; height: auto; border-radius: 8px; }
 .article-inline-image figcaption { padding-top: .5rem; color: var(--muted); font-size: .85rem; }.article-hero-image { margin: 2rem 0; }
