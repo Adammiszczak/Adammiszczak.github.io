@@ -66,3 +66,7 @@ advanced_agent_readiness:
   en: /articles/advanced-agent-readiness-enterprise-ecommerce
   pl: /pl/artykuly/zaawansowana-gotowosc-platform-ecommerce-na-agentow
   x_default: /articles/advanced-agent-readiness-enterprise-ecommerce
+chatgpt_apps_agentic_distribution:
+  en: /articles/no-chatgpt-app-you-may-lose-more-than-traffic
+  pl: /pl/artykuly/bez-aplikacji-chatgpt-mozesz-stracic-wiecej-niz-ruch
+  x_default: /articles/no-chatgpt-app-you-may-lose-more-than-traffic
