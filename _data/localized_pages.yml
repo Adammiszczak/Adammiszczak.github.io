@@ -74,3 +74,7 @@ enterprise_seo_geo_operating_model:
   en: /articles/managing-seo-geo-enterprise-ecommerce
   pl: /pl/artykuly/zarzadzanie-seo-geo-na-platformie-e-commerce
   x_default: /articles/managing-seo-geo-enterprise-ecommerce
+geo_performance_measurement:
+  en: /articles/how-to-measure-geo-performance-beyond-prompt-monitoring
+  pl: /pl/artykuly/jak-mierzyc-wyniki-geo-poza-monitorowaniem-promptow
+  x_default: /articles/how-to-measure-geo-performance-beyond-prompt-monitoring
