@@ -103,6 +103,7 @@ groups.each do |key, variants|
     footer_social_links = tags(html, "a").select { |tag| attr(tag, "class").to_s.split.include?("footer-social-link") }
     expected_social_urls = %w[
       https://www.linkedin.com/in/adam-miszczak/
+      https://www.facebook.com/Adam.Miszczak.SEO.GEO
       https://substack.com/@adammiszczak
       https://amiszczak.substack.com/
       https://github.com/Adammiszczak/Adammiszczak.github.io

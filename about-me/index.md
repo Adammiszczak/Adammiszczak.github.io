@@ -5,16 +5,16 @@ title: About Adam Miszczak
 description: About Adam Miszczak, Senior SEO / GEO & AI Search Specialist for international enterprise e-commerce.
 permalink: /about-me/
 image:
-  path: /assets/img/adam-miszczak-professional-portrait.jpg
-  alt: Adam Miszczak, enterprise SEO and GEO specialist, in a black shirt outdoors.
+  path: /assets/img/adam-miszczak.jpg
+  alt: Adam Miszczak standing in front of a colourful graffiti wall.
 hero_eyebrow: About Adam Miszczak
 hero_heading: Enterprise SEO, engineering and the systems behind search
 hero_intro: I am an SEO professional focused on international e-commerce, enterprise search challenges, GEO and AI Search.
 hero_supporting: Since 2018, I have worked across SEO strategy and implementation, combining technical investigation with a practical understanding of complex digital platforms.
-hero_image_src: /assets/img/adam-miszczak-professional-portrait.jpg
-hero_image_width: 1280
-hero_image_height: 1920
-hero_image_alt: Adam Miszczak, enterprise SEO and GEO specialist, in a black shirt outdoors.
+hero_image_src: /assets/img/adam-miszczak.jpg
+hero_image_width: 1110
+hero_image_height: 1195
+hero_image_alt: Adam Miszczak standing in front of a colourful graffiti wall.
 ---
 
 {% include profile-hero.html %}
@@ -57,7 +57,9 @@ I use this website to publish technical articles, research notes and observation
 
 LinkedIn is where I share shorter insights and take part in professional discussions. Longer-form articles provide more room to examine evidence, explain methodology and explore the implications of emerging developments.
 
-[Explore my articles]({{ '/articles/' | relative_url }}) · [Connect with me on LinkedIn](https://www.linkedin.com/in/adam-miszczak/)
+[Explore my articles]({{ '/articles/' | relative_url }})
+
+
 
 <figure class="about-photo">
   <img src="{{ '/assets/img/adam-miszczak-search-central-live-europe-2026.jpg' | relative_url }}" alt="Adam Miszczak, SEO and AI Search specialist, at Google Search Central Live Deep Dive Europe 2026." width="2880" height="5120" loading="lazy" decoding="async">
@@ -86,6 +88,8 @@ Outside SEO and technology, I enjoy martial arts, anime and manga, cold-water sw
 ## Let's connect
 
 I welcome conversations about enterprise SEO, international e-commerce, GEO, AI Search, automation and the challenges of delivering technical improvements in complex organisations. I am particularly interested in connecting with people building, researching or leading at the intersection of search, engineering and AI.
+
+{% include social-links.html %}
 
 [Connect with me on LinkedIn](https://www.linkedin.com/in/adam-miszczak/)
 

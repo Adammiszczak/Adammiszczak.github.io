@@ -258,10 +258,15 @@ html[data-theme="dark"] .article-callout-update { --callout-tint: #1d3830; }
 .site-footer-nav .footer-social-link:hover { background: var(--accent-soft); color: var(--accent-dark); }
 .footer-social-icon { display: block; width: 1.35rem; height: 1.35rem; fill: currentColor; }
 .footer-social-icon-linkedin { color: #0a66c2; }
+.footer-social-icon-facebook { color: #0866ff; }
 .footer-social-icon-substack { color: #ff6719; }
 .footer-social-icon-github { color: var(--ink); }
 .site-footer-utility { display: flex; flex-wrap: nowrap; align-items: center; justify-content: flex-end; gap: .6rem; }
 .copyright { grid-column: 1 / -1; }
+.about-social-list { margin-block: 1rem 1.5rem; padding-left: 1.5rem; }
+.about-social-list li { padding-block: .2rem; }
+.about-social-list a { display: inline-flex; max-width: 100%; align-items: center; gap: .55rem; overflow-wrap: anywhere; }
+.about-social-list .footer-social-icon { flex: 0 0 auto; }
 .selector-footer { grid-template-columns: 1fr auto auto; }
 .selector-footer .copyright { grid-column: auto; }
 .language-selector section { max-width: 700px; margin-inline: auto; }

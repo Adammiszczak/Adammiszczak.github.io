@@ -10,16 +10,16 @@ author:
   name: Adam Miszczak
   url: https://adammiszczak.github.io/pl/o-mnie/
 image:
-  path: /assets/img/adam-miszczak-professional-portrait.jpg
-  alt: Adam Miszczak, specjalista SEO dla dużego e-commerce i GEO, w czarnej koszuli na zewnątrz.
+  path: /assets/img/adam-miszczak.jpg
+  alt: Adam Miszczak na tle kolorowego muralu.
 hero_eyebrow: O Adamie Miszczaku
 hero_heading: SEO, inżynieria i mechanizmy działania wyszukiwarek
 hero_intro: Zajmuję się SEO w międzynarodowym e-commerce, złożonymi wyzwaniami dużych serwisów, GEO i AI Search.
 hero_supporting: Od 2018 roku pracuję nad strategią SEO i jej wdrażaniem. Łączę analizę techniczną z praktycznym rozumieniem złożonych platform cyfrowych.
-hero_image_src: /assets/img/adam-miszczak-professional-portrait.jpg
-hero_image_width: 1280
-hero_image_height: 1920
-hero_image_alt: Adam Miszczak, specjalista SEO dla dużego e-commerce i GEO, w czarnej koszuli na zewnątrz.
+hero_image_src: /assets/img/adam-miszczak.jpg
+hero_image_width: 1110
+hero_image_height: 1195
+hero_image_alt: Adam Miszczak na tle kolorowego muralu.
 ---
 
 {% include profile-hero.html %}
@@ -62,7 +62,9 @@ Na tej stronie publikuję artykuły techniczne, notatki badawcze i obserwacje do
 
 Na LinkedIn publikuję krótsze obserwacje i biorę udział w dyskusjach branżowych. Dłuższe artykuły pozwalają dokładniej omówić źródła, metodologię i możliwe konsekwencje nowych rozwiązań.
 
-[Zobacz moje artykuły]({{ '/pl/artykuly/' | relative_url }}) · [Napisz do mnie na LinkedIn](https://www.linkedin.com/in/adam-miszczak/)
+[Zobacz moje artykuły]({{ '/pl/artykuly/' | relative_url }})
+
+
 
 <figure class="about-photo">
   <img src="{{ '/assets/img/adam-miszczak-search-central-live-europe-2026.jpg' | relative_url }}" alt="Adam Miszczak, specjalista SEO i AI Search, podczas Google Search Central Live Deep Dive Europe 2026." width="2880" height="5120" loading="lazy" decoding="async">
@@ -91,6 +93,8 @@ Poza SEO i technologią interesuję się sztukami walki, anime i mangą, morsowa
 ## Porozmawiajmy
 
 Chętnie porozmawiam o SEO dla dużych serwisów, międzynarodowym e-commerce, GEO, AI Search, automatyzacji i wyzwaniach związanych z wdrażaniem zmian technicznych w złożonych organizacjach. Szczególnie interesują mnie osoby działające na styku wyszukiwania, inżynierii i AI.
+
+{% include social-links.html %}
 
 [Skontaktuj się ze mną na LinkedIn](https://www.linkedin.com/in/adam-miszczak/)
 

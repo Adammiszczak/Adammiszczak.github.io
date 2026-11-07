@@ -12,8 +12,8 @@
     <p class="profile-supporting">{{ page.hero_supporting | escape }}</p>
     <div class="profile-actions">
       <a class="profile-button" href="{{ routes.articles | relative_url }}">{{ copy.explore_articles }}</a>
-      <a href="https://www.linkedin.com/in/adam-miszczak/">{{ copy.connect_linkedin }}</a>
     </div>
+    {% include social-links.html %}
   </div>
   <figure class="profile-photo">
     <img src="{{ hero_image_path | relative_url }}" alt="{{ page.hero_image_alt | escape }}" width="{{ hero_image_width }}" height="{{ hero_image_height }}" loading="eager" decoding="async">
